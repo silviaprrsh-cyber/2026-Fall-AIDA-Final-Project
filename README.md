@@ -133,5 +133,3 @@ Official documentation: [CDSE authentication](https://documentation.dataspace.co
 ## Refresh coverage documentation only
 
 Use `.\.venv\Scripts\python.exe scripts/write_report.py --docs-only` to generate separate English and Chinese Markdown without rebuilding CSV indexes or accessing the network.
-#   2 0 2 6 - F a l l - A I D A - F i n a l - P r o j e c t  
- 
