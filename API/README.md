@@ -1,0 +1,30 @@
+# API acquisition code
+
+This directory contains the project's remote data acquisition code. It uses `.venv`, `.env` and `config/` in the project root. Original data are written to `data/sources/<source>/`, not to the code directory. Paths resolve from the project location rather than the terminal's working directory.
+
+| File | Purpose |
+| --- | --- |
+| `client.py` | HTTP retrieval, source-specific archives, caching and provenance |
+| `observations.py` | Hydrometric and weather interfaces and observation parsing |
+| `collector.py`, `__main__.py` | Independent scheduling, status and terminal stop |
+| `discover.py`, `discover_details.py` | Bounded endpoint and metadata discovery |
+| `validate_once.py` | One-shot hydrometric and weather validation |
+| `download_static.py`, `download_network.py`, `download_nhn.py` | Government reports and river-network downloads |
+| `fetch_station_datums.py` | Station datum evidence |
+| `backfill_weather_for_etl.py` | Bounded weather backfill |
+| `check_partner_precipitation.py` | Partner precipitation checks |
+| `validate_satellite_once.py` | One-shot satellite API and image validation |
+| `query_station_timestamps.py` | One-shot source timestamp query |
+
+Inspect configuration and run offline tests from the project root. `status` reads saved configuration; it does not query current station availability:
+
+```powershell
+.\.venv\Scripts\python.exe -m API status
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Run one-shot scripts with `python API/<script>.py` or `python -m API.<module>`, using the project virtual environment. Confirm the task scope and network/file-write effects before execution. Timestamp queries write `data/reports/station_timestamp_export/results.json`. The existing summary CSV lives in `data/processed/station_timestamps/`; rerunning the query does not regenerate that separately exported CSV.
+
+Use `.\.venv\Scripts\python.exe -m API watch --dry-run` from the project root for an offline scheduler exercise; enter `stop` followed by Enter to exit. It makes no network requests, but prints progress, writes `data/state/last_run.json` on exit and does not terminate automatically while terminal input remains open. Ctrl+C or input EOF also stops it. The old `python -m rdr` command remains a forwarding compatibility entry point; acquisition is implemented here.
+
+These instructions do not start continuous collection. Address the Datamart AMQPS requirement recorded in [AGENTS.md](../AGENTS.md) before ongoing Datamart retrieval. `watch` stores observations; ETL and hydraulic calculations run separately and are not automatically triggered by acquisition.

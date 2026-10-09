@@ -1,0 +1,43 @@
+# Local Python environment and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Credentials and local environment files
+.env
+.env.*
+
+# Source data, derived datasets and runtime state
+/data/sources/
+/data/processed/
+/data/logs/
+/data/state/
+
+# Historical data locations: keep ignored if recreated accidentally
+/data/raw/
+/data/static/
+/data/manual/
+
+# Machine reports, previews and maintenance backups remain local.
+# The two English human-readable reports may be versioned.
+/data/reports/*
+!/data/reports/coverage_report.md
+!/data/reports/manual_data_review.md
+
+# Chinese documentation is local only, at every directory depth.
+*CN.md
+*_ZH.docx
+*_ZH.pdf
+*_ZH_*.docx
+*_ZH_*.pdf
+Red_Deer_River_简化溢出风险监测项目*.docx
+Red_Deer_River_简化溢出风险监测项目*.pdf
+
+# Local proposal and project documents
+/Red_Deer_River_Scope_Proposal_EN.docx
+/Red_Deer_River_Scope_Proposal_EN.pdf
+/Red_Deer_River_Simplified_Overbank_Risk_Monitoring_Project.docx
+
+# Document editor lock files
+~$*
