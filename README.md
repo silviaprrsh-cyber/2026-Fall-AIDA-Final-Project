@@ -10,7 +10,7 @@ The user has received the government reply, data-use permission and download lin
 
 Eight completed migration and old document-editing utilities were deleted. `scripts/` now retains `build_config.py`, `build_network.py`, `refine_outlets.py`, `run_etl.py`, `inspect_reports.py` and `write_report.py`. All one-shot API acquisition scripts remain. `rdr/` provides local cataloguing, spatial associations, precipitation ETL, hydraulics and storage utilities.
 
-Acquisition still uses HTTP retrieval; AMQPS notifications have not been integrated. Before ongoing Datamart retrieval, address AMQPS notifications and downloads under the [MSC usage policy](https://eccc-msc.github.io/open-data/usage-policy/readme_en/); do not poll directory listings for new files. `watch` and ETL run separately, and this update starts no acquisition.
+As of 2026-10-10, `watch` subscribes to anonymous Datamart AMQPS file notifications before hydrometric collection. After an optional initial snapshot, water retrieval requires a notification (or a pending failed retrieval) and respects each source interval. GeoMet weather sources retain independent schedules. No directory listing is polled. See the [MSC usage policy](https://eccc-msc.github.io/open-data/usage-policy/readme_en/). Acquisition and ETL still run separately.
 
 English Markdown keeps the original filename; Chinese copies use `*CN.md`, such as `READMECN.md`, and remain local through `.gitignore`. Documentation links use the corresponding language.
 
@@ -31,7 +31,9 @@ Use `python -m API` as the main entry point; `python -m rdr` remains a compatibi
 
 ## Usage
 
-Run the appropriate command in PowerShell from the project folder; environment activation is not required. `status` displays saved configuration, not current station availability. Start `watch` only when continuous acquisition is intended and the Datamart requirement above has been addressed. `--dry-run` makes no network requests, but runs until stopped, prints progress and writes `data/state/last_run.json` on exit.
+Run the appropriate command in PowerShell from the project folder; environment activation is not required. `status` displays saved configuration, not current station availability. Start `watch` only when continuous acquisition is intended. `--dry-run` makes no network requests, but runs until stopped or its optional deadline; it prints progress and writes run state.
+
+For a three-hour run, use `python -m API watch --duration-seconds 10800`. Terminal `stop` and Ctrl+C remain available. Background launches use `--detached`, which requires a finite duration; stop such a run with `python -m API stop`. At the deadline, new requests stop and in-flight requests finish or time out. `data/state/active_run.json` records the PID, UTC deadline, counters and stop-control path; `last_run.json` records completion. Keep the computer running and online.
 
 ```powershell
 # Show saved station configuration and intervals without network access.

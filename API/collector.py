@@ -4,6 +4,7 @@ import csv
 import io
 import json
 import math
+import os
 import signal
 import sqlite3
 import sys
@@ -187,44 +188,117 @@ def load_config(path=None):
     return cfg
 
 
-def run(config, *, collect_immediately=True, dry_run=False, selected=None):
+def run(config, *, collect_immediately=True, dry_run=False, selected=None,
+        duration_seconds=None, detached=False):
+    if duration_seconds is not None and (isinstance(duration_seconds,bool) or
+            not isinstance(duration_seconds,(int,float)) or not math.isfinite(duration_seconds) or duration_seconds<=0):
+        raise ValueError('duration_seconds must be a positive finite number')
+    if detached and duration_seconds is None:
+        raise ValueError('Detached collection requires a finite duration')
     stations=[s for s in config['stations'] if s.get('enabled') and (not selected or s['station_id'] in selected)]
     if not stations:raise ValueError('No enabled monitoring stations selected')
     stop=threading.Event()
     old=signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT,lambda *args:stop.set())
-    collector=Collector(stop) if not dry_run else None
-    threading.Thread(target=listen_for_stop,args=(stop,),daemon=True).start()
-    started=time.monotonic()
     schedules=source_schedules(stations)
+    notifications=None
+    water_ids=[sid for kind,sid in schedules if kind=='hydrometric_hourly_csv']
+    try:
+        if water_ids and not dry_run:
+            from API.datamart_notifications import DatamartNotifications
+            notifications=DatamartNotifications(water_ids,stop)
+            notifications.start()
+        collector=Collector(stop) if not dry_run else None
+    except Exception:
+        stop.set()
+        if notifications:notifications.close()
+        signal.signal(signal.SIGINT,old)
+        raise
+    if not detached:
+        threading.Thread(target=listen_for_stop,args=(stop,),daemon=True).start()
+    started=time.monotonic()
+    started_utc=datetime.now(timezone.utc)
+    deadline=started+duration_seconds if duration_seconds is not None else None
+    deadline_utc=(started_utc+timedelta(seconds=duration_seconds)).isoformat() if duration_seconds is not None else None
+    run_id=started_utc.strftime('%Y%m%dT%H%M%S')+'_'+uuid4().hex[:8]
+    stop_file=DATA/'state'/f'{run_id}.stop'
+    stop_reason=['stop_or_keyboard_interrupt_or_stdin_closed']
+    def deadline_watch():
+        while not stop.wait(0.2):
+            if stop_file.exists():
+                stop_reason[0]='stop_file';stop.set()
+            elif deadline is not None and time.monotonic()>=deadline:
+                stop_reason[0]='duration_elapsed';stop.set()
+    controller=threading.Thread(target=deadline_watch,daemon=True)
+    controller.start()
     due={key:started+(0 if collect_immediately else job['source']['publication_interval_seconds'])
          for key,job in schedules.items()}
-    pending={};jobs=0
-    print(f'{len(stations)} monitoring points; {len(schedules)} independent source schedules. Type stop then Enter to stop. Dry run={dry_run}',flush=True)
+    pending={};jobs=0;completed=0;errors=0
+    initial_water=set(water_ids) if collect_immediately else set()
+    state_path=DATA/'state'/f'{run_id}.json'
+    def write_state(status):
+        state={'run_id':run_id,'pid':os.getpid(),'status':status,
+               'started_at_utc':started_utc.isoformat(),'deadline_utc':deadline_utc,
+               'duration_seconds':duration_seconds,'jobs_submitted':jobs,
+               'jobs_completed':completed,'jobs_with_errors':errors,'dry_run':dry_run,
+               'station_count':len(stations),'source_schedule_count':len(schedules),
+               'stop_file':str(stop_file.relative_to(ROOT)),
+               'datamart_mode':'initial_snapshot_then_amqps_notifications',
+               'datamart_notifications':notifications.status() if notifications else None}
+        if status=='stopped':
+            state.update(stopped_at_utc=now(),reason=stop_reason[0])
+        save_json(state_path,state)
+        save_json(DATA/'state/active_run.json',state)
+        if status=='stopped':save_json(DATA/'state/last_run.json',state)
+        return state
+    control='Run python -m API stop to stop.' if detached else 'Type stop then Enter to stop.'
+    print(f'{len(stations)} monitoring points; {len(schedules)} independent source schedules. {control} Dry run={dry_run}',flush=True)
     def source_job(source):
         if stop.is_set():return {'status':'stopped'}
         return {'status':'dry_run'} if dry_run else collector.collect(source)
     try:
+        write_state('running')
+        print(json.dumps({'run_id':run_id,'started_at_utc':started_utc.isoformat(),
+                          'deadline_utc':deadline_utc,'stop_file':str(stop_file)},ensure_ascii=True),flush=True)
+        last_state=started
         with ThreadPoolExecutor(max_workers=config.get('max_workers',4)) as pool:
             while not stop.is_set():
                 current=time.monotonic()
+                if deadline is not None and current>=deadline:
+                    stop_reason[0]='duration_elapsed';stop.set();break
                 for key,job in schedules.items():
+                    if stop.is_set():break
                     source=job['source']
                     future=pending.get(key)
                     if future and future.done():
                         result=future.result();print(':'.join(key),json.dumps(result),flush=True)
+                        completed+=1
+                        if result.get('status')=='error':
+                            errors+=1
+                            if notifications and key[0]=='hydrometric_hourly_csv':notifications.restore(key[1])
                         del pending[key]
                         due[key]=current+source['publication_interval_seconds']
                     if key not in pending and current>=due[key]:
+                        if notifications and key[0]=='hydrometric_hourly_csv':
+                            if key[1] in initial_water:initial_water.remove(key[1])
+                            elif not notifications.take(key[1]):continue
                         pending[key]=pool.submit(source_job,source);jobs+=1
+                if current-last_state>=10:
+                    write_state('running');last_state=current
                 stop.wait(0.2)
             for future in pending.values():future.cancel()
             # Executor finishes only requests already in flight; stop blocks
             # every subsequent source and pagination request.
+        for key,future in pending.items():
+            if not future.cancelled():
+                result=future.result();completed+=1
+                if result.get('status')=='error':errors+=1
+                print(':'.join(key),json.dumps(result),flush=True)
     finally:
+        stop.set()
+        if notifications:notifications.close()
+        controller.join(timeout=1)
         signal.signal(signal.SIGINT,old)
-        state={'stopped_at_utc':now(),'jobs_submitted':jobs,'dry_run':dry_run,
-               'station_count':len(stations),'source_schedule_count':len(schedules),
-               'reason':'stop_or_keyboard_interrupt_or_stdin_closed'}
-        save_json(DATA/'state/last_run.json',state)
+        write_state('stopped')
+        if stop_file.exists():stop_file.unlink()
         print('Stopped; no background acquisition remains.',flush=True)

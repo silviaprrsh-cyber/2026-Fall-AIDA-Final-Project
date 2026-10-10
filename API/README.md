@@ -7,6 +7,7 @@ This directory contains the project's remote data acquisition code. It uses `.ve
 | `client.py` | HTTP retrieval, source-specific archives, caching and provenance |
 | `observations.py` | Hydrometric and weather interfaces and observation parsing |
 | `collector.py`, `__main__.py` | Independent scheduling, status and terminal stop |
+| `datamart_notifications.py` | Anonymous AMQPS hydrometric file notifications |
 | `discover.py`, `discover_details.py` | Bounded endpoint and metadata discovery |
 | `validate_once.py` | One-shot hydrometric and weather validation |
 | `download_static.py`, `download_network.py`, `download_nhn.py` | Government reports and river-network downloads |
@@ -27,4 +28,4 @@ Run one-shot scripts with `python API/<script>.py` or `python -m API.<module>`, 
 
 Use `.\.venv\Scripts\python.exe -m API watch --dry-run` from the project root for an offline scheduler exercise; enter `stop` followed by Enter to exit. It makes no network requests, but prints progress, writes `data/state/last_run.json` on exit and does not terminate automatically while terminal input remains open. Ctrl+C or input EOF also stops it. The old `python -m rdr` command remains a forwarding compatibility entry point; acquisition is implemented here.
 
-These instructions do not start continuous collection. Address the Datamart AMQPS requirement recorded in [AGENTS.md](../AGENTS.md) before ongoing Datamart retrieval. `watch` stores observations; ETL and hydraulic calculations run separately and are not automatically triggered by acquisition.
+`watch` subscribes to Datamart AMQPS notifications before the optional initial water snapshot. Later water retrieval requires a notification or pending failed retrieval and respects source cadence; weather sources are scheduled independently. `--duration-seconds 10800` bounds a run to three hours of new requests. `--detached` requires a duration and disables stdin control; use `python -m API stop` for a graceful external stop. Foreground runs still accept `stop` and Ctrl+C. UTC start/deadline, PID and progress are in `data/state/active_run.json`; the final state is also in `last_run.json`. Run only with task authorization. `watch` stores observations; ETL and hydraulic calculations remain separate.

@@ -2,7 +2,7 @@
 
 This is the canonical project instruction file. Its Chinese local-reference counterpart is AGENTSCN.md and is excluded from Git.
 
-Updated: 2026-10-09. This file governs work in this directory and its descendants. It records working agreements, not proof of completed functionality.
+Updated: 2026-10-10. This file governs work in this directory and its descendants. It records working agreements, not proof of completed functionality.
 
 ## 1. Scope and evidence
 
@@ -28,8 +28,8 @@ Updated: 2026-10-09. This file governs work in this directory and its descendant
 - Existing source scheduling uses `publication_interval_seconds` and `interval_evidence` in `config/stations.json`; `calculation_interval_seconds` separately defines hydrometric calculation windows. Use archived responses and current validation for schemas, station availability and units.
 - Continuous mode must support `stop` followed by Enter and Ctrl+C: stop issuing new requests, allow in-flight requests to finish or time out, and preserve acquired data. Tests need explicit exit conditions; `watch --dry-run` is a loop, not a self-terminating one-shot command.
 - Public hydrometric and weather interfaces currently require no keys; do not generalize this to every project API. Satellite access uses existing `.env` authentication. Never print, commit or copy secrets and tokens into reports or response archives.
-- Current acquisition uses HTTP retrieval; do not claim push integration exists. Before enabling ongoing Datamart retrieval, check and follow its official AMQPS notification and download rules; do not poll directory listings for new files. File-availability notifications are not continuous sensor telemetry. Recording this rule does not itself authorize an acquisition migration.
-  Official source: [MSC usage policy](https://eccc-msc.github.io/open-data/usage-policy/readme_en/) (checked 2026-10-08).
+- Datamart water acquisition uses anonymous AMQPS file notifications followed by HTTPS retrieval, with an optional initial snapshot and bounded retry cadence. Weather GeoMet sources retain independent HTTP schedules. Follow official access rules; do not poll directory listings for new files. File-availability notifications are not continuous sensor telemetry. Timed runs use `--duration-seconds`; detached runs require this bound and support `python -m API stop`. At the deadline, stop new requests and allow in-flight requests to finish or time out. The user authorized one three-hour run on 2026-10-10; future runs still need task authorization. Preserve one-shot/static/manual files; clearing live data requires explicit scope, preserving filenames when requested.
+  Official source: [MSC usage policy](https://eccc-msc.github.io/open-data/usage-policy/readme_en/) (checked 2026-10-10).
 - Respect each provider's access rules, using reasonable timeouts, backoff and deduplication. Do not repeatedly request unchanged data at high frequency merely to appear real-time, or apply one provider's rules indiscriminately to other interfaces.
 
 ## 4. Time semantics and precipitation ETL
@@ -76,6 +76,7 @@ Updated: 2026-10-09. This file governs work in this directory and its descendant
 
 ## 8. Document conventions
 
+- Keep README files focused on the project and reusable usage instructions. Do not record the user's task-specific authorizations, approval history or conversational permissions in any README, including its Chinese counterpart.
 - Communicate with the user in Chinese by default. Maintain two copies of each project Markdown document: English keeps the original filename; Chinese adds CN before .md, such as READMECN.md, and is excluded from Git by *CN.md. Keep meaning and links synchronized; do not merge both README languages into one file. All code comments and docstrings must be in English only. Preserve Chinese output strings required to generate Chinese reports; these are report content, not code comments.
 - Distinguish the Scope Proposal from the detailed simplified overbank-risk monitoring project document. Preserve user-edited goals, methodological detail, formulas and questions; do not cut substantive material merely to reduce pages. Keep requested bilingual versions equivalent, and do not rename or delete files without task authorization.
 - Use Times New Roman, 12 pt and double spacing in Word, with a suitable Chinese font fallback. When PDF updates are requested, synchronize them with the corresponding Word content and visually verify rendered pages. Do not claim an unregenerated PDF is synchronized.

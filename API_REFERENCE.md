@@ -2,7 +2,7 @@
 
 Acquisition is implemented in `API/`; original responses are separated under `data/sources/<source>/`. Schema validation here is archived evidence, not a new query of every station today.
 
-The public hydrometric and weather interfaces listed below use anonymous HTTPS GET without API keys. Satellite interfaces require the CDSE credentials configured in the root `.env`. Actual station-specific field lists, timestamps and original-response paths are recorded in `data/reports/hydrometric_validation.json` and `data/reports/weather_validation.json`. Validation used bounded, one-time samples; continuous collection has not been started.
+The public hydrometric and weather interfaces listed below use anonymous HTTPS GET without API keys. Satellite interfaces require the CDSE credentials configured in the root `.env`. Actual station-specific field lists, timestamps and original-response paths are recorded in `data/reports/hydrometric_validation.json` and `data/reports/weather_validation.json`. Those validation reports describe bounded, one-time samples. The separately authorized three-hour run on 2026-10-10 has its own live archives and run-state records.
 
 | Data | Endpoint and filters | Core structure | Purpose |
 |---|---|---|---|
@@ -38,6 +38,8 @@ Start with `.\.venv\Scripts\python.exe -m API watch`. Enter `stop` and press Ent
 
 `DATETIME` and `date_tm-value` are observation times; `processed_date_tm` is provider processing time. None may be presented as actual station transmission time, and local receipt time is not a substitute. Leave the transmission field missing with a reason when selected interfaces do not explicitly expose it.
 
-The implementation uses HTTP retrieval and has not integrated AMQPS. Ongoing Datamart retrieval must follow its [MSC usage policy](https://eccc-msc.github.io/open-data/usage-policy/readme_en/) for AMQPS file notifications and downloads; do not poll directories to detect new data. These notifications are not millisecond sensor telemetry. GeoMet retains its own access rules.
+Since 2026-10-10, `watch` uses anonymous TLS AMQPS (`dd.weather.gc.ca:5671`, `xpublic`, hydrometric hourly topics) before Datamart HTTPS retrieval. It downloads an optional initial snapshot, then requires a file notification or pending failed retrieval, while respecting the configured source interval. Notifications for shared sources are coalesced; only configured water station files are downloaded. Connection failures are logged and retried; no directory polling or timer-only successful-file refresh is used. These are file notifications, not sensor telemetry. GeoMet weather retrieval retains independent schedules and its own access rules. See the [MSC usage policy](https://eccc-msc.github.io/open-data/usage-policy/readme_en/).
+
+`watch --duration-seconds 10800` stops issuing new requests after three hours; active requests may finish or time out afterward. Detached runs require a finite duration and can be stopped with `python -m API stop`. `data/state/active_run.json` reports live run state and `last_run.json` reports completion. Raw batches retain timestamped source directories; existing one-shot/static/manual files are not overwritten. This acquisition does not rebuild ETL.
 
 Satellite interfaces use CDSE credentials from the root `.env`; see the [API directory](API/README.md). Key-free public water/weather access does not imply key-free satellite authentication.

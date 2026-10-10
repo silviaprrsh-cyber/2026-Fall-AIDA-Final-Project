@@ -18,7 +18,7 @@ The original scope of the approximately 724 km mainstem and the entire Red Deer 
 | Historical geometry | 128 previews using survey water-surface elevations |
 | Actual risk output | All 1,607 sections are `indeterminate` pending verified inputs |
 
-Counts describe this archived sample, not current online availability. Only 42 points are enabled for acquisition; offline ETL examines all 102 catalogue stations, including archived observations at disabled stations. Continuous network acquisition has not been started. Offline scheduling and terminal `stop` have been exercised.
+Counts describe this archived sample, not current online availability. Only 42 points are enabled for acquisition; offline ETL examines all 102 catalogue stations, including archived observations at disabled stations. Continuous acquisition had not started when this snapshot was built. The separately authorized three-hour run on 2026-10-10 writes new raw batches and the observation store; it does not refresh these ETL results. Offline scheduling and terminal `stop` have been exercised.
 
 ## Time and precipitation rules
 
