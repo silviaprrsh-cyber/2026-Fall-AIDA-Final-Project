@@ -2,13 +2,19 @@
 
 ## Current status and next data-processing work
 
+Historical tributary data remain in [the daily archive](data/processed/tributary_history_20261012/README.md): 12 river stations and 3 lake-level references from the 2026-10-12 download. The 2026-10-13 map shows 6 blue stations with observations since 2026-07-13 and 2 yellow historical/reference stations, each ID once. Sylvan Creek 05CC004 is removed from display and replaced by Sylvan Lake 05CC003 as a yellow lake-level reference; recent lake availability is unverified. A separate red layer contains **11 prediction targets**, ordered upstream to downstream, including the footbridge beside Discovery Canyon. See the [map and point inventory](data/processed/qgis_dickson_joffre_20261012/README.md). Red points are locations for future estimation, with no calculated discharge, level or risk. Source archives and live acquisition configuration remain unchanged.
+
 The final goal is to combine mainstem gauges, available tributary inflows, river-network relationships and surveyed sections to continually estimate discharge Q, water level, travel time and potential overbank risk at key sections. Historical analysis supports development, calibration and validation; existing code does not establish verified basin-wide conditions.
 
-The four selected mainstem inputs are 05CA009, 05CC002, 05CE001 and 05CK004. Incorporate additional valid mainstem inputs according to coordinates, connectivity, flow direction, river distance and upstream-to-downstream order. Do not simply sum serial gauge flows.
+The active reach runs from the Gleniffer Lake outlet / Dickson Dam downstream to the **Joffre Bridge / Highway 11**, approximately 96.3 km along the selected mapped centerline. It includes the Blindman River input-to-mouth segment and stops at Joffre Bridge. Tributaries are retained from their nearest usable same-river station to their confluence with this reach. Available river geometry remains visible where no usable station exists.
+
+The 2026-10-12 snapshot selected **05CB007, 05CC002, 05CB001, 05CC007, 05CC011 and 05CC001**, with precipitation stations **3025484 and 3023722**. Dickson tunnel outlet discharge is not confirmed to include every dam release path. Do not add serial gauge flows. Configuration retains the broader catalogue with other stations disabled; `config/active_scope.json` records the active selection, and configuration rebuilding respects this selection.
+
+Open [the final QGIS project](data/processed/qgis_dickson_joffre_20261012/dickson_to_joffre.qgz), or view [the map preview](data/processed/qgis_dickson_joffre_20261012/map_overview.png). It contains 6 recent water stations, 2 historical/lake references, 11 prediction targets, 2 precipitation stations and 366 section lines with survey points, separated by source, over OpenStreetMap. Green shading is a schematic 2 km corridor showing existing weather associations, not official coverage or a catchment. See [scope verification](data/processed/qgis_dickson_joffre_20261012/scope_validation.json) for the initial selection and routing limitations, and the map README for current display counts. The pre-existing full-basin map and original archives remain available; the superseded 67 Street endpoint draft has been removed. These local data links require the corresponding local files.
 
 The user has received the government reply, data-use permission and download links. Four survey packages are saved. The ETL snapshot dated 2026-09-30 UTC contains 1,607 section lines, 91,967 points and 1,596 candidate profiles; the 2026-10-08 migration checks confirmed unchanged normalized data and section identifiers. All section risks in that snapshot are indeterminate pending verified datums, gauge-to-section transfers and effective bank elevations. These are archived results, not a fresh online availability check.
 
-Eight completed migration and old document-editing utilities were deleted. `scripts/` now retains `build_config.py`, `build_network.py`, `refine_outlets.py`, `run_etl.py`, `inspect_reports.py` and `write_report.py`. All one-shot API acquisition scripts remain. `rdr/` provides local cataloguing, spatial associations, precipitation ETL, hydraulics and storage utilities.
+Completed migration and obsolete document-editing utilities were deleted. `scripts/` contains reusable configuration, network, ETL, report and QGIS tools, including `build_scoped_qgis.py` and `render_qgis_project.py`. One-shot API acquisition scripts remain. `rdr/` provides local cataloguing, spatial associations, precipitation ETL, hydraulics and storage utilities.
 
 As of 2026-10-10, `watch` subscribes to anonymous Datamart AMQPS file notifications before hydrometric collection. After an optional initial snapshot, water retrieval requires a notification (or a pending failed retrieval) and respects each source interval. GeoMet weather sources retain independent schedules. No directory listing is polled. See the [MSC usage policy](https://eccc-msc.github.io/open-data/usage-policy/readme_en/). Acquisition and ETL still run separately.
 
@@ -25,11 +31,13 @@ Endpoint addresses, fields, precipitation accumulation windows and scheduling ev
 
 ## Current layout
 
-All remote acquisition code lives in [API](API/README.md). `rdr/` contains local storage, spatial processing, ETL and hydraulics; `scripts/` contains local processing and document tools. Original data are separated into 12 source directories under `data/sources/`; see [data/README.md](data/README.md). `.venv`, `.env` and `config/` remain in the root.
+All remote acquisition code lives in [API](API/README.md). `rdr/` contains local storage, spatial processing, ETL and hydraulics; `scripts/` contains local processing and document tools. Original data are separated by source under `data/sources/`; see [data/README.md](data/README.md). `.venv`, `.env` and `config/` remain in the root.
 
 Use `python -m API` as the main entry point; `python -m rdr` remains a compatibility forwarder. The root station timestamp CSV moved to `data/processed/station_timestamps/`. Original bytes and provenance remain unchanged; trace old paths through `data/reports/layout_migration/manifest.json`.
 
 ## Usage
+
+For one latest sample of the active scope only, run `.\.venv\Scripts\python.exe -m API.snapshot_scope`. It fetches at most 48 recent records per unique water/weather source, saves source-separated originals and a timestamped report under `data/reports/scope_snapshot/`, and exits. It does not run ETL or automatically refresh a saved QGIS snapshot. Observation timestamps are not actual station transmission timestamps.
 
 Run the appropriate command in PowerShell from the project folder; environment activation is not required. `status` displays saved configuration, not current station availability. Start `watch` only when continuous acquisition is intended. `--dry-run` makes no network requests, but runs until stopped or its optional deadline; it prints progress and writes run state.
 
@@ -118,7 +126,7 @@ Run survey normalization and observation-time ETL separately with `.\.venv\Scrip
 
 ## One-shot satellite image validation
 
-The original full-basin project scope is retained. The command below validates CDSE STAC, OAuth and the Sentinel Hub Process API using only a 5.12 × 5.12 km test area around `05CC002`; it does not start scheduled collection or CV training.
+The active project scope is the Dickson outlet to Joffre Bridge reach. The command below validates CDSE STAC, OAuth and the Sentinel Hub Process API using only a 5.12 × 5.12 km test area around `05CC002`; it does not establish imagery coverage of the whole selected reach or start scheduled collection or CV training.
 
 Credentials are read from the project-root `.env`. Supported keys include `CDSE_CLIENT_ID` / `CDSE_CLIENT_SECRET` and the existing `Client_ID` / `Client_secret`. Environment variables override file values with the same name. Credentials and access tokens are never written to reports.
 
@@ -135,3 +143,16 @@ Official documentation: [CDSE authentication](https://documentation.dataspace.co
 ## Refresh coverage documentation only
 
 Use `.\.venv\Scripts\python.exe scripts/write_report.py --docs-only` to generate separate English and Chinese Markdown without rebuilding CSV indexes or accessing the network.
+
+
+## Project Change History
+
+### 2026-10-13 Scope reduction based on data coverage
+
+The active project area is reduced from the approximately 724 km Red Deer River mainstem and its basin to the reach from the Gleniffer Lake outlet downstream of Dickson Dam to Joffre Bridge on Highway 11, approximately 96.3 km along the selected river network. Relevant tributary inflows entering this reach remain part of the analysis.
+
+The original full-basin data are incomplete. Available, relatively reliable observations cannot support every relevant tributary inflow point. Filling these widespread gaps would require extensive estimation, increasing accumulated uncertainty and weakening model reliability. The project therefore focuses subsequent development on this reach, where hydrometric observations, tributary information and surveyed cross-sections are relatively more complete.
+
+The goal remains a near-real-time monitoring system that uses available mainstem and tributary observations, river-network relationships and surveyed sections to estimate discharge, water level, travel time and potential overbank risk at selected locations. The smaller scope does not establish complete coverage or validated predictions; remaining gaps, assumptions and uncertainty must still be recorded and assessed.
+
+Earlier text is retained as the original project record. This entry defines the revised geographic scope for subsequent work and supersedes earlier full-basin scope statements. It records a scope decision, not completion or validation of the model.

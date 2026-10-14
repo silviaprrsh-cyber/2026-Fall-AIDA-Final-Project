@@ -1,5 +1,7 @@
 # Interfaces and data structures
 
+The 2026-10-12 tributary history task additionally queried `hydrometric-daily-mean/items` by `STATION_NUMBER`, with `sortby=DATE`, `limit=10000`, `f=json` and all subsequent page links. This retrieves all currently available daily dates for the reviewed candidate list, rather than the earlier single historical sample described below. `API/download_tributary_history.py` checks record identity, chronological ordering, duplicate records and matched counts. The [historical archive](data/processed/tributary_history_20261012/README.md) separates source daily dates, discharge in m³/s, levels in the source datum, quality symbols and local receipt timestamps. It is not a scheduled source.
+
 Acquisition is implemented in `API/`; original responses are separated under `data/sources/<source>/`. Schema validation here is archived evidence, not a new query of every station today.
 
 The public hydrometric and weather interfaces listed below use anonymous HTTPS GET without API keys. Satellite interfaces require the CDSE credentials configured in the root `.env`. Actual station-specific field lists, timestamps and original-response paths are recorded in `data/reports/hydrometric_validation.json` and `data/reports/weather_validation.json`. Those validation reports describe bounded, one-time samples. The separately authorized three-hour run on 2026-10-10 has its own live archives and run-state records.
@@ -43,3 +45,16 @@ Since 2026-10-10, `watch` uses anonymous TLS AMQPS (`dd.weather.gc.ca:5671`, `xp
 `watch --duration-seconds 10800` stops issuing new requests after three hours; active requests may finish or time out afterward. Detached runs require a finite duration and can be stopped with `python -m API stop`. `data/state/active_run.json` reports live run state and `last_run.json` reports completion. Raw batches retain timestamped source directories; existing one-shot/static/manual files are not overwritten. This acquisition does not rebuild ETL.
 
 Satellite interfaces use CDSE credentials from the root `.env`; see the [API directory](API/README.md). Key-free public water/weather access does not imply key-free satellite authentication.
+
+
+## Project Change History
+
+### 2026-10-13 Scope reduction based on data coverage
+
+The active project area is reduced from the approximately 724 km Red Deer River mainstem and its basin to the reach from the Gleniffer Lake outlet downstream of Dickson Dam to Joffre Bridge on Highway 11, approximately 96.3 km along the selected river network. Relevant tributary inflows entering this reach remain part of the analysis.
+
+The original full-basin data are incomplete. Available, relatively reliable observations cannot support every relevant tributary inflow point. Filling these widespread gaps would require extensive estimation, increasing accumulated uncertainty and weakening model reliability. The project therefore focuses subsequent development on this reach, where hydrometric observations, tributary information and surveyed cross-sections are relatively more complete.
+
+The goal remains a near-real-time monitoring system that uses available mainstem and tributary observations, river-network relationships and surveyed sections to estimate discharge, water level, travel time and potential overbank risk at selected locations. The smaller scope does not establish complete coverage or validated predictions; remaining gaps, assumptions and uncertainty must still be recorded and assessed.
+
+Earlier text is retained as the original project record. This entry defines the revised geographic scope for subsequent work and supersedes earlier full-basin scope statements. It records a scope decision, not completion or validation of the model.

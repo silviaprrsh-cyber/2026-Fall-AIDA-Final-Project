@@ -11,3 +11,4 @@ pyogrio>=0.11,<1
 numpy>=2,<3
 rasterio>=1.4,<2
 Pillow>=11,<13
+tzdata>=2026.5

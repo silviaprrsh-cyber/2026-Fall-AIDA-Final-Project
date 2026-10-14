@@ -14,6 +14,9 @@ def main():
     weather={s['weather_id']:s for s in json.loads((DATA/'reports/weather_validation.json').read_text())}
     links={s['station_id']:s for s in json.loads((DATA/'processed/weather_links.json').read_text())}
     selected=set(json.loads((DATA/'processed/monitoring_station_ids.json').read_text()))
+    scope_path = ROOT/'config/active_scope.json'
+    if scope_path.exists():
+        selected = set(json.loads(scope_path.read_text(encoding='utf-8'))['station_ids'])
     result=[]
     for s in stations:
         sid=s['station_id'];h=hydro[sid];link=links[sid];w=weather.get(link['weather_id'],{});sources=[];notes=[]

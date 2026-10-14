@@ -32,6 +32,8 @@ def source_for_url(url):
         return 'alberta_flood_studies'
     if host == 'ftp.maps.canada.ca':
         return 'nrcan_nhn'
+    if host == 'overpass-api.de':
+        return 'openstreetmap'
     if host.endswith('.dataspace.copernicus.eu'):
         return 'copernicus_sentinel2'
     raise ValueError(f'Unregistered data source host: {host}')

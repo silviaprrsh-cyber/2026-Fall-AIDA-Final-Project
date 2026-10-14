@@ -18,6 +18,7 @@ from qgis.core import (
     QgsMarkerSymbol, QgsLineSymbol, QgsFillSymbol, QgsSingleSymbolRenderer,
     QgsTextFormat, QgsPrintLayout, QgsLayoutItemMap, QgsLayoutItemLabel,
     QgsLayoutPoint, QgsLayoutSize, QgsLayoutExporter, QgsSettingsTree,
+    QgsPalLayerSettings, QgsVectorLayerSimpleLabeling, QgsTextBufferSettings,
 )
 from qgis.PyQt.QtGui import QColor, QFont, QFontDatabase
 from qgis.PyQt.QtCore import QSettings
@@ -34,7 +35,7 @@ def sha(path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--folder", default="data/processed/qgis_layers_20261011")
+    parser.add_argument("--folder", default="data/processed/qgis_dickson_joffre_20261012")
     args = parser.parse_args()
     folder = (ROOT / args.folder).resolve()
     if not folder.is_relative_to((ROOT / "data/processed").resolve()):
@@ -58,16 +59,19 @@ def main():
             QFontDatabase.addApplicationFont(str(font_path))
     app.setFont(QFont("Arial", 10))
     project = QgsProject.instance()
-    project.setFileName(str(folder / "red_deer_sources.qgz"))
+    project_file = folder / manifest.get("project_filename", "red_deer_sources.qgz")
+    project.setFileName(str(project_file))
     project.setFilePathStorage(Qgis.FilePathType.Relative)
-    project.setTitle("Red Deer River — stations and cross-sections")
+    project.setTitle(manifest.get("project_title", "Red Deer River — stations and cross-sections"))
     display_crs = QgsCoordinateReferenceSystem("EPSG:3857")
     project.setCrs(display_crs)
     project.setBackgroundColor(QColor("white"))
     root = project.layerTreeRoot()
     groups = {}
     loaded, checks = [], []
-    order = {"weather": 0, "hydro": 1, "uncertain": 1, "sections": 2, "weather_areas": 3}
+    order = {"prediction": -1, "weather": 0, "hydro": 1, "uncertain": 1, "historical": 1.5, "sections": 2, "weather_areas": 4}
+    if "project_filename" in manifest:
+        order["network"] = 3
     for entry in manifest["layers"]:
         path = folder / entry["path"]
         if sha(path) != entry["sha256"]:
@@ -86,13 +90,41 @@ def main():
                 "outline_color": "white", "outline_width": "0.3",
                 "size": "3.8" if style == "weather" else "2.4",
             })
+        elif style == "prediction":
+            symbol = QgsMarkerSymbol.createSimple({
+                "name": "circle", "color": "#e31922", "outline_color": "#ffffff",
+                "outline_width": "0.35", "size": "3.2",
+            })
+        elif style == "historical":
+            symbol = QgsMarkerSymbol.createSimple({
+                "name": "circle", "color": "#ffdf00", "outline_color": "#252525",
+                "outline_width": "0.3", "size": "2.4",
+            })
         elif style == "sections":
             symbol = QgsLineSymbol.createSimple({"line_color": "#d65039", "line_width": "0.42"})
+        elif style == "network":
+            symbol = QgsLineSymbol.createSimple({"line_color": "#368cba", "line_width": "0.35"})
         else:
-            symbol = QgsFillSymbol.createSimple({"color": "66,157,130,40", "outline_color": "48,120,104,105",
-                                                  "outline_width": "0.3", "joinstyle": "round"})
+            symbol = QgsFillSymbol.createSimple({"color": "40,160,75,60", "outline_color": "0,0,0,255",
+                                                  "outline_width": "0.6", "outline_width_unit": "MM",
+                                                  "joinstyle": "round"})
         layer.setRenderer(QgsSingleSymbolRenderer(symbol))
         layer.setLabelsEnabled(False)
+        if layer.fields().indexFromName("map_label") >= 0:
+            label_settings = QgsPalLayerSettings()
+            label_settings.fieldName = "map_label"
+            label_format = QgsTextFormat()
+            label_format.setFont(QFont("Arial", 8))
+            label_format.setSize(8)
+            label_format.setColor(QColor("#3b3420"))
+            buffer = QgsTextBufferSettings()
+            buffer.setEnabled(True)
+            buffer.setSize(0.8)
+            buffer.setColor(QColor("white"))
+            label_format.setBuffer(buffer)
+            label_settings.setFormat(label_format)
+            layer.setLabeling(QgsVectorLayerSimpleLabeling(label_settings))
+            layer.setLabelsEnabled(True)
         metadata = layer.metadata()
         metadata.setTitle(entry["title"])
         metadata.setAbstract("Source: " + entry["source"] + ". See feature attributes for provenance and datum status. "
@@ -106,7 +138,7 @@ def main():
         loaded.append((entry, layer))
         checks.append({"path": entry["path"], "qgis_valid": True, "qgis_count": layer.featureCount(),
                        "qgis_crs": layer.crs().authid(), "symbol": style})
-    assert len(loaded) == 8
+    assert loaded
     osm, network, hooks = create_osm_layer()
     project.addMapLayer(osm, False)
     root.addLayer(osm).setExpanded(False)
@@ -120,10 +152,13 @@ def main():
     conversion = QgsCoordinateTransform(areas.crs(), display_crs, project)
     extent = conversion.transformBoundingBox(areas.extent())
     extent.combineExtentWith(conversion.transformBoundingBox(weather.extent()))
+    for entry, layer in loaded:
+        if entry["style"] == "historical":
+            extent.combineExtentWith(conversion.transformBoundingBox(layer.extent()))
     extent.scale(1.06)
     project.viewSettings().setDefaultViewExtent(QgsReferencedRectangle(extent, display_crs))
     project.writeEntry("CopyrightLabel", "/Enabled", True)
-    project.writeEntry("CopyrightLabel", "/Label", '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>')
+    project.writeEntry("CopyrightLabel", "/Label", '© OpenStreetMap contributors')
     project.writeEntry("CopyrightLabel", "/Placement", 3)
     layout = QgsPrintLayout(project)
     layout.initializeDefaults()
@@ -147,7 +182,7 @@ def main():
         item.attemptResize(QgsLayoutSize(width, height))
 
     label("RED DEER RIVER", 7, 4, 150, 10, 17, bold=True)
-    label("Stations and cross-sections", 190, 6, 100, 7, 10)
+    label(manifest.get("map_subtitle", "Stations and cross-sections"), 190, 6, 100, 7, 10)
     canvas = QgsLayoutItemMap(layout)
     layout.addLayoutItem(canvas)
     canvas.attemptMove(QgsLayoutPoint(7, 19))
@@ -156,11 +191,20 @@ def main():
     canvas.setLayers(layers)
     canvas.setKeepLayerSet(True)
     canvas.zoomToExtent(extent)
-    label("●  Water station", 8, 191, 47, 7, 9, "#1267ab")
+    label("●  Recent water station" if "recency_legend" in manifest else "●  Water station", 8, 191, 47, 7, 8, "#1267ab")
     label("▲  Weather station", 57, 191, 48, 7, 9, "#147b54")
     label("—  Cross-section", 111, 191, 48, 7, 9, "#d65039")
     label("▧  Weather association area (schematic)", 162, 191, 126, 7, 9, "#387963")
-    label("Shading follows existing station links; it is not official weather coverage.", 8, 199, 194, 7, 8, "#596773")
+    if any(entry["style"] == "prediction" for entry, _ in loaded):
+        label("●  Prediction target", 8, 199, 51, 7, 8, "#e31922")
+        label("●  Historical / lake reference", 62, 199, 72, 7, 8, "#6b5900")
+        label("Blue: last 3 months; red: no estimates yet", 135, 199, 86, 7, 7, "#46525b")
+    elif "recency_legend" in manifest:
+        label("●  " + manifest["recency_legend"], 8, 199, 209, 7, 7, "#6b5900")
+    elif any(entry["style"] == "historical" for entry, _ in loaded):
+        label("●  Historical daily station (yellow)", 8, 199, 204, 7, 8, "#6b5900")
+    else:
+        label("Shading follows existing station links; it is not official weather coverage.", 8, 199, 194, 7, 8, "#596773")
     label("© OpenStreetMap contributors", 222, 199, 72, 7, 8, "#46525b")
     exporter = QgsLayoutExporter(layout)
     settings = QgsLayoutExporter.ImageExportSettings()
@@ -172,10 +216,10 @@ def main():
     if not project.write():
         raise RuntimeError("Could not save QGIS project")
     project.clear()
-    assert project.read(str(folder / "red_deer_sources.qgz"))
-    assert len(project.mapLayers()) == 9
+    assert project.read(str(project_file))
+    assert len(project.mapLayers()) == len(checks) + 1
     assert all(layer.isValid() for layer in project.mapLayers().values())
-    report = {"qgis_version": Qgis.QGIS_VERSION, "layer_count": 9, "local_vector_layers": 8,
+    report = {"qgis_version": Qgis.QGIS_VERSION, "layer_count": len(checks) + 1, "local_vector_layers": len(checks),
               "retained_geojson_files": len(manifest["layers"]), "project_reopened_successfully": True,
               "all_layers_valid_after_reopen": True, "project_display_crs": "EPSG:3857",
               "geojson_crs": "EPSG:4326", "relative_local_paths": True,
@@ -183,7 +227,7 @@ def main():
               "basemap": "OpenStreetMap standard XYZ; Internet required",
               "osm_requested_tiles_for_this_view": len(network["requested_urls"]),
               "osm_response_diagnostics": network["responses"],
-              "project_sha256": sha(folder / "red_deer_sources.qgz"),
+              "project_sha256": sha(project_file),
               "overview_sha256": sha(folder / "map_overview.png")}
     (folder / "qgis_validation.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps({k: v for k, v in report.items() if k not in {"checks", "osm_response_diagnostics"}}, indent=2))

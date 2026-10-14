@@ -1,8 +1,10 @@
 # Surveys, ETL and calculations (stages 1–4)
 
+The separate [historical tributary daily archive](data/processed/tributary_history_20261012/README.md) contains raw ML reference material. The map uses mutually exclusive blue/recent and yellow/historical-or-lake-reference station layers, plus a separate red layer of 11 prediction locations without calculated values. Recent availability of the yellow Sylvan Lake reference is unverified. These historical data have not been merged into observation-time ETL, used to fill live gaps or used to train a model; the archived calculations below are unchanged.
+
 Statistics come from the archived trial in `data/reports/etl_validation.json` dated 2026-09-30T05:52:25.088102+00:00. The 2026-10-08 migration checks confirmed unchanged water/precipitation content and section identifiers. This update performs no online query or hydraulic calibration. The user has confirmed government permission and download links.
 
-The original scope of the approximately 724 km mainstem and the entire Red Deer River basin is retained. These implementation and trial results use archived observations and four manual survey packages; they do not establish complete surveyed basin coverage. Original ZIP files, geodatabases and API responses remain under `data`.
+The active scope was reduced on 2026-10-12 to the Dickson outlet–Joffre Bridge reach and tributary input-to-mouth segments (see `config/active_scope.json`). The results below remain an archived full-basin ETL trial, not recomputed results for this reduced scope. The new QGIS snapshot filters spatial layers and current station availability; it does not rerun or validate hydraulic calculations. The offline ETL tool still examines the broader archived catalogue, so its unfiltered output must not be presented as the reduced project's results. Original ZIP files, geodatabases and API responses remain under `data`.
 
 ## Current results
 
@@ -64,3 +66,16 @@ Use these commands for a full local rebuild, a rebuild reusing unchanged spatial
 See `data/reports/etl_validation.json` for counts and blockers, and `data/reports/etl_weather_backfill.json` for bounded weather retrieval. Original backfill responses are in `data/sources/eccc_weather_geomet/raw/validation/etl_weather/`; official datum pages are in `data/sources/eccc_wateroffice/raw/datums/`. `API/fetch_station_datums.py` and `API/backfill_weather_for_etl.py` are separate bounded network scripts, not automatically called by ETL or the scheduler.
 
 `watch` acquires raw data; `run_etl.py` separately performs retrospective transformation and calculations. The acquisition thread does not automatically produce forecasts. CV training and joint feedback in stages 5 and 6 remain unchanged.
+
+
+## Project Change History
+
+### 2026-10-13 Scope reduction based on data coverage
+
+The active project area is reduced from the approximately 724 km Red Deer River mainstem and its basin to the reach from the Gleniffer Lake outlet downstream of Dickson Dam to Joffre Bridge on Highway 11, approximately 96.3 km along the selected river network. Relevant tributary inflows entering this reach remain part of the analysis.
+
+The original full-basin data are incomplete. Available, relatively reliable observations cannot support every relevant tributary inflow point. Filling these widespread gaps would require extensive estimation, increasing accumulated uncertainty and weakening model reliability. The project therefore focuses subsequent development on this reach, where hydrometric observations, tributary information and surveyed cross-sections are relatively more complete.
+
+The goal remains a near-real-time monitoring system that uses available mainstem and tributary observations, river-network relationships and surveyed sections to estimate discharge, water level, travel time and potential overbank risk at selected locations. The smaller scope does not establish complete coverage or validated predictions; remaining gaps, assumptions and uncertainty must still be recorded and assessed.
+
+Earlier text is retained as the original project record. This entry defines the revised geographic scope for subsequent work and supersedes earlier full-basin scope statements. It records a scope decision, not completion or validation of the model.

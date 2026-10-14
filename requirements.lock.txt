@@ -23,4 +23,5 @@ requests==2.34.2
 shapely==2.1.2
 soupsieve==2.10
 typing_extensions==4.16.0
+tzdata==2026.5
 urllib3==2.8.0

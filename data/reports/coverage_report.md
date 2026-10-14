@@ -76,3 +76,16 @@ Public hydrometric, weather and GIS response sidecars record URL, UTC retrieval 
 - Spring Creek gauge 05CJ010 and Sylvan Creek gauge 05CC004 are more than 500 m from all mapped same-name river geometry and were not automatically selected as mouth substitutes. Their catalogue records and initial validation remain available; additional connectivity or location evidence is required.
 - If a candidate’s verified river distance is shorter than the straight-line distance of every candidate with an unresolved route, the straight-line lower bound establishes the nearest gauge. Otherwise the selection remains provisional.
 - Check script: API/check_partner_precipitation.py. Results: data/reports/partner_precipitation_check.json.
+
+
+## Project Change History
+
+### 2026-10-13 Scope reduction based on data coverage
+
+The active project area is reduced from the approximately 724 km Red Deer River mainstem and its basin to the reach from the Gleniffer Lake outlet downstream of Dickson Dam to Joffre Bridge on Highway 11, approximately 96.3 km along the selected river network. Relevant tributary inflows entering this reach remain part of the analysis.
+
+The original full-basin data are incomplete. Available, relatively reliable observations cannot support every relevant tributary inflow point. Filling these widespread gaps would require extensive estimation, increasing accumulated uncertainty and weakening model reliability. The project therefore focuses subsequent development on this reach, where hydrometric observations, tributary information and surveyed cross-sections are relatively more complete.
+
+The goal remains a near-real-time monitoring system that uses available mainstem and tributary observations, river-network relationships and surveyed sections to estimate discharge, water level, travel time and potential overbank risk at selected locations. The smaller scope does not establish complete coverage or validated predictions; remaining gaps, assumptions and uncertainty must still be recorded and assessed.
+
+Earlier text is retained as the original project record. This entry defines the revised geographic scope for subsequent work and supersedes earlier full-basin scope statements. It records a scope decision, not completion or validation of the model.

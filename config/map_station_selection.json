@@ -1,0 +1,13 @@
+{
+  "map_folder": "data/processed/qgis_dickson_joffre_20261012",
+  "excluded_station_ids": ["05CB002", "05CB005", "05CC008", "05CC009", "05CC010", "05CC013", "05CC004"],
+  "exclusion_reason": "Six peripheral points removed by screenshot review; Sylvan Creek 05CC004 replaced on display by lake reference 05CC003. Source archives retained.",
+  "reference_station_ids": ["05CC003"],
+  "yellow_reference_ids": ["05CC003"],
+  "recent_calendar_months": 3,
+  "as_of_local_date": "2026-10-13",
+  "source_review": "data/reports/map_station_review/20261014T004319Z/source_review.json",
+  "time_zone": "America/Edmonton",
+  "color_rule": "Blue if a numeric observation falls within the preceding three calendar months; otherwise yellow with evidence status. Sylvan Lake 05CC003 is explicitly yellow as a lake-level reference; unqueried recent availability is unknown. One station ID appears in only one layer.",
+  "location_review_station_ids": ["05CC004"]
+}
