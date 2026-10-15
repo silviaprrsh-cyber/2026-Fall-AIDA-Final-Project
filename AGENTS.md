@@ -2,7 +2,7 @@
 
 This is the canonical project instruction file. Its Chinese local-reference counterpart is AGENTSCN.md and is excluded from Git.
 
-Updated: 2026-10-13. This file governs work in this directory and its descendants. It records working agreements, not proof of completed functionality.
+Updated: 2026-10-14. This file governs work in this directory and its descendants. It records working agreements, not proof of completed functionality.
 
 ## 1. Scope and evidence
 
@@ -62,6 +62,7 @@ Updated: 2026-10-13. This file governs work in this directory and its descendant
 
 - Keep all remote API acquisition code in root `API/`, including the HTTP client, scheduler, one-shot validation, backfill, static downloads and satellite access. Add future acquisition code there. Keep local ETL and hydraulics in `rdr/` and local tools in `scripts/`. Use `python -m API`; `python -m rdr` is only a compatibility forwarder.
 - Give each source its own `data/sources/<source>/` directory; do not mix original responses from different APIs. Retain raw/static/manual, station and batch subdivisions within sources. Keep cross-source derived products in `data/processed/` with input provenance. See `data/README.md` for sources and resolve old archive paths with the migration manifest or `rdr.paths.resolve_archived_path()`.
+- Reserve root `outputs/` exclusively for reviewed, user-confirmed stage deliverables intended for presentation or submission, such as a selected final map or report. Do not use it as a general output directory: keep working QGIS projects and derived datasets in `data/processed/`, acquired originals in `data/sources/`, and validation records in `data/reports/`. Do not place temporary exports, intermediate results, logs, caches or review renders in `outputs/`. Keep this directory eligible for Git tracking; do not add a directory-wide ignore rule. When a stage deliverable is added or replaced, update the stage-deliverables section near the beginning of both root READMEs.
 
 - Use the local `.venv` for project code. Add dependencies as needed for the task and keep requirements files consistent without modifying global Python. Preserve the actual `.env` and its credentials; report variable presence without revealing values.
 - Keep all acquired originals under `data/`: API responses in `data/sources/<source>/raw/`, static downloads in `data/sources/<source>/static/`, and user downloads and original ZIPs in the corresponding `data/sources/<source>/manual/`. Government flood-survey packages belong in `data/sources/alberta_flood_surveys/manual/`; manual downloads from other sources belong in their own source directories. Use `data/processed/` for derived outputs and `data/reports/` for validation. Preserve original archives, provenance, retrieval times and checksums; extraction and normalization must not overwrite originals.

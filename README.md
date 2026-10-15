@@ -1,12 +1,20 @@
 # Red Deer River near-real-time monitoring and potential overbank-risk project
 
-## Current status and next data-processing work
-
-Historical tributary data remain in [the daily archive](data/processed/tributary_history_20261012/README.md): 12 river stations and 3 lake-level references from the 2026-10-12 download. The 2026-10-13 map shows 6 blue stations with observations since 2026-07-13 and 2 yellow historical/reference stations, each ID once. Sylvan Creek 05CC004 is removed from display and replaced by Sylvan Lake 05CC003 as a yellow lake-level reference; recent lake availability is unverified. A separate red layer contains **11 prediction targets**, ordered upstream to downstream, including the footbridge beside Discovery Canyon. See the [map and point inventory](data/processed/qgis_dickson_joffre_20261012/README.md). Red points are locations for future estimation, with no calculated discharge, level or risk. Source archives and live acquisition configuration remain unchanged.
-
 The final goal is to combine mainstem gauges, available tributary inflows, river-network relationships and surveyed sections to continually estimate discharge Q, water level, travel time and potential overbank risk at key sections. Historical analysis supports development, calibration and validation; existing code does not establish verified basin-wide conditions.
 
 The active reach runs from the Gleniffer Lake outlet / Dickson Dam downstream to the **Joffre Bridge / Highway 11**, approximately 96.3 km along the selected mapped centerline. It includes the Blindman River input-to-mouth segment and stops at Joffre Bridge. Tributaries are retained from their nearest usable same-river station to their confluence with this reach. Available river geometry remains visible where no usable station exists.
+
+## Stage deliverables
+
+Reviewed and confirmed stage deliverables for presentation or submission are stored in the root [`outputs/`](outputs/) folder. This folder is not excluded from Git.
+
+- **GIS mapping stage:** [Monitoring stations and prediction targets - Dickson Dam to Joffre Bridge](outputs/Overhead%20view.pdf). This map presents the selected reach, monitoring locations, surveyed cross-sections and requested prediction locations; it does not represent completed hydraulic predictions or model validation.
+
+Only selected stage deliverables belong here. Working QGIS projects and derived datasets remain in `data/processed/`, original data in `data/sources/`, and validation records in `data/reports/`. Temporary exports, intermediate results, logs and caches do not belong in `outputs/`.
+
+## Current status and next data-processing work
+
+Historical tributary data remain in [the daily archive](data/processed/tributary_history_20261012/README.md): 12 river stations and 3 lake-level references from the 2026-10-12 download. The 2026-10-13 map shows 6 blue stations with observations since 2026-07-13 and 2 yellow historical/reference stations, each ID once. Sylvan Creek 05CC004 is removed from display and replaced by Sylvan Lake 05CC003 as a yellow lake-level reference; recent lake availability is unverified. A separate red layer contains **11 prediction targets**, ordered upstream to downstream, including the footbridge beside Discovery Canyon. See the [map and point inventory](data/processed/qgis_dickson_joffre_20261012/README.md). Red points are locations for future estimation, with no calculated discharge, level or risk. Source archives and live acquisition configuration remain unchanged.
 
 The 2026-10-12 snapshot selected **05CB007, 05CC002, 05CB001, 05CC007, 05CC011 and 05CC001**, with precipitation stations **3025484 and 3023722**. Dickson tunnel outlet discharge is not confirmed to include every dam release path. Do not add serial gauge flows. Configuration retains the broader catalogue with other stations disabled; `config/active_scope.json` records the active selection, and configuration rebuilding respects this selection.
 
