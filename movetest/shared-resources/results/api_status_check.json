@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "configured_stations": 102,
+  "enabled_stations": [
+    "05CC002",
+    "05CB007",
+    "05CB001",
+    "05CC007",
+    "05CC011",
+    "05CC001"
+  ],
+  "network_requested": false
+}

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "purpose": "Evidence-reviewed overrides for actual gauge-to-section calculations. Generated spatial candidates are not calibration.",
+  "required_fields": ["station_id", "evidence", "valid_from", "valid_to", "datum_verified", "transfer_verified", "profile_verified", "banks_verified", "bank_elevations_m"],
+  "optional_fields": ["water_level_transfer_offset_m", "connected_offset_m"],
+  "sections": {}
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "file": "courses/AIDA-2154/data/sources/copernicus_sentinel2/raw/satellite/20260930T035733509707Z/quality.tif",
+    "crs": "EPSG:32612",
+    "width": 512,
+    "height": 512,
+    "pixel_size": [
+      10.0,
+      10.0
+    ],
+    "valid_pixels": 0,
+    "total_pixels": 262144,
+    "cloud_shadow_pixels": 0,
+    "usable_data_present": false,
+    "note": "Provider classification only; not trained project segmentation or accuracy evidence."
+  },
+  {
+    "file": "courses/AIDA-2154/data/sources/copernicus_sentinel2/raw/satellite/20260930T035930356564Z/quality.tif",
+    "crs": "EPSG:32612",
+    "width": 512,
+    "height": 512,
+    "pixel_size": [
+      10.0,
+      10.0
+    ],
+    "valid_pixels": 262144,
+    "total_pixels": 262144,
+    "cloud_shadow_pixels": 2836,
+    "usable_data_present": true,
+    "note": "Provider classification only; not trained project segmentation or accuracy evidence."
+  }
+]

@@ -1,0 +1,62 @@
+{
+  "generated_at": "2026-10-27T03:05:08.492860+00:00",
+  "scope": "Original full-basin catalogue retained; no fabricated coverage",
+  "sections": 1607,
+  "survey_points": 91967,
+  "profiles": 1596,
+  "stations": 102,
+  "section_profile_status": {
+    "source_linked_review_required": 910,
+    "insufficient_points": 11,
+    "spatial_reconstruction_review_required": 686
+  },
+  "point_assignment_status": {
+    "not_cross_section": 7061,
+    "source_id_match": 46776,
+    "unmatched_source_id": 41,
+    "spatial_candidate_requires_review": 37750,
+    "ambiguous_or_outside_20m": 339
+  },
+  "section_station_link_methods": {
+    "same_river_network_candidate": 1143,
+    "same_river_straight_distance_provisional": 310,
+    "no_same_river_station": 154
+  },
+  "stations_with_section_within_1km": 9,
+  "water_observations": 50416,
+  "precipitation_intervals": 39202,
+  "precipitation_quality": {
+    "derived_complete": 37031,
+    "qa_passed": 1339,
+    "qa_not_passed": 615,
+    "missing_or_invalid_value": 217
+  },
+  "window_status": {
+    "no_instantaneous_water_or_calculation_cadence": 59,
+    "complete": 1003,
+    "missing": 3223
+  },
+  "latest_window_status": {
+    "complete": 13,
+    "missing": 30
+  },
+  "section_calculation_status": {
+    "indeterminate": 1607
+  },
+  "calculation_blockers": {
+    "datum_verified_not_confirmed": 1607,
+    "transfer_verified_not_confirmed": 1607,
+    "profile_verified_not_confirmed": 1607,
+    "banks_verified_not_confirmed": 1607,
+    "no_compatible_documented_datum_conversion": 1053,
+    "no_water_observation": 495,
+    "insufficient_profile": 11
+  },
+  "historical_survey_geometry_previews": 128,
+  "live_collection_started": false,
+  "datum_status": {
+    "no_published_conversion": 57,
+    "published_conversions_found": 45
+  },
+  "normalization_issues": 6
+}

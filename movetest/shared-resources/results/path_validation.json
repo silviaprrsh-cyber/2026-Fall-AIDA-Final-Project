@@ -1,0 +1,70 @@
+{
+  "checked_at_utc": "2026-10-27T03:00:36.461184+00:00",
+  "module_locations": {
+    "API.collector": "API/collector.py",
+    "API.snapshot_scope": "API/snapshot_scope.py",
+    "API.validate_satellite_once": "API/validate_satellite_once.py",
+    "rdr.storage": "shared-resources/src/rdr/storage.py",
+    "rdr.paths": "shared-resources/src/rdr/paths.py",
+    "rdr_eda.etl": "courses/AIDA-2156/analysis/rdr_eda/etl.py",
+    "rdr_eda.rainfall": "courses/AIDA-2156/analysis/rdr_eda/rainfall.py",
+    "rdr_eda.hydraulics": "courses/AIDA-2156/analysis/rdr_eda/hydraulics.py",
+    "rdr_gis.spatial": "courses/AIDA-2362/src/rdr_gis/spatial.py",
+    "rdr_gis.catalog": "courses/AIDA-2362/src/rdr_gis/catalog.py",
+    "gis_tools.build_scoped_qgis": "courses/AIDA-2362/src/gis_tools/build_scoped_qgis.py",
+    "gis_tools.build_prediction_points": "courses/AIDA-2362/src/gis_tools/build_prediction_points.py",
+    "eda_tools.prepare_tributary_history": "courses/AIDA-2156/analysis/eda_tools/prepare_tributary_history.py",
+    "cv_tools.inspect_archive": "courses/AIDA-2154/src/cv_tools/inspect_archive.py"
+  },
+  "python_files_parsed": 65,
+  "qgis_layers": [
+    {
+      "provider": "ogr",
+      "source": "./alberta_flood_surveys/county_markerville/cross_section_lines.geojson",
+      "exists": true
+    },
+    {
+      "provider": "ogr",
+      "source": "./eccc_hydrometric_geomet/historical_tributary_stations.geojson",
+      "exists": true
+    },
+    {
+      "provider": "ogr",
+      "source": "./eccc_weather_geomet/stations.geojson",
+      "exists": true
+    },
+    {
+      "provider": "wms",
+      "source": "type=xyz&url=https://tile.openstreetmap.org/%7Bz%7D/%7Bx%7D/%7By%7D.png&zmin=0&zmax=19&crs=EPSG3857&http-header:user-agent=RedDeerRiverMap%2F1.0%20%28QGIS%3B%20https%3A%2F%2Fgithub.com%2Fsilviaprrsh-cyber%2F2026-Fall-AIDA-Final-Project%29",
+      "network_basemap_not_requested": true
+    },
+    {
+      "provider": "ogr",
+      "source": "./derived_prediction_targets/prediction_points.geojson",
+      "exists": true
+    },
+    {
+      "provider": "ogr",
+      "source": "./alberta_flood_surveys/red_deer/cross_section_lines.geojson",
+      "exists": true
+    },
+    {
+      "provider": "ogr",
+      "source": "./nrcan_nhn/selected_rivers.geojson",
+      "exists": true
+    },
+    {
+      "provider": "ogr",
+      "source": "./eccc_hydrometric_geomet/stations.geojson",
+      "exists": true
+    },
+    {
+      "provider": "ogr",
+      "source": "./derived_weather_associations/areas.geojson",
+      "exists": true
+    }
+  ],
+  "qgis_check": "XML local-source resolution only; GUI rendering not asserted",
+  "runtime_root": "shared-resources",
+  "passed": true
+}
