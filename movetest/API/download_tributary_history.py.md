@@ -1,5 +1,7 @@
 # `download_tributary_history.py`
 
+The model-history station list also covers mainstem and lake stations. Download all five with `python -B run.py -m API.download_tributary_history --candidates config/model_history_stations.json`. Intermediate numberMatched values are recorded because the provider can report page-dependent counts. Completion requires terminal pagination, unique ordered station records and a final total equal to the first-page count. Original pages and response metadata are retained under the source's raw/tributary_history/run directory.
+
 File: `API/download_tributary_history.py`
 
 ## Purpose

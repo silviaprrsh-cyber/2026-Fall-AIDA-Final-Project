@@ -55,11 +55,10 @@ def source_relative_path(url, relative_path):
 
 @lru_cache(maxsize=1)
 def _relocations():
-    path = resolve_runtime_path(DATA / 'reports/layout_migration/manifest.json')
+    path = ROOT / 'config/archive_paths.json'
     if not path.exists():
         return {}
-    records = json.loads(path.read_text(encoding='utf-8'))['files']
-    return {r['old_path']: r['new_path'] for r in records}
+    return json.loads(path.read_text(encoding='utf-8'))
 
 
 def resolve_archived_path(value):

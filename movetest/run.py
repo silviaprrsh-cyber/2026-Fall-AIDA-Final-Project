@@ -28,10 +28,10 @@ def bootstrap():
 def main():
     bootstrap()
     if len(sys.argv) < 2:
-        raise SystemExit('Usage: python run.py status | test | verify | cv-check | -m PACKAGE [ARGS]')
+        raise SystemExit('Usage: python run.py status | etl | ml | inspect-imagery | -m PACKAGE [ARGS]')
     command, args = sys.argv[1], sys.argv[2:]
-    targets = {'status': ('API', ['status']), 'test': ('project_tools.test_workspace', []),
-               'verify': ('project_tools.verify_workspace', []), 'cv-check': ('cv_tools.inspect_archive', [])}
+    targets = {'status': ('API', ['status']), 'etl': ('eda_tools.run_etl', []),
+               'inspect-imagery': ('cv_tools.inspect_archive', []), 'ml': ('rdr_ml', [])}
     if command == '-m':
         if not args: raise SystemExit('A module name is required')
         module, args = args[0], args[1:]

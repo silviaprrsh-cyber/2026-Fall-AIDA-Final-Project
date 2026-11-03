@@ -1,0 +1,13 @@
+{
+  "validation_station_id": "05CC002",
+  "seed_station_id": "05CB007",
+  "initial_input_station_ids": ["05CB007", "05CB001", "05CC007"],
+  "lake_station_id": "05CC003",
+  "lake_target_id": "P04",
+  "source_max_age_seconds": 3600,
+  "lake_max_age_seconds": 86400,
+  "target_match_tolerance_seconds": 1800,
+  "merge_arrival_tolerance_seconds": 1800,
+  "velocity_source": "submodel_outputs",
+  "note": "Use submodel-predicted velocities only. For the initial three branches, supply separate model-predicted source velocities. No constant speed, same-time target or lake outlet discharge is assumed."
+}

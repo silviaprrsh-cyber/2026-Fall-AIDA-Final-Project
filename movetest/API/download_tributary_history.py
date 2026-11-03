@@ -29,7 +29,7 @@ def acquire(url, relative, params=None):
 
 
 def station_history(sid, run):
-    result = {"station_id": sid, "pages": [], "complete": False}
+    result = {"station_id": sid, "pages": [], "complete": False, "page_matched_counts": []}
     url = BASE + "/hydrometric-daily-mean/items"
     params = {"STATION_NUMBER": sid, "sortby": "DATE", "limit": 10000, "f": "json"}
     seen, total, expected, previous = set(), 0, None, None
@@ -42,8 +42,7 @@ def station_history(sid, run):
             features = obj["features"]
             if expected is None:
                 expected = obj.get("numberMatched")
-            elif obj.get("numberMatched", expected) != expected:
-                raise ValueError("Matched count changed during pagination")
+            result["page_matched_counts"].append(obj.get("numberMatched"))
             for f in features:
                 p = f["properties"]
                 if p.get("STATION_NUMBER") != sid:
@@ -63,6 +62,8 @@ def station_history(sid, run):
                     raise ValueError(f"Incomplete count {total}/{expected}")
                 result.update(complete=True, record_count=total, number_matched=expected,
                               status="downloaded" if total else "no_records")
+                if any(count != expected for count in result["page_matched_counts"]):
+                    result["count_caveat"] = "Intermediate page counts differ. Unique records and terminal total match the first-page count."
                 break
             if not features:
                 raise ValueError("Empty page with a next link")
@@ -111,6 +112,8 @@ def main():
             report["results"].append(result)
             (directory / "download_manifest.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(directory / "download_manifest.json", flush=True)
+    if any(not result["complete"] for result in report["results"]):
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":

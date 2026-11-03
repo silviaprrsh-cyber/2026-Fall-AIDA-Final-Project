@@ -47,5 +47,12 @@ def archive_relative(path, base):
 def require_local(path):
     resolved = Path(path).resolve()
     if not resolved.is_relative_to(WORKSPACE):
-        raise ValueError('Runtime path must stay inside the migration workspace')
+        raise ValueError('Runtime path must stay inside this project')
     return resolved
+
+
+def is_gis_output_path(path):
+    """Allow GIS work products and the single final handoff directory only."""
+    resolved = require_local(path)
+    return (resolved.is_relative_to(WORKSPACE/'courses/AIDA-2362/data/processed')
+            or resolved == WORKSPACE/'courses/AIDA-2362/project')

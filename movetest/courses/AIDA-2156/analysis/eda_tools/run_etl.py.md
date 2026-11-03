@@ -4,7 +4,9 @@ File: `courses/AIDA-2156/analysis/eda_tools/run_etl.py`
 
 ## Purpose
 
-Build stages 1-4 from local archives; no network or continuous collection.
+`--segment-states PATH` optionally passes model predictions to the scoped builder for arrival-time labels. It cannot be combined with the legacy branch. The builder also writes the four segment tables, feature contract and PostgreSQL SQL export.
+
+Default: build the current Dickson–Joffre dataset with `rdr_eda.project_etl.run_project_pipeline`, writing `data/processed/project_etl/` and `data/reports/project_etl_validation.json` in AIDA-2156. Only `--legacy-full-basin` invokes the older `run_pipeline`; `--reuse-spatial` applies to that older branch. No network or continuous collection.
 
 ## Defined functions/classes
 
@@ -15,11 +17,11 @@ None / 无
 - `argparse`
 - `pathlib: Path`
 - `rdr_eda.etl: run_pipeline`
-- `sys`
+- `rdr_eda.project_etl: run_project_pipeline`
 
 ## Calls
 
-`argparse.ArgumentParser`, `run_pipeline`
+`argparse.ArgumentParser`, `run_project_pipeline` or `run_pipeline`
 
 Static syntax evidence, not proof that every branch runs. Dynamic launcher dispatch depends on command arguments.
 

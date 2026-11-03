@@ -23,7 +23,7 @@ from shapely.geometry import LineString, MultiPoint, Point, mapping, shape
 from shapely.ops import transform, substring, unary_union
 from shapely.strtree import STRtree
 
-from project_paths import ROOT
+from project_paths import ROOT, is_gis_output_path
 OLD = resolve_runtime_path(ROOT / "data/processed/qgis_layers_20261011")
 TO_M = Transformer.from_crs(4326, 3400, always_xy=True, allow_ballpark=False).transform
 FROM_NHN = Transformer.from_crs(4617, 3400, always_xy=True, allow_ballpark=False).transform
@@ -140,7 +140,7 @@ def main():
     parser.add_argument("--folder", default="data/processed/qgis_dickson_joffre_20261012")
     args = parser.parse_args()
     output = (resolve_runtime_path(ROOT / args.folder)).resolve()
-    if not output.is_relative_to((resolve_runtime_path(ROOT / "data/processed")).resolve()) or output.exists():
+    if not is_gis_output_path(output) or output.exists():
         raise ValueError("Choose a new folder under data/processed")
     report = read(resolve_runtime_path(ROOT / args.snapshot))
     fresh = {(r["kind"], r["station_id"]): r for r in report["results"]}

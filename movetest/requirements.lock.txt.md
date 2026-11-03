@@ -13,3 +13,5 @@ Manifest source: `template` / `requirements.lock.txt`. The recorded input hash i
 No exact static code reference was identified; this does not mean the file is unused. QGIS/GDAL and dynamic directory scans may consume it.
 
 This note describes existing files only; it does not run collection, processing or training.
+
+PostgreSQL import and training views use psycopg with its binary wheel. The lock records psycopg and psycopg-binary 3.3.7.

@@ -24,7 +24,7 @@ from qgis.core import (
 from qgis.PyQt.QtGui import QColor, QFont, QFontDatabase
 from qgis.PyQt.QtCore import QSettings
 
-from project_paths import ROOT
+from project_paths import ROOT, is_gis_output_path
 
 from API.qgis_basemap import create_osm_layer
 
@@ -39,8 +39,8 @@ def main():
     parser.add_argument("--folder", default="data/processed/qgis_dickson_joffre_20261012")
     args = parser.parse_args()
     folder = (resolve_runtime_path(ROOT / args.folder)).resolve()
-    if not folder.is_relative_to((resolve_runtime_path(ROOT / "data/processed")).resolve()):
-        raise ValueError("Folder must be inside data/processed")
+    if not is_gis_output_path(folder):
+        raise ValueError("Folder must be a permitted GIS output directory")
     manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
     profile = resolve_runtime_path(ROOT / "data/state/qgis_map_render_profile")
     profile.mkdir(parents=True, exist_ok=True)

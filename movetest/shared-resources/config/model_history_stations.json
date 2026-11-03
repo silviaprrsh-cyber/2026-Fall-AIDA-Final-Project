@@ -1,0 +1,7 @@
+[
+  {"station_id": "05CB007", "role": "dam_input"},
+  {"station_id": "05CB001", "role": "tributary_input"},
+  {"station_id": "05CC007", "role": "independent_tributary_features"},
+  {"station_id": "05CC003", "role": "lake_level_feature"},
+  {"station_id": "05CC002", "role": "downstream_supervision"}
+]

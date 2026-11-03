@@ -1,32 +1,20 @@
 # `run.py`
 
-File: `run.py`
+`run.py`
 
-## Purpose
+Launch production modules: status, ETL, ML inspect/train/evaluate/predict, image inspection or an explicit package. No test/verification commands remain.
 
-Bootstrap the split course packages without importing the original project.
+## Imports
 
-## Defined functions/classes
-
-`bootstrap`, `main`
-
-## Direct imports
-
-- `os`
-- `pathlib: Path`
-- `runpy`
-- `sys`
+- `import os`
+- `from pathlib import Path`
+- `import runpy`
+- `import sys`
 
 ## Calls
 
-`Path`, `bootstrap`, `main`, `os.chdir`, `os.environ.pop`, `runpy.run_module`, `sys.path.insert`
+`Path`, `SystemExit`, `bootstrap`, `len`, `main`, `reversed`, `runpy.run_module`, `str`
 
-Static syntax evidence, not proof that every branch runs. Dynamic launcher dispatch depends on command arguments.
+## File outputs
 
-## Generated files / writes
-
-No direct file-write call identified here. Imported functions may produce files; see their companion notes.
-
-The write expressions show output names or variables. Variables, loops and caller-supplied paths are not fixed filenames. `DATA`/`ROOT` archive paths are routed by `project_paths.py` and `data_layout.json`.
-
-This note describes existing files only; it does not run collection, processing or training.
+No direct file writes; invoked modules own their outputs.

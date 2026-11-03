@@ -1,0 +1,38 @@
+{
+  "schema_version": 2,
+  "feature_station_id": "05CC007",
+  "feature_lag_initial_seconds": 86400,
+  "feature_lag_range_seconds": 172800,
+  "feature_trend_window_seconds": 3600,
+  "training_mode": "joint_endpoint_loss",
+  "section_zero": "minimum_surveyed_elevation_experimental",
+  "wet_component": "connected_to_lowest_surveyed_point",
+  "source_section_ids": {
+    "05CB007": "county_markerville:RED DEER RIVER:RDR112",
+    "05CB001": "county_markerville:LITTLE RED DEER RIVER:LRD015",
+    "05CC007": null
+  },
+  "source_geometry_note": "The first two profiles are nearby experimental proxies. 05CC007 supplies independently weighted Q, stage and trends with a jointly learned lag and requires no section or source velocity.",
+  "source_rivers": {
+    "05CB007": "RED DEER RIVER",
+    "05CB001": "LITTLE RED DEER RIVER",
+    "05CC007": "MEDICINE RIVER"
+  },
+  "source_max_age_seconds": 3600,
+  "lake_max_age_seconds": 86400,
+  "target_match_tolerance_seconds": 1800,
+  "merge_arrival_tolerance_seconds": 1800,
+  "max_transit_seconds": 604800,
+  "training_fraction": 0.8,
+  "minimum_training_pairs": 30,
+  "regularization": 0.05,
+  "iterations": 120,
+  "random_seed": 42,
+  "depth_discharge_exponent": 0.3,
+  "observation_mode": "retrospective_observation_time",
+  "note": "Endpoint-supervised experimental calibration of six separate recursive parameter blocks. Intermediate states are not independently identifiable or verified. No risk categories are produced. Observation-time hindcasts do not establish receipt-time availability.",
+  "validation_fraction": 0.0,
+  "test_fraction": 0.2,
+  "minimum_validation_pairs": 10,
+  "minimum_test_pairs": 10
+}

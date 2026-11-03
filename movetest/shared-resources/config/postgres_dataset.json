@@ -1,0 +1,6 @@
+{
+  "database": "red_deer_river",
+  "schema": "rdr_unit_c85b2cab1263ea01",
+  "dataset_id": "c85b2cab1263ea0142ed51d2487578b6faa705b400ca025d32500a9318309a82",
+  "source": "postgresql_views"
+}
