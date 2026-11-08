@@ -141,13 +141,14 @@ def build():
              "selection_evidence": json.dumps(evidence, sort_keys=True)}
         features.append({"type": "Feature", "id": target["id"], "geometry": mapping(transform(inverse, point)), "properties": p})
     features.sort(key=lambda f: f["properties"]["chainage_from_dickson_m"])
-    assert len(features) == 11 and len({f["id"] for f in features}) == 11
-    assert [f["id"] for f in features] == [f"P{i:02d}" for i in range(1, 12)]
-    assert len({tuple(f["geometry"]["coordinates"]) for f in features}) == 11
+    expected_ids = [target["id"] for target in config["targets"]]
+    assert expected_ids and len(set(expected_ids)) == len(expected_ids)
+    assert [f["id"] for f in features] == expected_ids
+    assert len({tuple(f["geometry"]["coordinates"]) for f in features}) == len(expected_ids)
     output = folder / "derived_prediction_targets/prediction_points.geojson"
     write(output, {"type": "FeatureCollection", "features": features})
     provenance = [{"path": archive_relative(p, ROOT).as_posix(), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in sources]
-    write(folder / "prediction_points_review.json", {"target_count": 11, "ordered_upstream_to_downstream": True,
+    write(folder / "prediction_points_review.json", {"target_count": len(features), "ordered_upstream_to_downstream": True,
           "all_points_on_selected_mainstem": True, "all_prediction_values_null": True,
           "inputs": provenance, "targets": [{**f["properties"], "coordinates": f["geometry"]["coordinates"]} for f in features]})
     manifest = read(folder / "manifest.json")
@@ -155,7 +156,7 @@ def build():
     manifest["layers"] = [e for e in manifest["layers"] if e["path"] != relative]
     manifest["layers"].append({"path": relative, "count": len(features),
           "sha256": hashlib.sha256(output.read_bytes()).hexdigest(), "source": "derived_prediction_targets",
-          "style": "prediction", "title": "Prediction targets - P01 to P11 (red)"})
+          "style": "prediction", "title": f"Prediction targets - {expected_ids[0]} to {expected_ids[-1]} (red)"})
     manifest["prediction_targets_review"] = "prediction_points_review.json"
     write(folder / "manifest.json", manifest)
     for f in features:

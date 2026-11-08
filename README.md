@@ -2,9 +2,15 @@
 
 The final goal is to combine mainstem gauges, available tributary inflows, river-network relationships and surveyed sections to continually estimate discharge Q, water level, travel time and potential overbank risk at key sections. Historical analysis supports development, calibration and validation; existing code does not establish verified basin-wide conditions.
 
-The active reach runs from the Gleniffer Lake outlet / Dickson Dam downstream to the **Joffre Bridge / Highway 11**, approximately 96.3 km along the selected mapped centerline. It includes the Blindman River input-to-mouth segment and stops at Joffre Bridge. Tributaries are retained from their nearest usable same-river station to their confluence with this reach. Available river geometry remains visible where no usable station exists.
+## Active development directory — updated 2026-11-05
+
+Continue development from [movetest/README.md](movetest/README.md). Its active reach is **Dickson Dam outlet → 05CC002**, retaining **P01–P05**. The current [QGIS project](movetest/courses/AIDA-2362/project/dickson_to_joffre.qgz) keeps its legacy filename. Root-level code, configuration, data and the older Joffre map remain the original implementation/archive; the commands below describe that root implementation and do not automatically use the reduced movetest configuration. See the movetest README for current ETL, PostgreSQL, ML and satellite status.
+
+The archived root implementation covers the reach from the Gleniffer Lake outlet / Dickson Dam downstream to the **Joffre Bridge / Highway 11**, approximately 96.3 km along the selected mapped centerline. It includes the Blindman River input-to-mouth segment and stops at Joffre Bridge. Tributaries are retained from their nearest usable same-river station to their confluence with this reach. Available river geometry remains visible where no usable station exists.
 
 ## Stage deliverables
+
+Current reduced-scope map (2026-11-08): [PDF](movetest/courses/AIDA-2362/outputs/Overhead%20view.pdf) ? [PNG](movetest/courses/AIDA-2362/project/map_overview.png). Endpoint: 05CC002; targets: P01?P05. The root Joffre PDF listed below remains historical.
 
 Reviewed and confirmed stage deliverables for presentation or submission are stored in the root [`outputs/`](outputs/) folder. This folder is not excluded from Git.
 
@@ -12,13 +18,13 @@ Reviewed and confirmed stage deliverables for presentation or submission are sto
 
 Only selected stage deliverables belong here. Working QGIS projects and derived datasets remain in `data/processed/`, original data in `data/sources/`, and validation records in `data/reports/`. Temporary exports, intermediate results, logs and caches do not belong in `outputs/`.
 
-## Current status and next data-processing work
+## Archived root implementation and data-processing status
 
 Historical tributary data remain in [the daily archive](data/processed/tributary_history_20261012/README.md): 12 river stations and 3 lake-level references from the 2026-10-12 download. The 2026-10-13 map shows 6 blue stations with observations since 2026-07-13 and 2 yellow historical/reference stations, each ID once. Sylvan Creek 05CC004 is removed from display and replaced by Sylvan Lake 05CC003 as a yellow lake-level reference; recent lake availability is unverified. A separate red layer contains **11 prediction targets**, ordered upstream to downstream, including the footbridge beside Discovery Canyon. See the [map and point inventory](data/processed/qgis_dickson_joffre_20261012/README.md). Red points are locations for future estimation, with no calculated discharge, level or risk. Source archives and live acquisition configuration remain unchanged.
 
 The 2026-10-12 snapshot selected **05CB007, 05CC002, 05CB001, 05CC007, 05CC011 and 05CC001**, with precipitation stations **3025484 and 3023722**. Dickson tunnel outlet discharge is not confirmed to include every dam release path. Do not add serial gauge flows. Configuration retains the broader catalogue with other stations disabled; `config/active_scope.json` records the active selection, and configuration rebuilding respects this selection.
 
-Open [the final QGIS project](data/processed/qgis_dickson_joffre_20261012/dickson_to_joffre.qgz), or view [the map preview](data/processed/qgis_dickson_joffre_20261012/map_overview.png). It contains 6 recent water stations, 2 historical/lake references, 11 prediction targets, 2 precipitation stations and 366 section lines with survey points, separated by source, over OpenStreetMap. Green shading is a schematic 2 km corridor showing existing weather associations, not official coverage or a catchment. See [scope verification](data/processed/qgis_dickson_joffre_20261012/scope_validation.json) for the initial selection and routing limitations, and the map README for current display counts. The pre-existing full-basin map and original archives remain available; the superseded 67 Street endpoint draft has been removed. These local data links require the corresponding local files.
+Open [the archived Joffre QGIS project](data/processed/qgis_dickson_joffre_20261012/dickson_to_joffre.qgz), or view [the map preview](data/processed/qgis_dickson_joffre_20261012/map_overview.png). It contains 6 recent water stations, 2 historical/lake references, 11 prediction targets, 2 precipitation stations and 366 section lines with survey points, separated by source, over OpenStreetMap. Green shading is a schematic 2 km corridor showing existing weather associations, not official coverage or a catchment. See [scope verification](data/processed/qgis_dickson_joffre_20261012/scope_validation.json) for the initial selection and routing limitations, and the map README for current display counts. The pre-existing full-basin map and original archives remain available; the superseded 67 Street endpoint draft has been removed. These local data links require the corresponding local files.
 
 The user has received the government reply, data-use permission and download links. Four survey packages are saved. The ETL snapshot dated 2026-09-30 UTC contains 1,607 section lines, 91,967 points and 1,596 candidate profiles; the 2026-10-08 migration checks confirmed unchanged normalized data and section identifiers. All section risks in that snapshot are indeterminate pending verified datums, gauge-to-section transfers and effective bank elevations. These are archived results, not a fresh online availability check.
 
@@ -134,7 +140,7 @@ Run survey normalization and observation-time ETL separately with `.\.venv\Scrip
 
 ## One-shot satellite image validation
 
-The active project scope is the Dickson outlet to Joffre Bridge reach. The command below validates CDSE STAC, OAuth and the Sentinel Hub Process API using only a 5.12 × 5.12 km test area around `05CC002`; it does not establish imagery coverage of the whole selected reach or start scheduled collection or CV training.
+This root-level satellite validation belongs to the archived Dickson outlet to Joffre Bridge implementation. The command below validates CDSE STAC, OAuth and the Sentinel Hub Process API using only a 5.12 × 5.12 km test area around `05CC002`; it does not establish imagery coverage of the whole selected reach or start scheduled collection or CV training.
 
 Credentials are read from the project-root `.env`. Supported keys include `CDSE_CLIENT_ID` / `CDSE_CLIENT_SECRET` and the existing `Client_ID` / `Client_secret`. Environment variables override file values with the same name. Credentials and access tokens are never written to reports.
 
@@ -164,3 +170,11 @@ The original full-basin data are incomplete. Available, relatively reliable obse
 The goal remains a near-real-time monitoring system that uses available mainstem and tributary observations, river-network relationships and surveyed sections to estimate discharge, water level, travel time and potential overbank risk at selected locations. The smaller scope does not establish complete coverage or validated predictions; remaining gaps, assumptions and uncertainty must still be recorded and assessed.
 
 Earlier text is retained as the original project record. This entry defines the revised geographic scope for subsequent work and supersedes earlier full-basin scope statements. It records a scope decision, not completion or validation of the model.
+
+## Project modification history — 2026-11-04 (verified 2026-11-05)
+
+The active movetest reach now ends at Red Deer station 05CC002. Retain P01–P05; remove P06–P11 and downstream Blindman/Waskasoo map inputs. The selected project data provide no comparable downstream observation constraint to validate the continuation to P11. This reduction limits unsupported extrapolation; it does not establish accuracy at retained targets. The filename `dickson_to_joffre.qgz` is retained for compatibility, but its layers and displayed endpoint now use 05CC002.
+
+Source archives, previous model results and satellite acquisitions are retained. Existing `Overhead view.pdf`, `map_overview.png` and earlier validation reports are historical Joffre snapshots, not updated exports. Current GIS checks are `movetest/courses/AIDA-2362/data/reports/scope_05CC002.json` and `movetest/courses/AIDA-2362/data/reports/qgis_scope_05CC002.json`. The model already ends at 05CC002: its M06 link from P05 to the validation station remains; M06 is not prediction point P06. This map update does not retrain the model or replace PostgreSQL snapshots.
+
+Per-file explanatory companions (for example `client.py.md`, `active_scope.json.md` and their Chinese copies) remain local and are ignored through `*.*.md` and `*CN.md`. Previously tracked companions have been removed from the Git index, not from local storage, except companions archived with retired tools. README and standalone English project documents remain eligible for Git tracking.

@@ -21,4 +21,6 @@ Thumbs.db
 /courses/*/data/
 /courses/AIDA-2362/project/
 *CN.md
+# Per-file English and Chinese explanatory companions are local references.
+*.*.md
 ~$*

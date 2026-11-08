@@ -1,18 +1,15 @@
 {
-  "scope_id": "dickson_to_joffre",
-  "updated_at_utc": "2026-10-13T02:08:12.666363+00:00",
+  "scope_id": "dickson_to_05CC002",
+  "updated_at_utc": "2026-11-04T16:24:19.822697+00:00",
   "start": "Gleniffer Lake outlet / Dickson Dam downstream (tunnel outlet reference)",
-  "end": "Joffre Bridge / Highway 11; includes Blindman River inflow",
+  "end": "Red Deer River at Red Deer, station 05CC002",
   "station_ids": [
     "05CB001",
     "05CB007",
-    "05CC001",
     "05CC002",
-    "05CC007",
-    "05CC011"
+    "05CC007"
   ],
   "weather_ids": [
-    "3023722",
     "3025484"
   ],
   "start_lon_lat": [
@@ -20,15 +17,52 @@
     52.058353257334666
   ],
   "end_lon_lat": [
-    -113.59247822005347,
-    52.26964125406002
+    -113.82388575033588,
+    52.27093663468838
   ],
   "tributary_rule": "Nearest usable same-river input station to confluence; mapped river retained without an empty station where unavailable",
-  "validation_report": "data/processed/qgis_dickson_joffre_20261012/scope_validation.json",
-  "map_project": "data/processed/qgis_dickson_joffre_20261012/dickson_to_joffre.qgz",
+  "validation_report": "courses\\AIDA-2362\\data\\reports\\scope_05CC002.json",
+  "map_project": "courses/AIDA-2362/project/dickson_to_joffre.qgz",
   "notes": [
-    "Preserve source archives and historical full-basin products.",
-    "The tunnel outlet station is not proven to measure total dam release.",
-    "Active membership is a dated validated selection, not a permanent availability guarantee."
+    "Current active reach ends at validation station 05CC002.",
+    "The legacy QGIS filename is retained; its title and layers reflect the current endpoint.",
+    "The dam tunnel gauge is not proven to measure total dam release."
+  ],
+  "endpoint_station_lon_lat": [
+    -113.82311248779295,
+    52.270530700683594
+  ],
+  "prediction_target_ids": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05"
+  ],
+  "scope_history": [
+    {
+      "date": "2026-11-04",
+      "endpoint_station_id": "05CC002",
+      "retained_target_ids": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05"
+      ],
+      "removed_target_ids": [
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11"
+      ],
+      "removed_tributaries": [
+        "BLINDMAN RIVER",
+        "WASKASOO CREEK"
+      ],
+      "reason": "No comparable observed downstream constraint is available beyond 05CC002 in the selected project data. Remove P06-P11 rather than extend the endpoint-supervised chain to unvalidated P11."
+    }
   ]
 }

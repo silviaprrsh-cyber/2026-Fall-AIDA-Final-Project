@@ -1,6 +1,22 @@
 # Red Deer River — reproducible course code
 
-Code and inputs for the Dickson Dam–Joffre Bridge project, separated into CV (2154), EDA (2156) and GIS (2362). This folder contains the current implemented workflow; it does not claim completed ML/CV training or validated flood prediction.
+Code and inputs for the Dickson Dam–05CC002 project, separated into CV (2154), EDA (2156) and GIS (2362). The goal is a near-real-time monitoring system combining API inputs, recursive predictions and a dashboard. GIS, ETL and experimental ML are implemented to different extents; CV training and end-to-end deployment remain pending.
+
+## Current scope and stage deliverables
+
+Active development is in this folder. The reach ends at **05CC002**, about 56.0 km along the mapped mainstem from Dickson Dam outlet. The working map retains **P01–P05**, four river gauges (05CB007, 05CB001, 05CC007 and 05CC002), two historical/lake references, one weather station and 229 section lines. Marker availability remains the dated archived review, not a live availability check.
+
+Reviewed presentation deliverables belong in the respective course deliverable folders, including [GIS outputs](courses/AIDA-2362/outputs/). These are not general destinations for logs, intermediate data or temporary exports. The [current GIS PDF](courses/AIDA-2362/outputs/Overhead%20view.pdf) and [PNG map](courses/AIDA-2362/project/map_overview.png) were exported and visually checked on 2026-11-08 from the reduced-scope [QGIS project](courses/AIDA-2362/project/dickson_to_joffre.qgz). The former Joffre PDF is preserved in the course data/processed/scope_history archive.
+
+| Component | Verified state and remaining work |
+|---|---|
+| GIS | Reduced map reopened in QGIS 3.44.14 with all layers valid and both layouts retained; see [verification](courses/AIDA-2362/data/reports/qgis_scope_05CC002.json). |
+| ETL / PostgreSQL | Observation-time tables and versioned training views exist. The 2026-11-02 ETL snapshot still contains the former 11-target geography; the map edit did not rebuild it or re-import PostgreSQL. |
+| ML | 60/20/20 and 80/20 experiments ran. Both selected the zero-parameter baseline; this is not evidence of useful learned improvement or validated intermediate predictions. |
+| CV | Historical imagery is downloaded and indexed. Segmentation training and independent validation remain pending. |
+| Final integration | Automatic acquisition → model inference → dashboard remains the final goal, not an implemented end-to-end service. |
+
+Next work is to reconcile ETL/geometry inputs with the reduced map and verify a new versioned dataset, then investigate model depth bias and evaluate CV inputs within the new reach. Do not overwrite the old experiments or describe them as rerun results.
 
 
 ## Field observation and winter observation scope
@@ -19,16 +35,16 @@ The backup [historical daily data](courses/AIDA-2156/data/processed/model_daily_
 
 The offline main program supports `python -B run.py ml inspect`, `train`, `evaluate` and `predict`. It applies the minimum surveyed elevation as experimental section zero, computes A(h) and V = Q/A, and calibrates six recursive parameter blocks with arrival-aligned endpoint supervision. 05CC007 supplies independent Q, stage and trend features with a learned lag. All segment and feature parameters train jointly on the 05CC002 endpoint. The active PostgreSQL unit-value snapshot supports arrival-aligned training, validation and testing. Effective counts and model selection are recorded in each training report. Commands, outputs, equations and limitations are documented in [ML README](courses/AIDA-2156/analysis/rdr_ml/README.md).
 
-The integrated model dataset is [segment_training.csv](courses/AIDA-2156/data/processed/project_etl/segment_training.csv). Each row represents one trajectory and independent submodel. The first chain is three source gauges → P01 → P02 → P03 → P04 → P05 → 05CC002, which lies before P06 in the selected GIS. Lake 05CC003 elevation is an ML feature only for P03→P04, never an added discharge. Transit times use along-river distance and future submodel-predicted velocity; endpoint labels are matched to the nearest downstream observation time at predicted arrival, not to simultaneous records. Missing velocity leaves labels pending. [ETL usage and state format](courses/AIDA-2156/data/processed/project_etl/README.md) describe the feature allowlist, configurable match tolerance and optional PostgreSQL import. CSV/SQLite are populated locally. The segment snapshot has also been imported and verified in PostgreSQL database `red_deer_river`, schema `rdr_segments_989fed53a9ba`; see `courses/AIDA-2156/data/reports/postgresql_import.json`.
+The integrated model dataset is [segment_training.csv](courses/AIDA-2156/data/processed/project_etl/segment_training.csv). Each row represents one trajectory and independent submodel. The first chain is 05CB007 + 05CB001 flows and independent 05CC007 features → P01 → P02 → P03 → P04 → P05 → 05CC002 (current downstream endpoint). Lake 05CC003 elevation is an ML feature only for P03→P04, never an added discharge. Transit times use along-river distance and future submodel-predicted velocity; endpoint labels are matched to the nearest downstream observation time at predicted arrival, not to simultaneous records. Missing velocity leaves labels pending. [ETL usage and state format](courses/AIDA-2156/data/processed/project_etl/README.md) describe the feature allowlist, configurable match tolerance and optional PostgreSQL import. CSV/SQLite are populated locally. The segment snapshot has also been imported and verified in PostgreSQL database `red_deer_river`, schema `rdr_segments_989fed53a9ba`; see `courses/AIDA-2156/data/reports/postgresql_import.json`.
 
 | Location | Contents |
 |---|---|
 | `API/` | Remote acquisition, one-time downloads and independent source scheduling |
-| `shared-resources/src/` and `config/` | Shared storage, path resolution and configuration |
+| `shared-resources/src/` and `shared-resources/config/` | Shared storage, path resolution and configuration |
 | `courses/AIDA-2154/src/`, `data/`, `outputs/` | Satellite input inspection and its data/results |
 | `courses/AIDA-2156/analysis/`, `data/`, `output/` | Observation-time ETL and preliminary hydraulic calculations |
 | `courses/AIDA-2362/src/`, `data/` | Survey/river processing and required spatial inputs |
-| `courses/AIDA-2362/project/dickson_to_joffre.qgz` | The single final QGIS project and its local layers |
+| `courses/AIDA-2362/project/dickson_to_joffre.qgz` | Current working QGIS project and its local layers |
 | `courses/AIDA-2362/outputs/` | Reviewed GIS presentation output |
 
 ## Experimental water-depth assumption and limitations
@@ -39,7 +55,13 @@ For this experiment, the reported river water level will be used as the variable
 
 The supplied cross-section data have not been verified to identify the corresponding gauge zero on each profile. Consequently, the omitted depth and the alignment between gauge levels and section elevations remain unresolved. Predicted water depth, wetted area, velocity and potential overbank risk may therefore differ from actual conditions. Treating the omitted depth as constant does not establish that its effects on area or flow are constant. ETL now preserves the original `level_m` and supplies a separate `experimental_variable_depth_m` under this assumption. It does not calculate or validate area, velocity or risk predictions.
 
+## Training experiment records
+
+The [60/20/20 report](courses/AIDA-2156/data/reports/segment_ml_training_60_20_20.json) and [80/20 report](courses/AIDA-2156/data/reports/segment_ml_training_80_20.json) are retained separately. Both selected iteration 0. In the 80/20 test, experimental-depth Bias = -1.227800 m, MAE = 1.227800 m and RMSE = 1.228352 m, indicating persistent underestimation with little error spread. The 80/20 comparison reuses a previously inspected period and is not a new untouched test. See the ML README for assumptions and effective sample counts.
+
 ## Environment
+
+For the existing workspace, run from `movetest` using `..\.venv\Scripts\python.exe -B run.py status` or `..\.venv\Scripts\python.exe -B run.py ml inspect`. The latter checks configured database inputs and needs PostgreSQL access. The setup below is for a separate new environment; do not recreate the existing parent environment. `etl` writes derived products and is not a read-only status check.
 
 Use 64-bit Python 3.13. The existing workflow was checked with Python 3.13.11 on Windows. From this folder:
 
@@ -57,7 +79,7 @@ python -m venv .venv
 
 Keep the course `data/` folders and the GIS `project/` together with the code. A code-only Git checkout cannot reproduce archived results unless these ignored inputs are supplied separately with permission. Do not copy an environment or credentials from another machine. Source responses and metadata remain under each course's `data/sources/`; `shared-resources/config/data_layout.json` routes shared reads and writes. `archive_paths.json` resolves legacy provenance references.
 
-The commands above read local archives without acquisition. Default ETL now builds the reduced Dickson–Joffre dataset in [`courses/AIDA-2156/data/processed/project_etl/`](courses/AIDA-2156/data/processed/project_etl/README.md): CSV tables plus `project.sqlite3`. It includes six river gauges, the separate Sylvan Lake reference, two linked weather stations, selected section profiles, P01–P11, candidate inflow/validation links and an index of existing satellite rasters. Historical daily values remain separate from instantaneous observations. Only necessary analytical fields, quality, missingness and provenance are retained; acquired originals are not removed. The build report is `courses/AIDA-2156/data/reports/project_etl_validation.json`.
+The local inspection commands do not acquire data. `run.py etl` rebuilds derived CSV/SQLite products under [project_etl](courses/AIDA-2156/data/processed/project_etl/README.md), using spatial selections and normalized profiles. The saved build report dated 2026-11-02 describes the former Dickson–Joffre snapshot: six river inputs, a separate lake reference, two weather stations, 366 sections and 11 targets. It has not been rebuilt after the map reduction. Check a new build report and import a separately verified PostgreSQL snapshot before claiming the analytical dataset matches the five-target map. Daily history remains separate from unit-value training; acquired originals are retained.
 
 This build reuses normalized profiles in `courses/AIDA-2156/data/processed/etl/` and the final GIS selections in `courses/AIDA-2362/project/`. If those prerequisite profiles must be rebuilt from the supplied geodatabases, explicitly run `run.py etl --legacy-full-basin` first, then `run.py etl`. The older full-basin output is a prerequisite archive, not the current analysis dataset. `--reuse-spatial` affects only the legacy command; the default scoped build always reuses the reviewed spatial selection. Image inspection separately writes `courses/AIDA-2154/outputs/archive_inspection.json`.
 
@@ -65,4 +87,16 @@ Open the final `.qgz` in QGIS to inspect its saved layers/layouts and export the
 
 Additional executable modules use `python -B run.py -m PACKAGE [ARGS]`. Running API acquisition is a separate operation and may need network access; satellite acquisition also needs root `.env` credentials. No credentials are supplied. Module-specific companion notes describe calls and outputs.
 
-There are no shipped unit-test directories, migration-check tools or test reports. Runtime data checks and the source evidence required by acquisition/ETL remain. AI assisted code organization and documentation; scientific validity is not established by a successful run. Data-use terms govern redistribution. Course submission must include the permitted inputs needed for the intended reproduction route.
+Standalone test suites are not part of the submission package; runtime validation and experiment reports remain with their data. Runtime data checks and the source evidence required by acquisition/ETL remain. AI assisted code organization and documentation; scientific validity is not established by a successful run. Data-use terms govern redistribution. Course submission must include the permitted inputs needed for the intended reproduction route.
+
+## Historical satellite inputs
+
+The 2026-11-04 verification completed all 989 river-grid requests for 2025-05-03 through 2026-11-01 UTC. [Historical imagery](courses/AIDA-2154/data/processed/satellite_history/20261103_history/README.md) contains 955 extracted 10 m GeoTIFFs from 104 acquisition groups. The index flags 34 no-data responses and one image without reflectance signal. Of the downloaded images, 658 match common hydrometric observations within 150 seconds for all source tiles, and 485 also meet the >=80% clear-corridor criterion. These are automated CV input candidates, not trained segmentation results. Original TAR responses and acquisition provenance are retained in the AIDA-2154 source archive.
+
+## Project modification history — 2026-11-04 (verified 2026-11-05)
+
+The active movetest reach now ends at Red Deer station 05CC002. Retain P01–P05; remove P06–P11 and downstream Blindman/Waskasoo map inputs. The selected project data provide no comparable downstream observation constraint to validate the continuation to P11. This reduction limits unsupported extrapolation; it does not establish accuracy at retained targets. The filename `dickson_to_joffre.qgz` is retained for compatibility, but its layers and displayed endpoint now use 05CC002.
+
+Source archives, previous model results and satellite acquisitions are retained. Existing `Overhead view.pdf`, `map_overview.png` and earlier validation reports are historical Joffre snapshots, not updated exports. Current GIS checks are `courses/AIDA-2362/data/reports/scope_05CC002.json` and `qgis_scope_05CC002.json`. The model already ends at 05CC002: its M06 link from P05 to the validation station remains; M06 is not prediction point P06. This map update does not retrain the model or replace PostgreSQL snapshots.
+
+Per-file explanatory companions (for example `client.py.md`, `active_scope.json.md` and their Chinese copies) remain local and are ignored through `*.*.md` and `*CN.md`. Previously tracked companions have been removed from the Git index, not from local storage, except companions archived with retired tools. README and standalone English project documents remain eligible for Git tracking.

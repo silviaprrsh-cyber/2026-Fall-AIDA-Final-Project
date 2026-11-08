@@ -3,16 +3,76 @@
   "bridges_source": "data/sources/openstreetmap/raw/prediction_landmarks/20261014T021331Z/bridges.json",
   "details_source": "data/sources/openstreetmap/raw/prediction_landmarks/20261014T021546Z/details.json",
   "targets": [
-    {"id": "P01", "name": "Mainstem after Little Red Deer and Medicine confluences", "method": "after_confluences", "rivers": ["LITTLE RED DEER RIVER", "MEDICINE RIVER"], "note": "Three rivers interpreted as Dickson mainstem, Little Red Deer and Medicine; first available downstream section."},
-    {"id": "P02", "name": "Highway 54", "method": "bridge", "osm_ids": [26987561]},
-    {"id": "P03", "name": "Township Road 370", "method": "bridge", "osm_ids": [31945917]},
-    {"id": "P04", "name": "Sylvan Creek mouth", "method": "osm_confluence", "osm_node_id": 894527429, "rivers": ["Sylvan Creek", "Red Deer River"], "note": "OSM shared confluence node projected onto the selected NHN mainstem; cartographic alignment, not a surveyed outlet."},
-    {"id": "P05", "name": "Highway 2", "method": "bridge", "osm_ids": [154744457,154744451], "note": "Single point at mean along-river chainage of both carriageways."},
-    {"id": "P06", "name": "Section between Gaetz Avenue and 49 Avenue bridges", "method": "section", "section_id": "red_deer:RED DEER RIVER:R46", "between_bridge_ids": [198352471,198352472], "note": "The user's 49 Street is interpreted as the mapped 49 Avenue bridge."},
-    {"id": "P07", "name": "67 Street", "method": "bridge", "osm_ids": [64026175,1550292482], "note": "Single point at mean along-river chainage of both carriageways."},
-    {"id": "P08", "name": "76 Street river bend section", "method": "section", "section_id": "red_deer:RED DEER RIVER:R59", "landmark_name": "76 Street", "note": "R59 selected as the nearest available mainstem section crossing to mapped 76 Street. Local bend interpretation remains reviewable."},
-    {"id": "P09", "name": "Discovery Canyon downstream footbridge", "method": "bridge", "osm_ids": [117724350], "landmark_name": "Discovery Canyon", "note": "User confirmed the downstream footbridge beside Discovery Canyon."},
-    {"id": "P10", "name": "First section downstream of Blindman confluence", "method": "after_confluences", "rivers": ["BLINDMAN RIVER"]},
-    {"id": "P11", "name": "Section beside Joffre Bridge / Highway 11", "method": "section", "section_id": "red_deer:RED DEER RIVER:R153", "adjacent_bridge_id": 63800353}
-  ]
+    {
+      "id": "P01",
+      "name": "Mainstem after Little Red Deer and Medicine confluences",
+      "method": "after_confluences",
+      "rivers": [
+        "LITTLE RED DEER RIVER",
+        "MEDICINE RIVER"
+      ],
+      "note": "Three rivers interpreted as Dickson mainstem, Little Red Deer and Medicine; first available downstream section."
+    },
+    {
+      "id": "P02",
+      "name": "Highway 54",
+      "method": "bridge",
+      "osm_ids": [
+        26987561
+      ]
+    },
+    {
+      "id": "P03",
+      "name": "Township Road 370",
+      "method": "bridge",
+      "osm_ids": [
+        31945917
+      ]
+    },
+    {
+      "id": "P04",
+      "name": "Sylvan Creek mouth",
+      "method": "osm_confluence",
+      "osm_node_id": 894527429,
+      "rivers": [
+        "Sylvan Creek",
+        "Red Deer River"
+      ],
+      "note": "OSM shared confluence node projected onto the selected NHN mainstem; cartographic alignment, not a surveyed outlet."
+    },
+    {
+      "id": "P05",
+      "name": "Highway 2",
+      "method": "bridge",
+      "osm_ids": [
+        154744457,
+        154744451
+      ],
+      "note": "Single point at mean along-river chainage of both carriageways."
+    }
+  ],
+  "scope_change": {
+    "date": "2026-11-04",
+    "endpoint_station_id": "05CC002",
+    "retained_target_ids": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05"
+    ],
+    "removed_target_ids": [
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11"
+    ],
+    "removed_tributaries": [
+      "BLINDMAN RIVER",
+      "WASKASOO CREEK"
+    ],
+    "reason": "No comparable observed downstream constraint is available beyond 05CC002 in the selected project data. Remove P06-P11 rather than extend the endpoint-supervised chain to unvalidated P11."
+  }
 }

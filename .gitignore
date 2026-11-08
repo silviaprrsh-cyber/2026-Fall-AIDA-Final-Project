@@ -27,6 +27,8 @@ __pycache__/
 
 # Chinese documentation is local only, at every directory depth.
 *CN.md
+# Per-file explanatory companions remain local; README and standalone docs remain tracked.
+*.*.md
 *_ZH.docx
 *_ZH.pdf
 *_ZH_*.docx

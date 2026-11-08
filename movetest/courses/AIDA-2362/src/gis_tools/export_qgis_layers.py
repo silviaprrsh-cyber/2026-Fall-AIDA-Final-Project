@@ -1,7 +1,7 @@
 """Export archived spatial data into source-separated WGS84 GeoJSON layers.
 
 Run with the project virtual environment. This performs no acquisition or ETL
-rebuild. The separate render_qgis_project.py uses the installed QGIS runtime.
+rebuild. Exporting the saved layout uses export_scope_layout.py in installed QGIS.
 """
 
 from project_paths import resolve_runtime_path, archive_relative
