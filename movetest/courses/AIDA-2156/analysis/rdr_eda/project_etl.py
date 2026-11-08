@@ -335,6 +335,19 @@ def target_inputs(stations, targets):
 
 
 def image_index(b, main):
+    scope = b.obj(ROOT / 'config/active_scope.json')
+    selected = WORKSPACE / 'courses/AIDA-2154/data/processed/satellite_history' / scope['scope_id'] / 'image_index.json'
+    if selected.exists():
+        index = b.obj(selected)
+        river_path = GIS / 'nrcan_nhn/selected_rivers.geojson'
+        if index['river_sha256'] != hashlib.sha256(river_path.read_bytes()).hexdigest():
+            raise ValueError('Satellite scope index is stale: run cv_tools.select_scope_history')
+        return [{'raster_path': row['image'], 'image_sha256': row['image_sha256'],
+                 'scope_id': index['scope_id'], 'source_archive': row['source_archive'],
+                 'time_matches': row['time_matches'], 'quality': row['quality'],
+                 'matched_clear_candidate': row['matched_clear_candidate'],
+                 'scope_mask_required': True, 'metadata_path': selected.relative_to(WORKSPACE).as_posix()}
+                for row in index['images']]
     from shapely.geometry import shape, box
     from shapely.ops import transform
     from pyproj import Transformer

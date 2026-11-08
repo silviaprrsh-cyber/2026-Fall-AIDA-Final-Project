@@ -11,12 +11,12 @@ Reviewed presentation deliverables belong in the respective course deliverable f
 | Component | Verified state and remaining work |
 |---|---|
 | GIS | Reduced map reopened in QGIS 3.44.14 with all layers valid and both layouts retained; see [verification](courses/AIDA-2362/data/reports/qgis_scope_05CC002.json). |
-| ETL / PostgreSQL | Observation-time tables and versioned training views exist. The 2026-11-02 ETL snapshot still contains the former 11-target geography; the map edit did not rebuild it or re-import PostgreSQL. |
+| ETL / PostgreSQL | Rebuilt for 05CC002 with 229 sections and five targets; new versioned PostgreSQL snapshot and both partition-view sets verified. |
 | ML | 60/20/20 and 80/20 experiments ran. Both selected the zero-parameter baseline; this is not evidence of useful learned improvement or validated intermediate predictions. |
 | CV | Historical imagery is downloaded and indexed. Segmentation training and independent validation remain pending. |
 | Final integration | Automatic acquisition → model inference → dashboard remains the final goal, not an implemented end-to-end service. |
 
-Next work is to reconcile ETL/geometry inputs with the reduced map and verify a new versioned dataset, then investigate model depth bias and evaluate CV inputs within the new reach. Do not overwrite the old experiments or describe them as rerun results.
+Next work is retraining and evaluation on the new snapshot, investigating depth bias, and preparing CV with the active-scope mask. Old models and results remain historical comparisons.
 
 
 ## Field observation and winter observation scope
@@ -27,7 +27,7 @@ Considering winter conditions that may include extremely low water, locally almo
 
 ## Segment ML entry point
 
-PostgreSQL storage is active in database `red_deer_river`, schema `rdr_unit_c85b2cab1263ea01`. `v_train`, `v_validation` and `v_test` expose the 60/20/20 candidate partitions. `v_input_history`, `v_lake_history` and `v_endpoint_observations` support arrival-time matching, while geometry and routing have their own views. Run `python -B run.py ml inspect` to check loading or `python -B run.py ml train --iterations 3` for a bounded trial. The reproducible import is `python -B run.py -m eda_tools.import_unit_postgres`. Credentials stay in the project `.env`. Import verification is in `courses/AIDA-2156/data/reports/postgresql_unit_import.json`.
+PostgreSQL storage is active in database `red_deer_river`, schema `rdr_unit_0f36881e431d0966`. `v_train`, `v_validation` and `v_test` expose the 60/20/20 candidate partitions. `v_input_history`, `v_lake_history` and `v_endpoint_observations` support arrival-time matching, while geometry and routing have their own views. Run `python -B run.py ml inspect` to check loading or `python -B run.py ml train --iterations 3` for a bounded trial. The reproducible import is `python -B run.py -m eda_tools.import_unit_postgres`. Credentials stay in the project `.env`. Import verification is in `courses/AIDA-2156/data/reports/postgresql_unit_import.json`.
 
 The active analysis source is the [18-month Wateroffice unit-value dataset](courses/AIDA-2156/data/processed/model_unit_history/20261103T070414Z/README.md). All 95 monthly station requests completed for 2025-05-03 through 2026-11-03 UTC. The files contain 1,350,764 unique parameter records and 95,053 screened, common observation timestamps, typically spaced five minutes apart. Chronological 60/20/20 candidate counts are 57,031/19,010/19,012 before propagation alignment and target-boundary checks. Numeric grades and provisional approvals are retained. The lake has a long winter gap. Daily means remain backup material and are excluded from the active analysis. The ML entry point now reads PostgreSQL views by default.
 
@@ -79,7 +79,7 @@ python -m venv .venv
 
 Keep the course `data/` folders and the GIS `project/` together with the code. A code-only Git checkout cannot reproduce archived results unless these ignored inputs are supplied separately with permission. Do not copy an environment or credentials from another machine. Source responses and metadata remain under each course's `data/sources/`; `shared-resources/config/data_layout.json` routes shared reads and writes. `archive_paths.json` resolves legacy provenance references.
 
-The local inspection commands do not acquire data. `run.py etl` rebuilds derived CSV/SQLite products under [project_etl](courses/AIDA-2156/data/processed/project_etl/README.md), using spatial selections and normalized profiles. The saved build report dated 2026-11-02 describes the former Dickson–Joffre snapshot: six river inputs, a separate lake reference, two weather stations, 366 sections and 11 targets. It has not been rebuilt after the map reduction. Check a new build report and import a separately verified PostgreSQL snapshot before claiming the analytical dataset matches the five-target map. Daily history remains separate from unit-value training; acquired originals are retained.
+`run.py etl` now rebuilds CSV/SQLite for the current map: four river stations, a lake reference, one weather station, 229 sections, five targets and 775 satellite index entries. Unit-value training history is separate from scoped ETL observations; current training views use the unit-value history. Source originals and previous snapshots are retained.
 
 This build reuses normalized profiles in `courses/AIDA-2156/data/processed/etl/` and the final GIS selections in `courses/AIDA-2362/project/`. If those prerequisite profiles must be rebuilt from the supplied geodatabases, explicitly run `run.py etl --legacy-full-basin` first, then `run.py etl`. The older full-basin output is a prerequisite archive, not the current analysis dataset. `--reuse-spatial` affects only the legacy command; the default scoped build always reuses the reviewed spatial selection. Image inspection separately writes `courses/AIDA-2154/outputs/archive_inspection.json`.
 
@@ -100,3 +100,23 @@ The active movetest reach now ends at Red Deer station 05CC002. Retain P01–P05
 Source archives, previous model results and satellite acquisitions are retained. Existing `Overhead view.pdf`, `map_overview.png` and earlier validation reports are historical Joffre snapshots, not updated exports. Current GIS checks are `courses/AIDA-2362/data/reports/scope_05CC002.json` and `qgis_scope_05CC002.json`. The model already ends at 05CC002: its M06 link from P05 to the validation station remains; M06 is not prediction point P06. This map update does not retrain the model or replace PostgreSQL snapshots.
 
 Per-file explanatory companions (for example `client.py.md`, `active_scope.json.md` and their Chinese copies) remain local and are ignored through `*.*.md` and `*CN.md`. Previously tracked companions have been removed from the Git index, not from local storage, except companions archived with retired tools. README and standalone English project documents remain eligible for Git tracking.
+
+## Scope synchronization — 2026-11-08
+
+API configuration, current GIS and rebuilt ETL now use Dickson Dam outlet → 05CC002: four enabled river gauges, a separate lake reference, one weather station, P01–P05 and 229 sections. The ETL satellite table now indexes 775 overlapping archived rasters; recalculated quality/time checks select 389 candidates. Original images are unchanged. Use the active-scope mask before CV; neither selection nor provider masks are a trained CV model.
+
+The current PostgreSQL snapshot is `rdr_unit_0f36881e431d0966`. Both default 60/20/20 views (57,031 / 19,010 / 19,012 candidates) and 80/20 views (76,042 / 0 / 19,011) were verified. These are candidate counts before travel-time alignment. Training still reads the unit-value dataset, not the 6,572 instantaneous rows in the separate scoped ETL archive.
+
+The previous PostgreSQL snapshot and both trained models remain historical. Changed geometry/graph rejects old model reuse. New default artifacts go to `courses/AIDA-2156/data/processed/segment_ml_05CC002/`; no new model has been trained. Use a separate output directory for an 80/20 run. Previous ETL and configuration are preserved in `courses/AIDA-2156/data/processed/scope_history/before_05CC002_sync_20261108.zip`.
+
+Reproduction from the movetest directory, using its installed Python environment:
+
+```powershell
+python -B run.py -m cv_tools.select_scope_history
+python -B run.py etl
+python -B run.py -m eda_tools.import_unit_postgres
+python -B run.py -m eda_tools.import_unit_postgres --split 80-20
+python -B run.py ml inspect
+```
+
+The first two commands rebuild local derived selections; the import commands write a versioned PostgreSQL schema/configuration. They do not fetch new observations or train a model. The satellite archive, normalized surveys and QGIS layers must accompany the code. For a new machine, create a local Python 3.13 environment and install `requirements.lock.txt`; configure `.env` from the blank `.env.example` using that machine's PostgreSQL account. Satellite credentials are needed only for new acquisition. In this workspace the existing parent `.venv` can be used explicitly; no credentials were copied and no second environment was created. QGIS remains a separately installed dependency. This is reproduction from supplied data, not an automatic reconstruction of every source archive from an empty checkout.

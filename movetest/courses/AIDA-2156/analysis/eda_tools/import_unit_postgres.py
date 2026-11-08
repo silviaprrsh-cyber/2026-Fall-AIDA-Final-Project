@@ -150,6 +150,10 @@ def main():
             'daily_data_imported':False,'status':'imported_and_views_verified'}
     path=BASE/'reports/postgresql_unit_import.json'
     path.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+    split_report = path.with_name('postgresql_unit_import_' + args.split.replace('-', '_') + '.json')
+    split_report.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+    companion(split_report, 'Split-specific import verification; preserves both partition checks.',
+              '\u5206\u522b\u4fdd\u7559\u4e24\u79cd\u5212\u5206\u7684\u5bfc\u5165\u6838\u5b9e\u8bb0\u5f55\u3002')
     companion(path,'Verified PostgreSQL import, snapshot hashes and table/view counts. Created by import_unit_postgres.',
               'import_unit_postgres 生成的 PostgreSQL 导入核实记录，包含快照哈希和表/view 数量。')
     print(json.dumps(report,indent=2))

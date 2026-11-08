@@ -2566,7 +2566,7 @@
       ],
       "vertical_datum": "ASSUMED DATUM",
       "province": "AB",
-      "enabled": true,
+      "enabled": false,
       "selected_monitoring_point": true,
       "sources": [
         {
@@ -2769,7 +2769,7 @@
       ],
       "vertical_datum": "ASSUMED DATUM",
       "province": "AB",
-      "enabled": true,
+      "enabled": false,
       "selected_monitoring_point": true,
       "sources": [
         {

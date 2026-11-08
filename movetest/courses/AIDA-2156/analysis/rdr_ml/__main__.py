@@ -15,7 +15,7 @@ from .core import Chain, Dataset, fit, metrics
 DATA = WORKSPACE / 'courses/AIDA-2156/data'
 DEFAULT_DB = DATA / 'processed/project_etl/project.sqlite3'
 DEFAULT_POLICY = WORKSPACE / 'shared-resources/config/segment_ml.json'
-DEFAULT_OUTPUT = DATA / 'processed/segment_ml_postgres'
+DEFAULT_OUTPUT = DATA / 'processed/segment_ml_05CC002'
 DEFAULT_PG_CONFIG = WORKSPACE / 'shared-resources/config/postgres_dataset.json'
 
 

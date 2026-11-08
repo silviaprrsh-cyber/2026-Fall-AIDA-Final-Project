@@ -7,6 +7,7 @@ __pycache__/
 # Credentials and local environment files
 .env
 .env.*
+!.env.example
 
 # Source data, derived datasets and runtime state
 /data/sources/
