@@ -1,0 +1,26 @@
+{
+  "validated_utc": "2026-11-24T03:15:55.863885+00:00",
+  "zip_name": "AIDA2156_EDA_D2L_ready_20261123.zip",
+  "zip_bytes": 3900642,
+  "zip_mb": 3.72,
+  "zip_sha256": "57bc681504115b9037aef30366018183968df600fb33040cb1ab6f2bc9412c57",
+  "file_count": 41,
+  "python_version": "3.13.7",
+  "stdlib_only_flags": "-B -E -S",
+  "build_seconds": 1.501,
+  "clean_extract_replay": {
+    "analysis_exit_code": 0,
+    "analysis_seconds": 21.346,
+    "assertions_exit_code": 0,
+    "assertions_seconds": 0.429,
+    "figures_exit_code": 0,
+    "figures_seconds": 0.165,
+    "table_files_byte_matched": 7,
+    "svg_files_byte_matched_and_xml_valid": 4,
+    "mismatches": 0
+  },
+  "excluded": [
+    "*CN.md and *CN.docx local companions",
+    "raw acquisition archives, PostgreSQL/V4 model weights, Windows server/client binaries, .env credentials"
+  ]
+}

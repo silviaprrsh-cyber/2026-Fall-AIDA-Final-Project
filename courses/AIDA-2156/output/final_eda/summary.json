@@ -1,0 +1,212 @@
+{
+  "study": "Dickson to Red Deer 05CC002 historical observation adequacy",
+  "request_window_utc": [
+    "2025-05-03T07:04:14+00:00",
+    "2026-11-03T07:04:14+00:00"
+  ],
+  "grid": "UTC-aligned 300 s slots within the requested window; expected slots are an inferred denominator, not a claim of nominal station uptime.",
+  "inputs": [
+    {
+      "station": "05CB007",
+      "input_file": "05CB007_observations.csv",
+      "rows": 155601,
+      "sha256": "e4ab164e7a4a23f61c8beb0328eda097c8ccdc05b78b3c9c2191fb2e353c74b6"
+    },
+    {
+      "station": "05CB001",
+      "input_file": "05CB001_observations.csv",
+      "rows": 157719,
+      "sha256": "0916cd68193fc47eaad7799eadc6b1e6b9f121e2732b9c388abedc057b592fc8"
+    },
+    {
+      "station": "05CC007",
+      "input_file": "05CC007_observations.csv",
+      "rows": 157220,
+      "sha256": "b21533b60d4c7119c62db6164ec62908dfc7c018567c2feeee2654c9d3febe69"
+    },
+    {
+      "station": "05CC002",
+      "input_file": "05CC002_observations.csv",
+      "rows": 156318,
+      "sha256": "0819e1b3bad5dc8e22113b68af8ace81ac04f27b707443197299bdc3a0035cbd"
+    },
+    {
+      "station": "05CC003",
+      "input_file": "05CC003_observations.csv",
+      "rows": 105790,
+      "sha256": "2a2128535f28903fa6fccda30b7c276e531c55b7564ba81f482f70d9bba757ca"
+    }
+  ],
+  "joint_screen": "Positive finite level and flow at all four river stations; a positive finite level at 05CC003 when required. Blank Symbol and Qualifiers fields, exact UTC five-minute keys, no imputation. Grade and approval retained.",
+  "strict_policy": "Also require an explicit Final/Finales label on each value; other status and missing status excluded. No quality ordering of numeric grades assumed.",
+  "approval_coverage_by_station_parameter": [
+    {
+      "station": "05CB007",
+      "parameter": "level",
+      "baseline_n": 152554,
+      "explicit_final_n": 73601
+    },
+    {
+      "station": "05CB007",
+      "parameter": "discharge",
+      "baseline_n": 153801,
+      "explicit_final_n": 73601
+    },
+    {
+      "station": "05CB001",
+      "parameter": "level",
+      "baseline_n": 157695,
+      "explicit_final_n": 0
+    },
+    {
+      "station": "05CB001",
+      "parameter": "discharge",
+      "baseline_n": 157682,
+      "explicit_final_n": 0
+    },
+    {
+      "station": "05CC007",
+      "parameter": "level",
+      "baseline_n": 157205,
+      "explicit_final_n": 0
+    },
+    {
+      "station": "05CC007",
+      "parameter": "discharge",
+      "baseline_n": 156318,
+      "explicit_final_n": 0
+    },
+    {
+      "station": "05CC002",
+      "parameter": "level",
+      "baseline_n": 153401,
+      "explicit_final_n": 67183
+    },
+    {
+      "station": "05CC002",
+      "parameter": "discharge",
+      "baseline_n": 156318,
+      "explicit_final_n": 69975
+    },
+    {
+      "station": "05CC003",
+      "parameter": "level",
+      "baseline_n": 105790,
+      "explicit_final_n": 52402
+    }
+  ],
+  "station_parameters_without_explicit_final_after_screen": [
+    {
+      "station": "05CB001",
+      "parameter": "level"
+    },
+    {
+      "station": "05CB001",
+      "parameter": "discharge"
+    },
+    {
+      "station": "05CC007",
+      "parameter": "level"
+    },
+    {
+      "station": "05CC007",
+      "parameter": "discharge"
+    }
+  ],
+  "secondary_endpoint_only_approval_check": {
+    "id": "secondary_endpoint_approval",
+    "comparison": "Endpoint discharge only, screened versus explicitly Final/Finales within UTC dates with any Final discharge.",
+    "reference_timestamps": 70179,
+    "alternative_timestamps": 69975,
+    "alternative_retention_fraction": 0.997093,
+    "reference_utc_days": 244,
+    "alternative_utc_days": 244,
+    "reference_7day_blocks": 35,
+    "alternative_7day_blocks": 35,
+    "reference_endpoint_q_mean_m3_s": 34.365085,
+    "alternative_endpoint_q_mean_m3_s": 34.419607,
+    "changed_minus_reference_mean_m3_s": 0.054522,
+    "changed_minus_reference_mean_ci_2_5": 0.0,
+    "changed_minus_reference_mean_ci_97_5": 0.185018,
+    "reference_endpoint_q_median_m3_s": 21.7,
+    "alternative_endpoint_q_median_m3_s": 21.7,
+    "reference_endpoint_q_p90_m3_s": 73.3,
+    "alternative_endpoint_q_p90_m3_s": 73.3,
+    "decision_impact": "Describes endpoint approval availability and cannot substitute for an all-final joint river/lake comparison."
+  },
+  "cohort_timestamps": {
+    "river_only_all_dates": 144289,
+    "river_only_shared_dates": 95718,
+    "lake_complete": 95053,
+    "all_final_lake_complete": 0
+  },
+  "cohort_utc_dates": {
+    "river_only_all_dates": 541,
+    "river_only_shared_dates": 361,
+    "lake_complete": 361,
+    "all_final_lake_complete": 0
+  },
+  "river_only_timestamps_on_other_dates": 48571,
+  "lag_method": "Pearson upstream Q(t-lag) versus endpoint Q(t); exact matches; common target support across tested lags within each upstream station; supports can differ between stations. Tested lags are illustrative, not a selected or verified transit time.",
+  "uncertainty": "Percentile 95% intervals from 1000 resamples of fixed nonoverlapping 7-day UTC blocks (seed 20261120); at least 8 contributing blocks per cohort. P-S2 resamples paired calendar blocks and compares record-weighted means. Intervals describe historical sample variability, not independent-event, causal or forecast uncertainty.",
+  "limitations": [
+    "Season, shared drivers, persistence and station-specific availability affect contemporaneous and lagged flow associations.",
+    "Receipt time does not prove availability at a historical forecast issue time.",
+    "Avoid interpreting a change in sample composition as a hydraulic effect of the lake.",
+    "Reported stage/elevation is not river-bed depth; common vertical datum and bank elevation not verified.",
+    "Rare highs cannot validate flood warnings. No CV inference, rainfall imputation, model performance, or site-level hazard is estimated."
+  ],
+  "sensitivity": [
+    {
+      "id": "P-S1",
+      "comparison": "Historical lake-complete screen versus same screen requiring explicit Final/Finales for all nine values.",
+      "reference_timestamps": 95053,
+      "alternative_timestamps": 0,
+      "alternative_retention_fraction": 0.0,
+      "reference_utc_days": 361,
+      "alternative_utc_days": 0,
+      "reference_7day_blocks": 55,
+      "alternative_7day_blocks": 0,
+      "reference_endpoint_q_mean_m3_s": 39.826631,
+      "alternative_endpoint_q_mean_m3_s": null,
+      "changed_minus_reference_mean_m3_s": null,
+      "changed_minus_reference_mean_ci_2_5": null,
+      "changed_minus_reference_mean_ci_97_5": null,
+      "reference_endpoint_q_median_m3_s": 29.0,
+      "alternative_endpoint_q_median_m3_s": null,
+      "reference_endpoint_q_p90_m3_s": 76.4,
+      "alternative_endpoint_q_p90_m3_s": null,
+      "decision_impact": "No joint all-final estimate available; retain flagged historical observations only for exploratory use."
+    },
+    {
+      "id": "P-S2",
+      "comparison": "River-only versus lake-complete using the historical screen on the same UTC dates that have at least one lake-complete candidate.",
+      "reference_timestamps": 95718,
+      "alternative_timestamps": 95053,
+      "alternative_retention_fraction": 0.993053,
+      "reference_utc_days": 361,
+      "alternative_utc_days": 361,
+      "reference_7day_blocks": 55,
+      "alternative_7day_blocks": 55,
+      "reference_endpoint_q_mean_m3_s": 39.703642,
+      "alternative_endpoint_q_mean_m3_s": 39.826631,
+      "changed_minus_reference_mean_m3_s": 0.12299,
+      "changed_minus_reference_mean_ci_2_5": -0.002041,
+      "changed_minus_reference_mean_ci_97_5": 0.315401,
+      "reference_endpoint_q_median_m3_s": 28.8,
+      "alternative_endpoint_q_median_m3_s": 29.0,
+      "reference_endpoint_q_p90_m3_s": 76.4,
+      "alternative_endpoint_q_p90_m3_s": 76.4,
+      "decision_impact": "Show lake-complete estimates as conditional on lake availability; do not impute or require lake data for a river-only descriptive analysis."
+    }
+  ],
+  "checks": {
+    "five_station_inputs_with_unique_in_window_sorted_keys": true,
+    "nine_parameter_series_reconciled": true,
+    "filter_hierarchy_and_no_imputation": true,
+    "shared_date_comparison_uses_identical_dates": true,
+    "lagged_outputs_use_exact_past_or_same_time_support": true,
+    "cohort_counts_equal_block_sums": true
+  },
+  "disposition": "Experimental descriptive study only; operational use withheld."
+}

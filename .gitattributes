@@ -1,0 +1,2 @@
+courses/AIDA-2154/outputs/AIDA2154-CV-Windows-20261113.zip.part001 filter=lfs diff=lfs merge=lfs -text
+courses/AIDA-2154/outputs/AIDA2154-CV-Windows-20261113.zip.part002 filter=lfs diff=lfs merge=lfs -text

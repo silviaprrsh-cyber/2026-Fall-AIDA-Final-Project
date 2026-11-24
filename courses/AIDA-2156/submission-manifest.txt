@@ -1,0 +1,74 @@
+AIDA 2156 submission manifest
+Inventory UTC: 2026-11-23T01:36:00+00:00 (refreshed after 2026-11-22 student sign-off on AI declaration, retrospective, and ECCC datum update)
+Scope: Dickson Dam to Red Deer gauge 05CC002, formal historical EDA only.
+Private final-project repository: https://github.com/stem-ai-studio-classroom/aida-final-project-miles-zhang
+Current assignment: AIDA 2156 Final Project: Presentation, Peer Review, and Submission.
+D2L cutoff as displayed: Monday, December 14, 2026 at 11:59 p.m. In-class presentations: Weeks 13-14 by instructor schedule.
+D2L requires an uploaded clean, reproducible project package plus the private repository link; the supplied page does not specify an extension.
+Status: local evidence and replay inventory, not an uploaded package, D2L receipt, or release approval.
+The reproducible inputs are the five frozen normalized WSC/ECCC Water Office tables. The formal analysis only needs CPython 3.13.11 standard library.
+Run instructions are in analysis/README.md; the exact isolated commands and output hashes are in output/clean-copy-replay.txt.
+
+COURSE EVIDENCE  |  SHA-256  |  bytes  |  path  |  purpose
+Paths are relative to courses/AIDA-2156 and this manifest is excluded from its own hash list.
+3732b80a6533a314329889fe153268a9374d11e35aa9d0b4321f9977f54530a3       22584  README.md  |  entry point
+a21217a1c182af7160d765df812809fb95928ba557b5347c7cd877950f6ed92b       20437  READMECN.md  |  entry point (Chinese)
+5146d714e14f523294088ca03ab2add2f7c5891611c211d01a53db82732ad606         296  requirements-eda.lock.txt  |  environment
+0b36ad5df6725bfc0e598555615b712f94b86ec46c4771cab839d32ad9dfcea1        6094  analysis-plan.md  |  research question
+809620f3cc40e69161bede594edf6a50f11850b41cbc44d7f1d233c029abb85b        5340  analysis-planCN.md  |  research question (Chinese)
+6466acbc09216d3cd1544bb9b5dc6f0d21bf5dd9738ab09aeb9ffa7ea55cf26d        3503  claim-evidence-index.csv  |  claim mapping
+8ee26a52fbd1e92b602a08f6e003eb7d4b8fb24b3d45ea48ff0c45d3e920abba       15251  data/data-dictionary.csv  |  data dictionary
+9f6219457b01a7e6305b2131a3e3216f729d1e995b326986d6dff6a439315f3e         938  data/provenance.txt  |  source and permission
+1fb38710d4490e9535418e4046f8d0836b46cc8ecc8183c5bc540c3aa3403096        5906  data/provenance.md  |  source and permission details
+14a1568580a61e66543e1edd6ea79d069307784f41e12ace6fa51cc4ff4788c3        3601  data/provenanceCN.md  |  source and permission details (Chinese)
+2b9e517e1c0a581e4335c549891dac644d77f5ae75606f25b6f647f7257b1ee4      297769  data/eda-input-checksums.csv  |  input identity ledger
+71f7557d761cc71c4fce393a302038a90c0f86fd7b21b195cc60d5a0d3249a2e        2643  analysis/README.md  |  reproduction instructions
+bbab5e89a5c61b33fb6052cd4b183be5824094be92087fe0f7c6c55771a3207c       21641  analysis/analysis.py  |  analysis code
+7d4e52c9e0a07bbe5c7dd646a000c02cda4e7fc0881efee476216f7ecbc75ee6       30690  analysis/make_eda_figures.py  |  standard-library SVG figure generator
+c1e5a3bebc740d91d0370a715d22d8676bb704d2b40ced2e6d7ea0f0268dbdc6        6540  analysis/tests_or_assertions.py  |  assertions
+3d330355751132a6da58d7401dd36a3256d275064bc2a9db1e46ffff035c7360        1667  output/README.md  |  official-output index
+f1a1e678a34e5e56718e1cfb2d9e16fceb3d6a0befb536b13a3c116c9443ae54        1171  output/sensitivity-results.csv  |  formal sensitivity summary
+262204b024949f211c10e0e027cfcd5e02c66ff8682283f8534298af2dd0728c        3528  output/clean-copy-replay.txt  |  clean-copy replay evidence
+58e93bb061b99ebd7cd0e6ffbc0fffad27084e69c0bafb4c7cfb1b97329ed38a        9341  app-or-report/final-eda-report.md  |  formal decision report
+33aede2968e2f20e503fd900a36945eb17f9c68bd8d629b53e5b5519b1b56b6f        8028  app-or-report/final-eda-reportCN.md  |  formal decision report (Chinese)
+fcc35d7da00d7df84f0f971c97dc7e2e5a33c64c3499fbd1d1e3e5642fbb481f        2822  app-or-report/source-context.md  |  context and source audits
+b408d37fe41c9f29455e1cccedf45b44c86e53f1d5712d27cdbd3d90688df899        2290  app-or-report/source-contextCN.md  |  context and source audits (Chinese)
+f097e9d3647a25ae99607f16e85baa87cda58e0179195c22d37bb716a8242e02        2403  app-or-report/accessibility-notes.md  |  accessible equivalents
+5d3261fae898c0e0389b620e86f4702ec40b45a7fad09eebc789fac9186271a2        1439  app-or-report/accessibility-notesCN.md  |  accessible equivalents (Chinese)
+d649eb608edc349bc8d00ccfa55342106789d3736c0570cccdf68c481bcdbf9e       78265  docs/eda-project-report.docx  |  standalone report with classroom walkthrough
+112b7e5a6bf9a1223e6fe3da41950853a1f65679fdd2b5aaedeee70a1b635c87       91181  docs/eda-project-reportCN.docx  |  standalone report with classroom walkthrough (Chinese)
+c17ae20b9e75138e47336264fb6a5d6573a9e2ae7fc197142a59d13cbd446b11        3999  governance-and-release.md  |  governance and disposition
+1a445cec522742fee3fcade483e8eb817ab589ea33f89ec464fd83dbea0b1131        2385  governance-and-releaseCN.md  |  governance and disposition (Chinese)
+40ce6dd4cb252a7515d77126e07b6629bcd7c0660c747e34256e18ace3f4a799        2458  limitations-and-next-evidence.md  |  limitations and next evidence
+a8611a97c3c178eb88f8d60bfe6d814cbfc91d2c43861b69e822d792bc7f6122        2174  limitations-and-next-evidenceCN.md  |  limitations and next evidence (Chinese)
+ec87a895ecd0c06127b74711ac2eccc0bd1869b44105694bab937a06a24bd169        2373  ai-use-declaration.md  |  AI disclosure (finalized 2026-11-22)
+224175f4d86cf4ee5cf1a3dbb7047ac82de2d7752533c4c6ea4be5944c3d6718        2110  ai-use-declarationCN.md  |  AI disclosure (Chinese, finalized 2026-11-22)
+a980a91fe05e5d88648f2c56eb249da4fef76a776df165555d22216078d2bfa2        3465  retrospective.md  |  retrospective (finalized 2026-11-22)
+2617e171602daaa8dacff06bae19f388e9f6f8cdf89e4e03b5e42b0bb07f2db9        3028  retrospectiveCN.md  |  retrospective (Chinese, finalized 2026-11-22)
+a1b8153784c660ea450e02a6f2bc802c00100328889e8f5610b0e0e0c290813d         412  peer-review.md  |  peer review position; genuine record pending
+fcf96f99e0cb529e241ab5824679a98a74278c91d80ffe7e2c09115acf755826         367  peer-reviewCN.md  |  peer review position (Chinese); genuine record pending
+5d150588ec5334c459e7e674316abd37d0084bc3902eaaf500a3635f04390b11       14162  output/final_eda/coverage.csv  |  formal replay result
+4ee046790b6bb2d96e5269dd2651bb83697f4a55061f1c71fcf406232e6a9948        1781  output/final_eda/distributions.csv  |  formal replay result
+bfbf3e7996a5158cc5dea7cc2a1ea97bfb5548a2e0c2c5051838a2a410a00430        1742  output/final_eda/lagged_relationships.csv  |  formal replay result
+920d9f65a83dee1b9d34ad619d38be83320f0e77eeaad290ca5e40c33c0838a3       33677  output/final_eda/quality_counts.csv  |  formal replay result
+e96554bef115f75b9cdf2c71750e6f5b5febfcff05959ff929e6a66d88fcbf57        1135  output/final_eda/sensitivity-results.csv  |  formal replay result
+05ffc8ca4bd027ee33acc2e4b476d4e2d903721d46b2ed7d5af726d1fee6ba6e        8606  output/final_eda/summary.json  |  formal replay result
+995cd72aa3f94e90b43845ba8f509360e0e0f878ad1cff7ee13c96e06b0d5568        4584  output/final_eda/time_blocks.csv  |  formal replay result
+708c61ac4a36d90ee64c5fae6403b4664fd9fe576af6487963384fe6eaeba2e6       25883  output/final_eda/figures/fig1_monthly_coverage.svg  |  labelled colourblind-safe SVG figure
+2bf04937e1b5f0781d0848681d4a8245fd91091a4eb6eadb696039a173d84fef        8554  output/final_eda/figures/fig2_discharge_distributions.svg  |  labelled colourblind-safe SVG figure
+fef071a0120f722f3363f36a833277b6f998afecaa05e1e6f11878f30f4d862b       14989  output/final_eda/figures/fig3_lagged_correlations.svg  |  labelled colourblind-safe SVG figure
+baf58bef1296ee4db182425df51136a4e119d3e55572e07dca1b89da892a5f86       10412  output/final_eda/figures/fig4_sensitivity_rules.svg  |  labelled colourblind-safe SVG figure
+
+FROZEN REPLAY INPUTS  |  SHA-256  |  bytes  |  local course-relative path
+These are the exact local dependencies used in the clean copy. Inclusion here does not authorize external redistribution of every field.
+0916cd68193fc47eaad7799eadc6b1e6b9f121e2732b9c388abedc057b592fc8    63602598  data/processed/model_unit_history/20261103T070414Z/05CB001_observations.csv
+e4ab164e7a4a23f61c8beb0328eda097c8ccdc05b78b3c9c2191fb2e353c74b6    60394194  data/processed/model_unit_history/20261103T070414Z/05CB007_observations.csv
+0819e1b3bad5dc8e22113b68af8ace81ac04f27b707443197299bdc3a0035cbd    61242896  data/processed/model_unit_history/20261103T070414Z/05CC002_observations.csv
+2a2128535f28903fa6fccda30b7c276e531c55b7564ba81f482f70d9bba757ca    23745641  data/processed/model_unit_history/20261103T070414Z/05CC003_observations.csv
+b21533b60d4c7119c62db6164ec62908dfc7c018567c2feeee2654c9d3febe69    63371610  data/processed/model_unit_history/20261103T070414Z/05CC007_observations.csv
+
+FINAL HANDOFF BOUNDARY
+Verified locally: an empty temporary directory contained only the two analysis scripts and five frozen tables before execution. Standard-library-only run and assertions passed; all seven outputs matched the saved evidence byte for byte.
+Before any external handoff: choose only provider-permitted inputs and fields, keep WSC/ECCC attribution, and verify the actual deliverable and dependencies from a fresh location. If an approved projection changes input hashes, identify that exact variant and verify it independently.
+Exclude raw archives and receipts, restricted records, private communications, credentials, connection strings, caches, virtual environments, unrelated or nested archives, model weights and the separate Windows deployment.
+Pending: genuine assigned peer feedback and recorded response, clean uploadable ZIP packaging, class demonstration, any official validation checks supplied, verification of the final private repository reference and actual D2L upload. AI disclosure and personal retrospective were finalized on 2026-11-22. No review, submission, staging, commit or push was performed here.

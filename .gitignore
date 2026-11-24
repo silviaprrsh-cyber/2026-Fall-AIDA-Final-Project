@@ -1,46 +1,58 @@
-# Local Python environment and caches
+# Local Python environments and caches
 .venv/
+venv/
 __pycache__/
 *.py[cod]
-.pytest_cache/
+.ipynb_checkpoints/
 
-# Credentials and local environment files
+# Local secrets and credentials
 .env
 .env.*
 !.env.example
+*.pem
+*.key
 
-# Source data, derived datasets and runtime state
-/data/sources/
-/data/processed/
-/data/logs/
-/data/state/
+# Operating-system and temporary files
+.DS_Store
+Thumbs.db
+*.log
 
-# Historical data locations: keep ignored if recreated accidentally
-/data/raw/
-/data/static/
-/data/manual/
+# Local source archives, derived datasets, reports and runtime files.
+/shared-resources/data/
+/courses/*/data/sources/
+# ECCC emailed benchmark reports remain local; redistribution not verified.
+/courses/AIDA-2156/data/sources/eccc_documentation/manual/benchmark_history_reports/
+/courses/*/data/processed/
+/courses/*/data/reports/
+/courses/*/data/state/
+/courses/*/data/logs/
+/courses/*/data/acquisition_runs/
 
-# Machine reports, previews and maintenance backups remain local.
-# The two English human-readable reports may be versioned.
-/data/reports/*
-!/data/reports/coverage_report.md
-!/data/reports/manual_data_review.md
-
-# Chinese documentation is local only, at every directory depth.
+# Generated satellite acquisition/review artifacts, not final deliverables.
+# Match their output directories, regardless of image/task filename format.
+/courses/AIDA-2154/outputs/cv_gap_fill_*/**/*.csv
+/courses/AIDA-2154/outputs/cv_gap_fill_*/**/*.json
+/courses/AIDA-2154/outputs/cv_gap_fill_*/**/*.png
+/courses/AIDA-2154/outputs/cv_material_screening_*/**/*.csv
+/courses/AIDA-2154/outputs/cv_material_screening_*/**/*.json
+/courses/AIDA-2154/outputs/cv_material_screening_*/**/*.png
+/courses/AIDA-2154/outputs/cv_material_diversity_*/**/*.csv
+/courses/AIDA-2154/outputs/cv_material_diversity_*/**/*.json
+/courses/AIDA-2154/outputs/cv_material_diversity_*/**/region_review_masks/
+# English review/README documents and course deliverables remain eligible.
+# Working GIS package is supplied separately from Git; keep its usage guide.
+/courses/AIDA-2362/project/*
+!/courses/AIDA-2362/project/README.md
+# Keep root data dictionaries, provenance and README files eligible for Git.
 *CN.md
-# Per-file explanatory companions remain local; README and standalone docs remain tracked.
+*CN.docx
 *.*.md
-*_ZH.docx
-*_ZH.pdf
-*_ZH_*.docx
-*_ZH_*.pdf
-Red_Deer_River_简化溢出风险监测项目*.docx
-Red_Deer_River_简化溢出风险监测项目*.pdf
-
-# Local proposal and project documents
-/Red_Deer_River_Scope_Proposal_EN.docx
-/Red_Deer_River_Scope_Proposal_EN.pdf
-/Red_Deer_River_Simplified_Overbank_Risk_Monitoring_Project.docx
-
-# Document editor lock files
 ~$*
+/courses/AIDA-2154/outputs/AIDA2154-CV-Windows-20261113.zip
+/repo_link.txt
+/courses/AIDA-2156/deployment/client/.recovery/
+# Blank in-class peer-review Word templates (completed Dec 1-11 and uploaded separately to D2L)
+/shared-resources/Miles-peer-review-*.docx
+# Local consolidated D2L upload folder: track only the 3 verified course ZIPs; keep blank peer-review templates & Chinese note local
+/D2L_SUBMISSION_READY/*
+!/D2L_SUBMISSION_READY/*.zip

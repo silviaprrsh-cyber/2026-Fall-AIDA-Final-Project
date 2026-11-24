@@ -1,4 +1,5 @@
 """Read public source timestamps once; do not start the project collector."""
+from project_paths import resolve_runtime_path, archive_relative
 import concurrent.futures
 import csv
 import hashlib
@@ -11,10 +12,10 @@ import urllib.parse
 import urllib.error
 import sys
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+from project_paths import ROOT
+
 from rdr.paths import source_relative_path
-OUT = ROOT / 'data/reports/station_timestamp_export'
+OUT = resolve_runtime_path(ROOT / 'data/reports/station_timestamp_export')
 RUN = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
 RAW = Path('raw/station_timestamp_check') / RUN
 API = 'https://api.weather.gc.ca/collections/'
@@ -23,13 +24,13 @@ def now():
     return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
 
 def load_csv(name):
-    with (ROOT/name).open(encoding='utf-8-sig', newline='') as f:
+    with (resolve_runtime_path(ROOT/name)).open(encoding='utf-8-sig', newline='') as f:
         return list(csv.DictReader(f))
 
 def query(collection, params, stem):
     params = {**params, 'f':'json'}
     url = API + collection + '/items?' + urllib.parse.urlencode(params)
-    folder = ROOT / 'data' / source_relative_path(url, RAW)
+    folder = resolve_runtime_path(ROOT / 'data' / source_relative_path(url, RAW))
     folder.mkdir(parents=True, exist_ok=True)
     meta = {'url':url,'query_started_at_utc':now()}
     try:
@@ -73,7 +74,7 @@ HEADERS = ['station_id','station_name','station_type','river_role',
 stations=load_csv('data/processed/station_master.csv')
 links=load_csv('data/processed/weather_links.csv')
 link_map={s['station_id']:s for s in links}
-config=json.loads((ROOT/'config/stations.json').read_text(encoding='utf-8'))
+config=json.loads((resolve_runtime_path(ROOT/'config/stations.json')).read_text(encoding='utf-8'))
 enabled_sources={(s['kind'],str(s['station_id'])) for st in config['stations'] if st.get('enabled')
                  for s in st.get('sources',[])}
 weather={s['weather_id']:s for s in links if s.get('weather_id')}
@@ -165,7 +166,7 @@ def main():
     assert len(rows)==len(stations)+len(weather)
     assert len({(r['station_type'],r['station_id']) for r in rows})==len(rows)
     assert all(r['actual_station_transmission_time_utc']=='' for r in rows)
-    payload={'headers':HEADERS,'rows':rows,'raw_directories':[str(ROOT / 'data/sources' / source / RAW) for source in ('eccc_hydrometric_geomet','eccc_weather_geomet')],'run':RUN,
+    payload={'headers':HEADERS,'rows':rows,'raw_directories':[str(resolve_runtime_path(ROOT / 'data/sources' / source / RAW)) for source in ('eccc_hydrometric_geomet','eccc_weather_geomet')],'run':RUN,
              'notes':'Finite one-shot source queries. No continuous collection started. Local receipt times are retained only in raw audit metadata, not used as source timestamps.'}
     (OUT/'results.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
     counts={status:sum(r['query_data_status']==status for r in rows) for status in sorted({r['query_data_status'] for r in rows})}

@@ -1,0 +1,6 @@
+target_id,section_id,section_status,distance_crs,signed_offset_m,absolute_offset_m,passes_25m,passes_50m,changed,vertical_datum_verified,hydraulic_transfer_verified
+P01,county_markerville:RED DEER RIVER:RDR082,planned,EPSG:3400,0.0,0.0,yes,yes,unchanged,no,no
+P02,county_markerville:RED DEER RIVER:RDR062A,planned,EPSG:3400,5.824881241424009,5.824881241424009,yes,yes,unchanged,no,no
+P03,county_markerville:RED DEER RIVER:RDR035A,planned,EPSG:3400,7.137726808403386,7.137726808403386,yes,yes,unchanged,no,no
+P04,red_deer:RED DEER RIVER:R11,surveyed,EPSG:3400,47.03040211006737,47.03040211006737,no,yes,added,no,no
+P05,red_deer:RED DEER RIVER:R19,surveyed,EPSG:3400,32.25347521444928,32.25347521444928,no,yes,added,no,no

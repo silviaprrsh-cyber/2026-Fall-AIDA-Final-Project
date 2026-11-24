@@ -1,0 +1,61 @@
+{
+  "validation_utc": "2026-11-24T03:16:00+00:00",
+  "qgis_version": "3.44.14-Solothurn",
+  "archive_name": "AIDA2362_FinalProject_Miles_Zhang.zip",
+  "archive_sha256": "ae43b04e8e1fb68e9d47cde41d12c4c8ec23465ebe8d64f72a64ec63774b8c59",
+  "archive_bytes": 9501498,
+  "archive_member_count": 37,
+  "extracted_qgz_reopened": true,
+  "all_vector_layers_resolved_inside_extracted_zip": true,
+  "relative_file_path_storage": true,
+  "display_crs": "EPSG:3857",
+  "vector_storage_crs": "EPSG:4326",
+  "distance_crs": "EPSG:3400 (metres)",
+  "area_checks": {
+    "EPSG:3400_bbox_wsen": [
+      -120.0,
+      48.99,
+      -109.98,
+      60.0
+    ],
+    "EPSG:3780_bbox_wsen": [
+      -115.5,
+      48.99,
+      -112.5,
+      60.0
+    ]
+  },
+  "local_vector_layers": 8,
+  "total_vector_features": 246,
+  "invalid_geos_geometries": 0,
+  "empty_geometries": 0,
+  "remote_layers_not_rendered": [
+    {
+      "name": "OpenStreetMap",
+      "provider": "wms",
+      "rendered_or_fetched": false
+    }
+  ],
+  "layouts": [
+    "Overhead view",
+    "Simple OSM overview"
+  ],
+  "qgis_select_by_expression_ids": {
+    "25": [
+      "P01",
+      "P02",
+      "P03"
+    ],
+    "50": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05"
+    ]
+  },
+  "nearest_section_links_resolved": 5,
+  "usable_mainstem_section_point_crossings": 145,
+  "max_offset_delta_m": 7.34871719032526e-10,
+  "survey_attribution_clearance": "Alberta Environment and Protected Areas (EPA) confirmed 2026-11-23 that the provided Red Deer River survey data is publicly available information and may be used in this course submission with EPA credit."
+}

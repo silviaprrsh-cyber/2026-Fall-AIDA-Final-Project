@@ -1,0 +1,16 @@
+# Project charter
+
+- **Project title:** Red Deer River monitoring evidence and experimental reach estimation.
+- **Intended user/team:** A hypothetical municipal river-infrastructure reviewer deciding where monitoring evidence supports further investigation. This is an educational study, not an operational warning system.
+- **Practical question or decision:** What can permitted hydrometric, cross-section and satellite observations support within the Dickson Dam outlet–05CC002 reach, and where must estimates be withheld or reviewed?
+- **Project boundary:** Approximately 56 km of mapped mainstem, retained tributary inputs, and P01–P05. Unit-value archive requested 2025-05-03 through 2026-11-03 UTC; matched satellite archive extends through 2026-11-01. Availability differs by input. Current configuration: `shared-resources/config/active_scope.json`.
+- **What is outside scope:** Downstream P06–P11, official flood warnings, demonstrated intermediate-point accuracy, operational river-system deployment and private sensor construction. The independent CV Windows inference container has been verified. Historical archives are retained but are not active-scope evidence.
+- **Shared inputs:** ECCC hydrometry/weather, NRCan river geometry, Alberta flood-survey packages and Copernicus Sentinel-2. See `shared-resources/provenance-and-permissions.md`; permission to use does not automatically establish permission to redistribute.
+- **Course contributions:** 2154 investigates imagery-based water evidence; 2156 evaluates observational quality, relationships and estimation limitations; 2362 supplies the spatial association and decision map. Each has a separate question, evidence chain and D2L package.
+- **Proposal status:** The teacher's root README records all three proposals as approved as submitted. The local original Scope Proposal and Project Design were reviewed on 2026-11-13; current D2L requirements and any later approved proposal revision have not been reverified. Generic course briefs refer to facilities-maintenance/supplied or fictional cases; applicability to the approved river proposal and approval of the reduced scope remain explicit confirmation items.
+- **Plan updates:** 2026-11-04: endpoint reduced to 05CC002 because no comparable downstream validation constraint supports P11. 2026-11-08: migration and evidence organization; no new model, CV evaluation or release claim.
+- **Target finish:** End of Week 15; current D2L assignments display December 14, 2026 at 11:59 p.m. (2154/2156 present in Weeks 13–14; 2362 presents in Week 15).
+
+- **CV status, 2026-11-13:** Nine-point masks, CNN/static baseline and indirect checks are retained. Available imagery is insufficiently clear for reliable widths; current CV outputs are withheld from the prediction model. The technical experiment is complete, but course package/student review and D2L actions are tracked separately in the CV release checklist. This does not change EDA/GIS status.
+
+- **AIDA 2156 packaging, 2026-11-20:** The [local research prototype](courses/AIDA-2156/README.md) has a Windows server and receiver, with dedicated managed PostgreSQL planned. This is not production deployment. P06 in the prototype names the 05CC002 terminal model output, not the excluded downstream legacy GIS marker P06.

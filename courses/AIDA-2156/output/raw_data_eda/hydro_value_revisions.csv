@@ -1,0 +1,3 @@
+group,station,name,variable,unit,month,changed_value_rows
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-05,4263
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-06,4545

@@ -1,0 +1,98 @@
+{
+  "created_utc": "2026-11-24T01:04:11.543068+00:00",
+  "purpose": "Independent blind manual check responding to Formative Feedback 1 (2026-11-23)",
+  "selection_rule": "Chronological median held-out test sample per site (items[len//2]), selected deterministically without viewing CNN predictions, errors, or automatic masks. Disjoint from first test sample shown in test_examples.png and first/last in selection_review.png.",
+  "blindness_guarantee": "HTML annotation tool embeds stretched RGB and NIR-Green-Red crops only; zero model predictions or automatic masks are included.",
+  "selected_samples": [
+    {
+      "point_id": "05CB001",
+      "record_id": "05CB001_2026-06-14_8d97371b0f7d",
+      "date_utc": "2026-06-14T18:49:53.871000+00:00",
+      "global_index": 926,
+      "test_position": 49,
+      "test_rank_within_site": "5 of 9",
+      "crop_sha256": "f38cc60bde5b1c79e9f1b3fddfbe5eb731b041bb590e7a55881e03f51899f026",
+      "mask_sha256": "7134e63913f2a3c0dd4fa22b75188a07c30d2a00b8ce4f078f6d534356cb1cdf"
+    },
+    {
+      "point_id": "05CB007",
+      "record_id": "05CB007_2026-07-29_6c0e0aa9ad24",
+      "date_utc": "2026-07-29T18:50:00.998000+00:00",
+      "global_index": 956,
+      "test_position": 79,
+      "test_rank_within_site": "13 of 24",
+      "crop_sha256": "a38cccf447ef4478973db8e221ece55050586dad120441fffe0cca9fd88d6a1a",
+      "mask_sha256": "fb96ab1b60b5f7264a9a3624a42171cdadb9575a7cd262b7f4e13ebde3c03cbf"
+    },
+    {
+      "point_id": "05CC002",
+      "record_id": "05CC002_2026-06-24_7fd564a310a5",
+      "date_utc": "2026-06-24T18:49:38.806000+00:00",
+      "global_index": 932,
+      "test_position": 55,
+      "test_rank_within_site": "9 of 17",
+      "crop_sha256": "86190128ac35acc8831fa9043a518d6cc34e23e3687ae36a6fbb6597396518ac",
+      "mask_sha256": "93346fc25b28c0878b47c28801c8a5e9ef2c291a1ece0b167e9d6dd914d9f446"
+    },
+    {
+      "point_id": "05CC007",
+      "record_id": "05CC007_2026-06-24_d87a59b3a619",
+      "date_utc": "2026-06-24T18:49:43.123000+00:00",
+      "global_index": 935,
+      "test_position": 58,
+      "test_rank_within_site": "11 of 20",
+      "crop_sha256": "2af15a8e5ad6cfec53e41c69b06692a741c68dfd2000dd379d5dfc162a68e08f",
+      "mask_sha256": "088bf56428f24701a13342995b0aad60571db46506a328df1bcdf95243389635"
+    },
+    {
+      "point_id": "P01",
+      "record_id": "P01_2026-06-24_754c0e753a05",
+      "date_utc": "2026-06-24T18:49:54.108000+00:00",
+      "global_index": 936,
+      "test_position": 59,
+      "test_rank_within_site": "6 of 10",
+      "crop_sha256": "bace80ab6935f97a0bf22b76b866ac5be7516d1632839f06ffee0711989889ab",
+      "mask_sha256": "8d125a2511f6f28994b2429289928969399ee0ab2a14d61c83e956b591d91c69"
+    },
+    {
+      "point_id": "P02",
+      "record_id": "P02_2026-07-29_5a35894d9ebe",
+      "date_utc": "2026-07-29T18:49:57.412000+00:00",
+      "global_index": 953,
+      "test_position": 76,
+      "test_rank_within_site": "6 of 11",
+      "crop_sha256": "be53086ef5b42bcdf0208f75fcbc2f8bea48dd81407776ad3ba500da379861b1",
+      "mask_sha256": "b4bf7392a94a842f6463eafd58d9a571f5048728db1ce8268a511d972d0845d4"
+    },
+    {
+      "point_id": "P03",
+      "record_id": "P03_2026-07-29_f69cae18cb9b",
+      "date_utc": "2026-07-29T18:49:57.412000+00:00",
+      "global_index": 954,
+      "test_position": 77,
+      "test_rank_within_site": "6 of 11",
+      "crop_sha256": "66809790e6b9a059e8aaabb794e5a9e60c30890d71e7a94843375a5625a88b25",
+      "mask_sha256": "f6f683c9a03abefc0b41f95313ec17500587167147c6043ae4b8e09db5d585e9"
+    },
+    {
+      "point_id": "P04",
+      "record_id": "P04_2026-06-24_7fd564a310a5",
+      "date_utc": "2026-06-24T18:49:38.806000+00:00",
+      "global_index": 933,
+      "test_position": 56,
+      "test_rank_within_site": "8 of 15",
+      "crop_sha256": "6480c54e19413bd98ad4ada4d484bb34eaa44367ef1fc13507a29cecd66a4301",
+      "mask_sha256": "b702bcd55887c0b2963d23d3143e5a559a50c09e199ff357c4121dcbb9530ee9"
+    },
+    {
+      "point_id": "P05",
+      "record_id": "P05_2026-07-04_a85d4db10e5c",
+      "date_utc": "2026-07-04T18:49:38.283000+00:00",
+      "global_index": 943,
+      "test_position": 66,
+      "test_rank_within_site": "8 of 15",
+      "crop_sha256": "63e8dc5d317ec13beeacb24a2e8a6369a8733e754536a3f25ab43e0b3f815c3e",
+      "mask_sha256": "3ad5344dc4981c2f86681b9af3b060f4a8c2792e57f7876b924ef2748369a6c5"
+    }
+  ]
+}

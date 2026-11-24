@@ -1,0 +1,10 @@
+point_id,kind,derived_crops,unique_source_rasters,unique_sensing_utc_days,first_sensing_utc_day,last_sensing_utc_day,winter_crops,spring_crops,summer_crops,autumn_crops
+P01,prediction,85,85,85,2016-05-02,2026-10-12,5,10,45,25
+P02,prediction,200,200,151,2016-05-02,2026-10-12,6,33,109,52
+P03,prediction,199,199,151,2016-05-02,2026-10-12,6,33,108,52
+P04,prediction,442,442,181,2016-05-02,2026-10-12,7,97,228,110
+P05,prediction,440,440,180,2016-05-02,2026-10-12,7,97,226,110
+05CB001,discharge_station,87,87,87,2016-05-02,2026-10-12,5,11,45,26
+05CB007,discharge_station,199,199,194,2016-05-02,2026-10-30,7,16,104,72
+05CC002,discharge_station,440,440,180,2016-05-02,2026-10-12,7,97,226,110
+05CC007,discharge_station,230,230,227,2016-05-02,2026-11-04,5,38,96,91

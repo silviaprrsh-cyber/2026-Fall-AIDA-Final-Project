@@ -1,0 +1,6 @@
+AIDA 2156 provenance quick reference
+Authoritative scope and methods: provenance.md / provenanceCN.md.
+Exact local byte inventory: eda-input-checksums.csv (repository-relative paths, byte sizes, SHA-256, source sidecar comparison).
+Formal EDA: Water Survey of Canada, Environment and Climate Change Canada, Water Office unit values; five frozen normalized station tables from 20261103T070414Z. See eda-input-checksums.csv for original working-input hashes and provenance.md for source and provider conditions.
+Raw EDA: ECCC Water Office and climate archives plus CDSE Sentinel-2 L2A and Alberta GIS evidence. Archive receipts do not establish historical observation availability. Exact inventory coverage and release exclusions are documented in provenance.md.
+Do not include provider raw downloads, personal/credential data, raw GIS, checkpoints, operational release archives or private correspondence in the clean EDA evidence package.

@@ -1,0 +1,41 @@
+AIDA 2156 formal EDA clean-copy replay
+Started UTC: 2026-11-21T01:54:00+00:00
+Runtime: CPython 3.13.11 (CPython), Windows AMD64
+Isolation: empty temporary directory; analysis and assertions copied verbatim with five locally permitted, checksum-verified normalized WSC/ECCC station tables.
+Only the Python standard library was available to the scripts (-S disables site packages; -E ignores Python environment variables; -B prevents bytecode cache files).
+No downloads were requested; no database, GIS, ML, server, or additional project code was used.
+No submission archive was created, and the source archive and saved outputs were not rewritten.
+Reproduction scope: CPython 3.13.11 on this Windows x64 host, not a fresh OS or a D2L validator result.
+
+Inputs and scripts: SHA-256 / bytes / course-relative name
+bbab5e89a5c61b33fb6052cd4b183be5824094be92087fe0f7c6c55771a3207c       21641  analysis/analysis.py
+c1e5a3bebc740d91d0370a715d22d8676bb704d2b40ced2e6d7ea0f0268dbdc6        6540  analysis/tests_or_assertions.py
+0916cd68193fc47eaad7799eadc6b1e6b9f121e2732b9c388abedc057b592fc8    63602598  data/processed/model_unit_history/20261103T070414Z/05CB001_observations.csv
+e4ab164e7a4a23f61c8beb0328eda097c8ccdc05b78b3c9c2191fb2e353c74b6    60394194  data/processed/model_unit_history/20261103T070414Z/05CB007_observations.csv
+0819e1b3bad5dc8e22113b68af8ace81ac04f27b707443197299bdc3a0035cbd    61242896  data/processed/model_unit_history/20261103T070414Z/05CC002_observations.csv
+2a2128535f28903fa6fccda30b7c276e531c55b7564ba81f482f70d9bba757ca    23745641  data/processed/model_unit_history/20261103T070414Z/05CC003_observations.csv
+b21533b60d4c7119c62db6164ec62908dfc7c018567c2feeee2654c9d3febe69    63371610  data/processed/model_unit_history/20261103T070414Z/05CC007_observations.csv
+
+Command: python -B -E -S analysis/analysis.py --input-dir data/processed/model_unit_history/20261103T070414Z --output-dir output/final_eda
+Exit code: 0 | elapsed 22.92 s
+Historical observation analysis completed; all internal checks passed.
+River-only 144,289; shared-date river-only 95,718; lake-complete 95,053; joint all-final 0.
+
+Command: python -B -E -S analysis/tests_or_assertions.py --input-dir data/processed/model_unit_history/20261103T070414Z --output-dir output/final_eda
+Exit code: 0 | elapsed 0.55 s
+EDA assertions passed: frozen input checksums, coverage accounting, cohort reconstruction, sensitivity, and lag support.
+
+All generated evidence files compared byte-for-byte to the saved formal EDA.
+SHA-256 / bytes / output filename
+5d150588ec5334c459e7e674316abd37d0084bc3902eaaf500a3635f04390b11       14162  coverage.csv
+4ee046790b6bb2d96e5269dd2651bb83697f4a55061f1c71fcf406232e6a9948        1781  distributions.csv
+bfbf3e7996a5158cc5dea7cc2a1ea97bfb5548a2e0c2c5051838a2a410a00430        1742  lagged_relationships.csv
+920d9f65a83dee1b9d34ad619d38be83320f0e77eeaad290ca5e40c33c0838a3       33677  quality_counts.csv
+e96554bef115f75b9cdf2c71750e6f5b5febfcff05959ff929e6a66d88fcbf57        1135  sensitivity-results.csv
+05ffc8ca4bd027ee33acc2e4b476d4e2d903721d46b2ed7d5af726d1fee6ba6e        8606  summary.json
+995cd72aa3f94e90b43845ba8f509360e0e0f878ad1cff7ee13c96e06b0d5568        4584  time_blocks.csv
+
+Result: PASS (7/7 byte-identical files; formal assertions pass).
+Source files unchanged. The isolated temporary copy was removed after verification.
+This log does not verify third-party archival redistribution permission, D2L upload, classroom performance, or peer feedback.
+Finished UTC: 2026-11-21T01:54:25+00:00

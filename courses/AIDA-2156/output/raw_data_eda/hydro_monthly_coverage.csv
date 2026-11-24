@@ -1,0 +1,406 @@
+group,station,name,variable,unit,month,inferred_slots,numeric_observations,absent_timestamps,timestamp_with_blank,recorded_zero,missing_pct
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2025-05,8267,8220,47,0,0,0.5685
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2025-06,8640,6834,1806,0,0,20.9028
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2025-07,8928,8516,412,0,0,4.6147
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2025-08,8928,8919,9,0,0,0.1008
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2025-09,8640,8628,12,0,0,0.1389
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2025-10,8928,8928,0,0,0,0.0
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2025-11,8640,8640,0,0,0,0.0
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2025-12,8928,8928,0,0,0,0.0
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-01,8928,8928,0,0,0,0.0
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-02,8064,8051,13,0,0,0.1612
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-03,8928,8928,0,0,0,0.0
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-04,8640,8640,0,0,0,0.0
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-05,8928,8779,149,0,0,1.6689
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-06,8640,8481,159,0,0,1.8403
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-07,8928,7294,1634,0,0,18.302
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-08,8928,8918,10,0,0,0.112
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-09,8640,8615,25,0,0,0.2894
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-10,8928,8900,28,0,0,0.3136
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,2026-11,2910,2910,0,0,0,0.0
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2025-05,8267,8266,1,0,0,0.0121
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2025-06,8640,8592,48,0,0,0.5556
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2025-07,8928,8878,50,0,0,0.56
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2025-08,8928,8898,30,0,0,0.336
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2025-09,8640,8639,1,0,0,0.0116
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2025-10,8928,8927,1,0,0,0.0112
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2025-11,8640,8640,0,0,0,0.0
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2025-12,8928,8928,0,0,0,0.0
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-01,8928,8928,0,0,0,0.0
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-02,8064,8064,0,0,0,0.0
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-03,8928,8928,0,0,0,0.0
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-04,8640,8640,0,0,0,0.0
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-05,8928,8925,3,0,0,0.0336
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-06,8640,8539,101,0,0,1.169
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-07,8928,8790,138,0,0,1.5457
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-08,8928,8915,13,0,0,0.1456
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-09,8640,8640,0,0,0,0.0
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-10,8928,8928,0,0,0,0.0
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,2026-11,654,617,37,0,0,5.6575
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-05,8267,8257,10,0,0,0.121
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-06,8640,8576,64,0,0,0.7407
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-07,8928,8928,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-08,8928,8919,9,0,0,0.1008
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-09,8640,8640,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-10,8928,8928,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-11,8640,8640,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2025-12,8928,8928,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-01,8928,8928,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-02,8064,8064,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-03,8928,8928,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-04,8640,8632,8,0,0,0.0926
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-05,8928,8928,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-06,8640,8161,479,0,0,5.544
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-07,8928,8730,198,0,0,2.2177
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-08,8928,8898,30,0,0,0.336
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-09,8640,7722,918,0,0,10.625
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-10,8928,8928,0,0,0,0.0
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,2026-11,653,653,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2025-05,8267,8267,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2025-06,8640,8640,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2025-07,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2025-08,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2025-09,8640,8640,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2025-10,8928,8925,3,0,0,0.0336
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2025-11,8640,8635,5,0,0,0.0579
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2025-12,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-01,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-02,8064,8064,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-03,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-04,8640,8640,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-05,8928,7146,1782,0,0,19.9597
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-06,8640,8638,2,0,0,0.0231
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-07,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-08,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-09,8640,8640,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-10,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,2026-11,2915,2915,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2025-05,8267,8267,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2025-06,8640,8640,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2025-07,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2025-08,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2025-09,8640,8640,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2025-10,8928,8925,3,0,0,0.0336
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2025-11,8640,7522,1118,0,0,12.9398
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2025-12,8928,7249,1679,0,0,18.806
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-01,8928,8926,2,0,0,0.0224
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-02,8064,8064,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-03,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-04,8640,8517,123,0,0,1.4236
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-05,8928,7146,1782,0,0,19.9597
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-06,8640,8638,2,0,0,0.0231
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-07,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-08,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-09,8640,8640,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-10,8928,8928,0,0,0,0.0
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,2026-11,2915,2915,0,0,0,0.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2025-05,8267,8267,0,0,0,0.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2025-06,8640,8627,13,0,0,0.1505
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2025-07,8928,8928,0,0,0,0.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2025-08,8928,8928,0,0,0,0.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2025-09,8640,8640,0,0,0,0.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2025-10,8928,8928,0,0,0,0.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2025-11,8640,84,8556,0,0,99.0278
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2025-12,8928,0,8928,0,0,100.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-01,8928,0,8928,0,0,100.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-02,8064,0,8064,0,0,100.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-03,8928,0,8928,0,0,100.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-04,8640,357,8283,0,0,95.8681
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-05,8928,8928,0,0,0,0.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-06,8640,8624,16,0,0,0.1852
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-07,8928,8928,0,0,0,0.0
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-08,8928,8914,14,0,0,0.1568
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-09,8640,8638,2,0,0,0.0231
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-10,8928,8915,13,0,0,0.1456
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,2026-11,84,84,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2020-06,653,653,0,0,589,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2020-07,744,744,0,0,670,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2020-08,744,744,0,0,720,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2020-09,720,720,0,0,684,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2020-10,744,744,0,0,704,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2020-11,720,720,0,0,694,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2020-12,744,744,0,0,727,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-01,744,744,0,0,741,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-02,672,672,0,0,661,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-03,744,744,0,0,737,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-04,720,718,0,2,708,0.2778
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-05,744,744,0,0,683,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-06,720,720,0,0,665,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-07,744,742,1,1,721,0.2688
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-08,744,744,0,0,694,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-09,720,720,0,0,686,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-10,744,744,0,0,739,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-11,720,720,0,0,717,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2021-12,744,744,0,0,723,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-01,744,744,0,0,734,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-02,672,672,0,0,652,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-03,744,721,23,0,704,3.0914
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-04,720,713,7,0,683,0.9722
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-05,744,434,0,310,422,41.6667
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-06,720,158,41,521,157,78.0556
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-07,744,685,9,50,662,7.9301
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-08,744,743,1,0,729,0.1344
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-09,720,714,0,6,714,0.8333
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-10,744,719,1,24,719,3.3602
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-11,720,719,0,1,686,0.1389
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2022-12,744,740,0,4,728,0.5376
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-01,744,743,1,0,735,0.1344
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-02,672,672,0,0,660,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-03,744,725,19,0,722,2.5538
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-04,720,719,1,0,709,0.1389
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-05,744,744,0,0,727,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-06,720,720,0,0,633,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-07,744,744,0,0,703,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-08,744,743,1,0,711,0.1344
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-09,720,720,0,0,687,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-10,744,744,0,0,714,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-11,720,720,0,0,714,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2023-12,744,742,2,0,728,0.2688
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-01,744,744,0,0,736,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-02,696,696,0,0,683,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-03,744,744,0,0,729,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-04,720,708,12,0,688,1.6667
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-05,744,744,0,0,680,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-06,720,720,0,0,679,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-07,744,744,0,0,728,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-08,744,740,3,1,700,0.5376
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-09,720,720,0,0,702,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-10,744,744,0,0,728,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-11,720,720,0,0,707,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2024-12,744,742,0,2,717,0.2688
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-01,744,740,0,4,729,0.5376
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-02,672,672,0,0,651,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-03,744,740,0,4,714,0.5376
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-04,720,717,0,3,685,0.4167
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-05,744,744,0,0,686,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-06,720,720,0,0,676,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-07,744,734,10,0,673,1.3441
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-08,744,743,0,1,713,0.1344
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-09,720,719,0,1,717,0.1389
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-10,744,744,0,0,732,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-11,720,720,0,0,692,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2025-12,744,744,0,0,707,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-01,744,744,0,0,736,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-02,672,672,0,0,669,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-03,744,714,2,28,688,4.0323
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-04,720,720,0,0,698,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-05,744,730,14,0,712,1.8817
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-06,720,718,2,0,580,0.2778
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-07,744,735,5,4,716,1.2097
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-08,744,744,0,0,710,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-09,720,720,0,0,692,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-10,744,744,0,0,718,0.0
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,2026-11,222,222,0,0,222,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2020-06,653,652,0,1,0,0.1531
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2020-07,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2020-08,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2020-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2020-10,744,744,0,0,5,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2020-11,720,720,0,0,4,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2020-12,744,744,0,0,4,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-01,744,744,0,0,3,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-02,672,672,0,0,1,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-03,744,744,0,0,5,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-04,720,718,0,2,8,0.2778
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-05,744,744,0,0,3,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-06,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-07,744,742,1,1,0,0.2688
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-08,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-09,720,720,0,0,1,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-10,744,744,0,0,4,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-11,720,720,0,0,10,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2021-12,744,744,0,0,2,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-01,744,744,0,0,6,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-02,672,672,0,0,2,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-03,744,720,23,1,2,3.2258
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-04,720,713,7,0,8,0.9722
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-05,744,744,0,0,4,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-06,720,679,41,0,0,5.6944
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-07,744,735,9,0,0,1.2097
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-08,744,743,1,0,0,0.1344
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-10,744,743,1,0,6,0.1344
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-11,720,719,0,1,3,0.1389
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2022-12,744,740,0,4,0,0.5376
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-01,744,743,1,0,3,0.1344
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-02,672,672,0,0,4,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-03,744,725,19,0,1,2.5538
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-04,720,719,1,0,5,0.1389
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-05,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-06,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-07,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-08,744,743,1,0,0,0.1344
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-10,744,744,0,0,2,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-11,720,720,0,0,6,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2023-12,744,742,2,0,10,0.2688
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-01,744,744,0,0,2,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-02,696,696,0,0,5,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-03,744,744,0,0,4,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-04,720,708,12,0,4,1.6667
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-05,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-06,720,719,0,1,0,0.1389
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-07,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-08,744,740,3,1,0,0.5376
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-10,744,744,0,0,4,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-11,720,720,0,0,1,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2024-12,744,742,0,2,2,0.2688
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-01,744,740,0,4,3,0.5376
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-02,672,672,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-03,744,740,0,4,2,0.5376
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-04,720,716,0,4,8,0.5556
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-05,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-06,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-07,744,734,10,0,0,1.3441
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-08,744,743,0,1,0,0.1344
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-09,720,718,0,2,1,0.2778
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-10,744,743,0,1,4,0.1344
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-11,720,720,0,0,3,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2025-12,744,744,0,0,1,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-01,744,744,0,0,2,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-02,672,672,0,0,5,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-03,744,739,2,3,1,0.672
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-04,720,720,0,0,6,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-05,744,730,14,0,1,1.8817
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-06,720,718,2,0,0,0.2778
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-07,744,735,5,4,0,1.2097
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-08,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-09,720,720,0,0,1,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-10,744,744,0,0,6,0.0
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,2026-11,222,222,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2020-06,653,653,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2020-07,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2020-08,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2020-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2020-10,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2020-11,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2020-12,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-01,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-02,672,672,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-03,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-04,720,718,0,2,0,0.2778
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-05,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-06,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-07,744,742,1,1,0,0.2688
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-08,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-10,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-11,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2021-12,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-01,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-02,672,672,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-03,744,721,23,0,0,3.0914
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-04,720,713,7,0,0,0.9722
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-05,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-06,720,679,41,0,0,5.6944
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-07,744,735,9,0,0,1.2097
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-08,744,743,1,0,0,0.1344
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-10,744,743,1,0,0,0.1344
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-11,720,719,0,1,0,0.1389
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2022-12,744,740,0,4,0,0.5376
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-01,744,743,1,0,0,0.1344
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-02,672,672,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-03,744,725,19,0,0,2.5538
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-04,720,719,1,0,0,0.1389
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-05,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-06,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-07,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-08,744,743,1,0,0,0.1344
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-10,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-11,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2023-12,744,742,2,0,0,0.2688
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-01,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-02,696,696,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-03,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-04,720,708,12,0,0,1.6667
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-05,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-06,720,719,0,1,0,0.1389
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-07,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-08,744,740,3,1,0,0.5376
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-10,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-11,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2024-12,744,742,0,2,0,0.2688
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-01,744,740,0,4,0,0.5376
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-02,672,672,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-03,744,740,0,4,0,0.5376
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-04,720,717,0,3,0,0.4167
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-05,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-06,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-07,744,734,10,0,0,1.3441
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-08,744,743,0,1,0,0.1344
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-09,720,719,0,1,0,0.1389
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-10,744,743,0,1,0,0.1344
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-11,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2025-12,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-01,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-02,672,672,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-03,744,739,2,3,0,0.672
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-04,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-05,744,730,14,0,0,1.8817
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-06,720,718,2,0,0,0.2778
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-07,744,735,5,4,0,1.2097
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-08,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-09,720,720,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-10,744,744,0,0,0,0.0
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,2026-11,222,222,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2025-05,737,737,0,0,679,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2025-06,720,720,0,0,676,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2025-07,744,734,10,0,673,1.3441
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2025-08,744,743,0,1,713,0.1344
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2025-09,720,719,0,1,717,0.1389
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2025-10,744,744,0,0,732,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2025-11,720,720,0,0,692,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2025-12,744,744,0,0,707,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-01,744,744,0,0,736,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-02,672,672,0,0,669,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-03,744,714,2,28,688,4.0323
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-04,720,720,0,0,698,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-05,744,730,14,0,712,1.8817
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-06,720,718,2,0,580,0.2778
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-07,744,735,5,4,716,1.2097
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-08,744,744,0,0,710,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-09,720,720,0,0,692,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-10,744,744,0,0,718,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,2026-11,222,222,0,0,222,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2025-05,737,737,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2025-06,720,720,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2025-07,744,734,10,0,0,1.3441
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2025-08,744,743,0,1,0,0.1344
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2025-09,720,718,0,2,1,0.2778
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2025-10,744,743,0,1,4,0.1344
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2025-11,720,720,0,0,3,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2025-12,744,744,0,0,1,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-01,744,744,0,0,2,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-02,672,672,0,0,5,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-03,744,739,2,3,1,0.672
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-04,720,720,0,0,6,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-05,744,730,14,0,1,1.8817
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-06,720,718,2,0,0,0.2778
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-07,744,735,5,4,0,1.2097
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-08,744,744,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-09,720,720,0,0,1,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-10,744,744,0,0,6,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,2026-11,222,222,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2025-05,737,737,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2025-06,720,720,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2025-07,744,734,10,0,0,1.3441
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2025-08,744,743,0,1,0,0.1344
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2025-09,720,719,0,1,0,0.1389
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2025-10,744,743,0,1,0,0.1344
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2025-11,720,720,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2025-12,744,744,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-01,744,744,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-02,672,672,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-03,744,739,2,3,0,0.672
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-04,720,720,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-05,744,730,14,0,0,1.8817
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-06,720,718,2,0,0,0.2778
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-07,744,735,5,4,0,1.2097
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-08,744,744,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-09,720,720,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-10,744,744,0,0,0,0.0
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,2026-11,222,222,0,0,0,0.0

@@ -1,0 +1,7 @@
+season,scoped_rasters,overpass_groups,eligible_for_label_review,eligible_overpass_groups,eligible_share,median_clear_corridor_fraction,median_clear_river_core_fraction,valid_coverage_below_95pct,clear_corridor_below_80pct,clear_river_core_below_90pct,snow_ice_above_1pct,hash_check_failed_in_saved_screen
+all,775,104,285,71,0.36774193548387096,0.9472168228735655,0.7463976945244957,141,331,477,143,0
+winter,86,11,0,0,0.0,0.0021365666386935593,0.0,16,86,86,82,0
+spring,134,19,30,9,0.22388059701492538,0.9299341977786933,0.7029674775411159,16,59,102,41,0
+summer,313,39,126,36,0.402555910543131,0.9698346835276296,0.8226959658904559,56,85,182,2,0
+autumn,242,35,129,26,0.5330578512396694,0.9964799853926813,0.9992673992673993,53,101,107,18,0
+unknown,0,0,0,0,,,,0,0,0,0,0

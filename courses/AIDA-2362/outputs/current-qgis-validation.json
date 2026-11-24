@@ -1,0 +1,358 @@
+{
+  "scope": "dickson_to_05CC002",
+  "validation_utc": "2026-11-21T02:02:32+00:00",
+  "qgis_version": "3.44.14-Solothurn",
+  "procedure": "Independent relative-path copy; no release ZIP created or extracted by this check.",
+  "copied_qgz_reopened": true,
+  "relative_file_path_storage": true,
+  "display_crs": "EPSG:3857",
+  "vector_storage_crs": "EPSG:4326",
+  "distance_crs": "EPSG:3400 (metres)",
+  "area_checks": {
+    "EPSG:3400_bbox_wsen": [
+      -120.0,
+      48.99,
+      -109.98,
+      60.0
+    ],
+    "EPSG:3780_bbox_wsen_for_survey_layers": [
+      -115.5,
+      48.99,
+      -112.5,
+      60.0
+    ]
+  },
+  "local_vector_layers": 8,
+  "map_equivalent_feature_rows": 246,
+  "remote_layers_not_rendered": [
+    {
+      "name": "OpenStreetMap",
+      "provider": "wms",
+      "rendered_or_fetched": false
+    }
+  ],
+  "layouts": [
+    "Overhead view",
+    "Simple OSM overview"
+  ],
+  "layer_checks": [
+    {
+      "source_relative_to_project": "nrcan_nhn/selected_rivers.geojson",
+      "display_name": "Selected mainstem and tributaries",
+      "geometry_kind_expected": "Line",
+      "storage_crs": "EPSG:4326",
+      "count": 4,
+      "expected_count": 4,
+      "id_field": "river",
+      "duplicate_ids": [],
+      "blank_id_count": 0,
+      "required_decision_fields": [
+        "river",
+        "role"
+      ],
+      "missing_required_values": {},
+      "blank_or_null_by_field": {
+        "actual_mouth_lon_lat": 2,
+        "edge_ids": 2,
+        "end_snap_m": 1,
+        "endpoint_station_id": 3,
+        "length_m": 1,
+        "method": 1,
+        "mouth_connection": 2,
+        "note": 3,
+        "orientation": 1,
+        "source_direction_conflict_ids": 1,
+        "source_route_archive": 3,
+        "start_snap_m": 1,
+        "station_id": 2
+      },
+      "empty_geometry_ids": [],
+      "invalid_geos_geometry_ids": [],
+      "wrong_geometry_type_ids": [],
+      "outside_applicable_bbox_ids": [],
+      "transform_error_ids": [],
+      "transformed_vertices": 9581,
+      "max_roundtrip_error_degrees": 2.842170943040401e-14
+    },
+    {
+      "source_relative_to_project": "eccc_hydrometric_geomet/stations.geojson",
+      "display_name": "Water stations - data in last 3 months (blue)",
+      "geometry_kind_expected": "Point",
+      "storage_crs": "EPSG:4326",
+      "count": 4,
+      "expected_count": 4,
+      "id_field": "station_id",
+      "duplicate_ids": [],
+      "blank_id_count": 0,
+      "required_decision_fields": [
+        "station_id",
+        "name",
+        "river",
+        "role",
+        "latest_observation_utc"
+      ],
+      "missing_required_values": {},
+      "blank_or_null_by_field": {
+        "both_missing_rows": 2,
+        "coordinate_crs": 2,
+        "discharge_m3_s_count": 2,
+        "discharge_m3_s_first_date": 2,
+        "discharge_m3_s_last_date": 2,
+        "download_complete": 2,
+        "first_returned_date": 2,
+        "last_returned_date": 2,
+        "latitude": 2,
+        "level_m_count": 2,
+        "level_m_first_date": 2,
+        "level_m_last_date": 2,
+        "longitude": 2,
+        "membership_evidence": 2,
+        "metadata_source": 2,
+        "parent_chain": 2,
+        "provider_station_status": 2,
+        "returned_rows": 2,
+        "root_tributary": 2,
+        "unreturned_calendar_days": 2,
+        "vertical_datum": 2
+      },
+      "empty_geometry_ids": [],
+      "invalid_geos_geometry_ids": [],
+      "wrong_geometry_type_ids": [],
+      "outside_applicable_bbox_ids": [],
+      "transform_error_ids": [],
+      "transformed_vertices": 4,
+      "max_roundtrip_error_degrees": 0.0
+    },
+    {
+      "source_relative_to_project": "eccc_hydrometric_geomet/historical_tributary_stations.geojson",
+      "display_name": "Historical / lake reference stations (yellow)",
+      "geometry_kind_expected": "Point",
+      "storage_crs": "EPSG:4326",
+      "count": 2,
+      "expected_count": 2,
+      "id_field": "station_id",
+      "duplicate_ids": [],
+      "blank_id_count": 0,
+      "required_decision_fields": [
+        "station_id",
+        "name",
+        "river",
+        "role"
+      ],
+      "missing_required_values": {},
+      "blank_or_null_by_field": {
+        "discharge_m3_s_first_date": 1,
+        "discharge_m3_s_last_date": 1,
+        "display_role": 1,
+        "level_m_first_date": 1,
+        "level_m_last_date": 1,
+        "map_label": 1
+      },
+      "empty_geometry_ids": [],
+      "invalid_geos_geometry_ids": [],
+      "wrong_geometry_type_ids": [],
+      "outside_applicable_bbox_ids": [],
+      "transform_error_ids": [],
+      "transformed_vertices": 2,
+      "max_roundtrip_error_degrees": 7.105427357601002e-15
+    },
+    {
+      "source_relative_to_project": "eccc_weather_geomet/stations.geojson",
+      "display_name": "Linked precipitation station",
+      "geometry_kind_expected": "Point",
+      "storage_crs": "EPSG:4326",
+      "count": 1,
+      "expected_count": 1,
+      "id_field": "station_id",
+      "duplicate_ids": [],
+      "blank_id_count": 0,
+      "required_decision_fields": [
+        "station_id",
+        "name",
+        "latest_observation_utc",
+        "data_snapshot"
+      ],
+      "missing_required_values": {},
+      "blank_or_null_by_field": {},
+      "empty_geometry_ids": [],
+      "invalid_geos_geometry_ids": [],
+      "wrong_geometry_type_ids": [],
+      "outside_applicable_bbox_ids": [],
+      "transform_error_ids": [],
+      "transformed_vertices": 1,
+      "max_roundtrip_error_degrees": 7.105427357601002e-15
+    },
+    {
+      "source_relative_to_project": "alberta_flood_surveys/red_deer/cross_section_lines.geojson",
+      "display_name": "Red Deer - cross-section lines",
+      "geometry_kind_expected": "Line",
+      "storage_crs": "EPSG:4326",
+      "count": 38,
+      "expected_count": 38,
+      "id_field": "section_id",
+      "duplicate_ids": [],
+      "blank_id_count": 0,
+      "required_decision_fields": [
+        "section_id",
+        "source_section_id",
+        "river",
+        "line_status",
+        "survey_date",
+        "source_fid"
+      ],
+      "missing_required_values": {},
+      "blank_or_null_by_field": {
+        "bank_a_candidate_elevation_m": 38,
+        "bank_b_candidate_elevation_m": 38,
+        "survey_water_elevation_median_m": 19,
+        "survey_water_elevation_range_m": 19
+      },
+      "empty_geometry_ids": [],
+      "invalid_geos_geometry_ids": [],
+      "wrong_geometry_type_ids": [],
+      "outside_applicable_bbox_ids": [],
+      "transform_error_ids": [],
+      "transformed_vertices": 76,
+      "max_roundtrip_error_degrees": 1.5888218580782548e-14
+    },
+    {
+      "source_relative_to_project": "alberta_flood_surveys/county_markerville/cross_section_lines.geojson",
+      "display_name": "County and Markerville - cross-section lines",
+      "geometry_kind_expected": "Line",
+      "storage_crs": "EPSG:4326",
+      "count": 191,
+      "expected_count": 191,
+      "id_field": "section_id",
+      "duplicate_ids": [],
+      "blank_id_count": 0,
+      "required_decision_fields": [
+        "section_id",
+        "source_section_id",
+        "river",
+        "line_status",
+        "source_fid"
+      ],
+      "missing_required_values": {},
+      "blank_or_null_by_field": {
+        "bank_a_candidate_elevation_m": 191,
+        "bank_b_candidate_elevation_m": 191,
+        "reach_id": 43,
+        "survey_date": 191,
+        "survey_water_elevation_median_m": 191,
+        "survey_water_elevation_range_m": 191
+      },
+      "empty_geometry_ids": [],
+      "invalid_geos_geometry_ids": [],
+      "wrong_geometry_type_ids": [],
+      "outside_applicable_bbox_ids": [],
+      "transform_error_ids": [],
+      "transformed_vertices": 702,
+      "max_roundtrip_error_degrees": 2.5618982671915014e-14
+    },
+    {
+      "source_relative_to_project": "derived_prediction_targets/prediction_points.geojson",
+      "display_name": "Prediction targets - P01 to P05 (red)",
+      "geometry_kind_expected": "Point",
+      "storage_crs": "EPSG:4326",
+      "count": 5,
+      "expected_count": 5,
+      "id_field": "target_id",
+      "duplicate_ids": [],
+      "blank_id_count": 0,
+      "required_decision_fields": [
+        "target_id",
+        "name",
+        "nearest_section_id",
+        "nearest_section_along_river_offset_m",
+        "chainage_from_dickson_m"
+      ],
+      "missing_required_values": {},
+      "blank_or_null_by_field": {
+        "discharge_m3_s": 5,
+        "on_section_id": 4,
+        "risk": 5,
+        "water_level_m": 5
+      },
+      "empty_geometry_ids": [],
+      "invalid_geos_geometry_ids": [],
+      "wrong_geometry_type_ids": [],
+      "outside_applicable_bbox_ids": [],
+      "transform_error_ids": [],
+      "transformed_vertices": 5,
+      "max_roundtrip_error_degrees": 1.4210854715202004e-14
+    },
+    {
+      "source_relative_to_project": "derived_weather_associations/areas.geojson",
+      "display_name": "Weather association - schematic river corridor",
+      "geometry_kind_expected": "Polygon",
+      "storage_crs": "EPSG:4326",
+      "count": 1,
+      "expected_count": 1,
+      "id_field": "weather_id",
+      "duplicate_ids": [],
+      "blank_id_count": 0,
+      "required_decision_fields": [
+        "weather_id",
+        "meaning",
+        "cartographic_buffer_m",
+        "not_official_coverage",
+        "not_a_catchment"
+      ],
+      "missing_required_values": {},
+      "blank_or_null_by_field": {},
+      "empty_geometry_ids": [],
+      "invalid_geos_geometry_ids": [],
+      "wrong_geometry_type_ids": [],
+      "outside_applicable_bbox_ids": [],
+      "transform_error_ids": [],
+      "transformed_vertices": 1911,
+      "max_roundtrip_error_degrees": 2.1316282072803006e-14
+    }
+  ],
+  "section_and_target_checks": {
+    "nearest_section_links_resolved": 5,
+    "usable_mainstem_section_point_crossings": 145,
+    "mapped_mainstem_sections_without_point_crossing": [
+      "county_markerville:RED DEER RIVER:RDR087"
+    ],
+    "maximum_difference_from_stored_along_river_offset_m": 7.34871719032526e-10,
+    "mainstem_length_m_recomputed_epsg3400": 55995.46964053231,
+    "mainstem_length_difference_m_from_layer_field": 6.642949301749468e-09,
+    "target_to_section_proximity_does_not_verify_datum": true,
+    "profile_flags_marked_verified": 0,
+    "bank_flags_marked_verified": 0,
+    "qgis_select_by_expression_ids": {
+      "25": [
+        "P01",
+        "P02",
+        "P03"
+      ],
+      "50": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05"
+      ]
+    }
+  },
+  "known_exceptions": [
+    "County proposed lines have no individual survey date. Null stage/flow/risk for GIS targets is intentional.",
+    "Reference 05CC012 lacks optional display_role and map_label. The table falls back to its populated role and station_id.",
+    "RDR087 is mapped as a near-route section line but does not intersect the mainstem.",
+    "QGIS GEOS validation addresses geometric structure, not authoritative survey accuracy or hydraulic connectivity.",
+    "The OSM basemap was not requested; the boxed weather corridor is schematic.",
+    "The hosted release ZIP, its licences, peer review, and the student's in-class QGIS demo are separate checks."
+  ],
+  "source_hashes_verified": {
+    "dickson_to_joffre.qgz": "c48f27b86c43a13ba0804d50f39730338d8355991ceb16f9e89b1f3119ea6b32",
+    "nrcan_nhn/selected_rivers.geojson": "9acbea9e9567693591d1b7f4f5616516e26b344ce5ebf27a545fcf6817c21eca",
+    "eccc_hydrometric_geomet/stations.geojson": "59972827a92406d74045939b2b2c9075f8e7e56c2187d4afbf1a11251a516481",
+    "alberta_flood_surveys/red_deer/cross_section_lines.geojson": "5843a7ad1960d5a9b400f49cfc7bf88f84f976ba24945a324d93bd8d57e0b791",
+    "alberta_flood_surveys/county_markerville/cross_section_lines.geojson": "061c36d3336eb1b1a1fccb60b08635154108030944f227647d63aca2ad6b1464",
+    "eccc_weather_geomet/stations.geojson": "6dea28c70221fa08ad78f890450e08c338f9eec45198205e5b43167a2e151c37",
+    "derived_weather_associations/areas.geojson": "9301a11dd63ddf9bce1461bd4be2b54ad0bcf3c61a5548a7f721ba032a52c993",
+    "eccc_hydrometric_geomet/historical_tributary_stations.geojson": "a15bb62d138d65bbe2461b1eaa30c67d11782ee72f42f548f677fbbf31674b3b",
+    "derived_prediction_targets/prediction_points.geojson": "a7d39a9cfad0ea279c6b93c065693cca20c6d8c99af171d4b7e1a86b9d23d988"
+  }
+}

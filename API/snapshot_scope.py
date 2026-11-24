@@ -1,5 +1,6 @@
 """Fetch one bounded latest-observation sample for a specified station set."""
 
+from project_paths import resolve_runtime_path, archive_relative
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -9,9 +10,7 @@ from pathlib import Path
 from API.client import fetch
 from API.observations import numeric, precipitation
 
-ROOT = Path(__file__).resolve().parents[1]
-
-
+from project_paths import ROOT
 def sample(job, run):
     kind, sid = job
     water = kind == "water"
@@ -36,7 +35,7 @@ def sample(job, run):
             any(numeric(f["properties"].get(k)) for k in ("LEVEL", "DISCHARGE"))
             if water else precipitation(f["properties"]) is not None)]
         latest = max(valid, key=lambda f: f["properties"].get(time_key) or "") if valid else None
-        result.update(source=source, raw_path=path.relative_to(ROOT).as_posix(),
+        result.update(source=source, raw_path=archive_relative(path, ROOT).as_posix(),
                       record_count=len(features), numeric_record_count=len(valid),
                       status="numeric_observations" if valid else "no_numeric_observations",
                       latest_observation=latest["properties"].get(time_key) if latest else None,
@@ -52,8 +51,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--station", action="append", help="Override the active scope with explicit candidate IDs")
     args = parser.parse_args()
-    links = json.loads((ROOT / "data/processed/weather_links.json").read_text(encoding="utf-8"))
-    scope_path = ROOT / "config/active_scope.json"
+    links = json.loads((resolve_runtime_path(ROOT / "data/processed/weather_links.json")).read_text(encoding="utf-8"))
+    scope_path = resolve_runtime_path(ROOT / "config/active_scope.json")
     if args.station:
         selected = set(args.station)
     elif scope_path.exists():
@@ -63,7 +62,7 @@ def main():
     weather = {x["weather_id"] for x in links if x.get("station_id") in selected and x.get("weather_id")}
     jobs = [("water", s) for s in sorted(selected)] + [("weather", s) for s in sorted(weather)]
     run = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    folder = ROOT / "data/reports/scope_snapshot" / run
+    folder = resolve_runtime_path(ROOT / "data/reports/scope_snapshot" / run)
     folder.mkdir(parents=True, exist_ok=False)
     report = {"run": run, "query_limit_per_source": 48, "continuous": False,
               "note": "Candidate acquisition is not the final geographic selection. No historical fallback.",

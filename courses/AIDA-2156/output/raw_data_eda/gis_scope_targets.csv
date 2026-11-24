@@ -1,0 +1,6 @@
+target_id,name,selection_method,chainage_m,on_section_id,nearest_section_id,nearest_section_along_river_offset_m,mapped_section_resolves,associated_line_status,vertical_datum_verified,hydraulic_transfer_verified
+P01,Mainstem after Little Red Deer and Medicine confluences,after_confluences,12982.737110238479,county_markerville:RED DEER RIVER:RDR082,county_markerville:RED DEER RIVER:RDR082,0.0,True,planned,False,False
+P02,Highway 54,bridge,23013.963339748818,,county_markerville:RED DEER RIVER:RDR062A,5.824881241424009,True,planned,False,False
+P03,Township Road 370,bridge,33213.722070812095,,county_markerville:RED DEER RIVER:RDR035A,7.137726808403386,True,planned,False,False
+P04,Sylvan Creek mouth,osm_confluence,48709.05975822383,,red_deer:RED DEER RIVER:R11,47.03040211006737,True,surveyed,False,False
+P05,Highway 2,bridge,50830.57387026033,,red_deer:RED DEER RIVER:R19,32.25347521444928,True,surveyed,False,False

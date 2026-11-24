@@ -1,3 +1,4 @@
+from project_paths import resolve_runtime_path, archive_relative
 import argparse
 import json
 from API.collector import load_config, run
@@ -16,14 +17,14 @@ def main():
     watch.add_argument('--detached',action='store_true',help='Ignore stdin; requires a finite duration and supports the state-file stop control')
     args=parser.parse_args()
     if args.command=='stop':
-        state_path=DATA/'state/active_run.json'
+        state_path=resolve_runtime_path(DATA/'state/active_run.json')
         if not state_path.exists():
             print('No recorded active run.');return
         state=json.loads(state_path.read_text(encoding='utf-8'))
         if state.get('status')!='running':
             print('The recorded run is already stopped.');return
-        path=(ROOT/state['stop_file']).resolve()
-        if path.parent!=(DATA/'state').resolve() or path.suffix!='.stop':
+        path=(resolve_runtime_path(ROOT/state['stop_file'])).resolve()
+        if path.parent!=(resolve_runtime_path(DATA/'state')).resolve() or path.suffix!='.stop':
             raise ValueError('Invalid stop-control path')
         path.write_text('stop\n',encoding='utf-8')
         print('Stop requested; in-flight requests will finish or time out.');return

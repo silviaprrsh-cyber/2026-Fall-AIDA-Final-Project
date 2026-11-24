@@ -1,4 +1,5 @@
 """HTTP acquisition with source-separated archives and original provenance."""
+from project_paths import resolve_runtime_path, archive_relative
 import hashlib
 import json
 import requests
@@ -11,7 +12,7 @@ def fetch(url, relative_path, params=None, *, reuse=True, timeout=45):
 
     Failed HTTP responses are also retained. No credentials or API keys are used.
     """
-    path = DATA / source_relative_path(url, relative_path)
+    path = resolve_runtime_path(DATA / source_relative_path(url, relative_path))
     meta_path = path.with_suffix(path.suffix + '.meta.json')
     requested_url = requests.Request('GET', url, params=params).prepare().url
     if reuse and path.exists() and meta_path.exists():
@@ -29,7 +30,7 @@ def fetch(url, relative_path, params=None, *, reuse=True, timeout=45):
                 'status': response.status_code, 'content_type': response.headers.get('Content-Type'),
                 'last_modified': response.headers.get('Last-Modified'),
                 'etag': response.headers.get('ETag'), 'bytes': len(body),
-                'sha256': hashlib.sha256(body).hexdigest(), 'path': str(path.relative_to(DATA))}
+                'sha256': hashlib.sha256(body).hexdigest(), 'path': str(archive_relative(path, DATA))}
         save_json(meta_path, meta)
         log(meta)
         response.raise_for_status()

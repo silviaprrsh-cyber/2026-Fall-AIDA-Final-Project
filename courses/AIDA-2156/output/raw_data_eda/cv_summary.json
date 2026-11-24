@@ -1,0 +1,168 @@
+{
+  "source": {
+    "product": "Copernicus Data Space Ecosystem Sentinel-2 L2A",
+    "grain": "Local downloaded raster references, not independent overpasses or widths",
+    "stored_bands_in_order": [
+      "B04 red",
+      "B03 green",
+      "B02 blue",
+      "B08 NIR",
+      "SCL scene classification",
+      "dataMask"
+    ],
+    "raster_grid": "WGS 84 / UTM zone 12N; 10-m grid; SCL originates at 20 m",
+    "point_crop": "Derived 61 × 61 pixels; not the source raster size",
+    "regions": [
+      "Red Deer River project corridor",
+      "Nine CV target points"
+    ],
+    "local_inventory_inputs": [
+      "courses/AIDA-2154/data/processed/satellite_history/20261103_history/image_index.json",
+      "courses/AIDA-2154/outputs/cv_gap_fill_20261111/all_downloaded_images.csv",
+      "courses/AIDA-2154/outputs/cv_gap_fill_20261111/request_status_inventory.csv",
+      "courses/AIDA-2154/outputs/cv_material_screening_20261111/all_image_screening.csv",
+      "courses/AIDA-2154/outputs/cv_material_screening_20261111/catalog_pixel_availability.csv",
+      "courses/AIDA-2154/data/processed/point_water_masks_20261113/full_manifest.json"
+    ]
+  },
+  "download_inventory": {
+    "recorded_raster_paths": 3704,
+    "raster_paths_found_locally": 3704,
+    "missing_local_raster_paths": 0,
+    "local_raster_date_coverage": {
+      "records": 3704,
+      "undated_records": 0,
+      "first_sensing_utc_day": "2016-05-02",
+      "last_sensing_utc_day": "2026-11-04",
+      "unique_sensing_utc_days": 348,
+      "records_by_season": {
+        "winter": 110,
+        "spring": 566,
+        "summer": 1865,
+        "autumn": 1163,
+        "unknown": 0
+      },
+      "median_gap_between_observed_days": 5,
+      "max_gap_between_observed_days": 220
+    },
+    "historical": {
+      "catalogue_records_in_original_batch": 289,
+      "grid_requests": 989,
+      "saved_request_statuses": {
+        "downloaded": 955,
+        "no_data": 34
+      },
+      "local_raster_date_coverage": {
+        "records": 955,
+        "undated_records": 0,
+        "first_sensing_utc_day": "2025-05-05",
+        "last_sensing_utc_day": "2026-10-30",
+        "unique_sensing_utc_days": 99,
+        "records_by_season": {
+          "winter": 110,
+          "spring": 176,
+          "summer": 375,
+          "autumn": 294,
+          "unknown": 0
+        },
+        "median_gap_between_observed_days": 4.5,
+        "max_gap_between_observed_days": 21
+      }
+    },
+    "gap_fill": {
+      "saved_request_statuses": {
+        "downloaded": 2749,
+        "needs_review": 2
+      },
+      "catalogue_product_ids_in_downloaded_records": 686,
+      "grids_in_downloaded_records": 12,
+      "candidate_rasters_in_downloaded_records": 1149,
+      "local_raster_date_coverage": {
+        "records": 2749,
+        "undated_records": 0,
+        "first_sensing_utc_day": "2016-05-02",
+        "last_sensing_utc_day": "2026-11-04",
+        "unique_sensing_utc_days": 249,
+        "records_by_season": {
+          "winter": 0,
+          "spring": 390,
+          "summer": 1490,
+          "autumn": 869,
+          "unknown": 0
+        },
+        "median_gap_between_observed_days": 5.0,
+        "max_gap_between_observed_days": 558
+      }
+    }
+  },
+  "catalogue_index": {
+    "intersection_product_records": 5785,
+    "interpretation": "Metadata intersection records; separate from the pixel inventory."
+  },
+  "saved_historical_corridor_quality_screen": {
+    "scope": "Dickson Dam to 05CC002 along the selected river network",
+    "all_seasons": {
+      "season": "all",
+      "scoped_rasters": 775,
+      "overpass_groups": 104,
+      "eligible_for_label_review": 285,
+      "eligible_overpass_groups": 71,
+      "eligible_share": 0.36774193548387096,
+      "median_clear_corridor_fraction": 0.9472168228735655,
+      "median_clear_river_core_fraction": 0.7463976945244957,
+      "valid_coverage_below_95pct": 141,
+      "clear_corridor_below_80pct": 331,
+      "clear_river_core_below_90pct": 477,
+      "snow_ice_above_1pct": 143,
+      "hash_check_failed_in_saved_screen": 0
+    },
+    "eligible_by_season": {
+      "winter": 0,
+      "spring": 30,
+      "summer": 126,
+      "autumn": 129,
+      "unknown": 0
+    },
+    "independent_manual_labels_provided": false,
+    "interpretation": "Saved pixel-derived screening; eligibility is not label approval.",
+    "rejection_reasons_overlap": true
+  },
+  "derived_point_analysis": {
+    "registered_source_paths": 1442,
+    "distinct_registered_source_hashes_in_saved_manifest": 1442,
+    "registered_source_paths_found_locally": 1442,
+    "registered_source_paths_absent_from_acquisition_inventory": 0,
+    "local_registered_sources_date_coverage": {
+      "records": 1442,
+      "undated_records": 0,
+      "first_sensing_utc_day": "2016-05-02",
+      "last_sensing_utc_day": "2026-11-04",
+      "unique_sensing_utc_days": 348,
+      "records_by_season": {
+        "winter": 41,
+        "spring": 238,
+        "summer": 735,
+        "autumn": 428,
+        "unknown": 0
+      },
+      "median_gap_between_observed_days": 5,
+      "max_gap_between_observed_days": 220
+    },
+    "point_crops": 2322,
+    "points": 9
+  },
+  "raster_spot_check": {
+    "status": "attempted",
+    "opened": 4,
+    "selection": "Temporal middle raster per season, ties broken by path",
+    "quality_denominator": "Whole tile; distinct from the corridor and river-core screen",
+    "band_statistics_denominator": "dataMask = 1, digital numbers without normalization"
+  },
+  "limitations": [
+    "This is the input pool for the point-mask analysis, not all project experiments or catalogue scenes.",
+    "TARs and their extracted GeoTIFFs are the same acquisitions; only the raster paths are counted.",
+    "Multiple grids may share a sensing day and are not independent river observations.",
+    "Irregular acquisition and quality-dependent missingness prevent continuous seasonal coverage.",
+    "Catalogue or clear-pixel records do not establish an independently measured river width."
+  ]
+}

@@ -3,6 +3,7 @@
 Inspect only AB-MAI candidates encountered in the original nearest-station
 search, and one latest XML per station. Never schedule this discovery script.
 """
+from project_paths import resolve_runtime_path, archive_relative
 import concurrent.futures
 import json
 import sys
@@ -10,7 +11,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+
 from rdr.storage import DATA, save_json, now
 from API.client import fetch
 from API.observations import precipitation
@@ -41,7 +42,7 @@ def main():
     if not days:raise ValueError('No partner day directory')
     day=days[-1];daily=fetch(urljoin(BASE,day),'sources/eccc_weather_datamart/raw/discovery/ab_agriculture_day.html')
     available=set(links(daily))
-    candidates=[s for s in json.loads((DATA/'reports/weather_validation.json').read_text()) if s['weather_id'].startswith('AB-MAI_')]
+    candidates=[s for s in json.loads((resolve_runtime_path(DATA/'reports/weather_validation.json')).read_text()) if s['weather_id'].startswith('AB-MAI_')]
     def check(station):
         sid=station['weather_id'];code=sid.split('_',1)[1].lower()
         result={'weather_id':sid,'name':station['name'],'directory_day':day.rstrip('/')}
@@ -53,13 +54,13 @@ def main():
             if not xmls:return {**result,'status':'no_xml'}
             p=fetch(urljoin(base,xmls[-1]),f'sources/eccc_weather_datamart/raw/validation/partners/{code}.xml')
             parsed=inspect_xml(p,sid)
-            return {**result,**parsed,'status':'precipitation_available' if parsed['precipitation'] else 'no_valid_precipitation_in_sample','raw_path':str(p.relative_to(DATA))}
+            return {**result,**parsed,'status':'precipitation_available' if parsed['precipitation'] else 'no_valid_precipitation_in_sample','raw_path':str(archive_relative(p, DATA))}
         except Exception as exc:return {**result,'status':'error','error':str(exc)}
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:results=list(pool.map(check,candidates))
     report={'checked_at_utc':now(),'mode':'one cached latest XML per candidate; no polling',
             'source':BASE,'stations':results,'valid_precipitation_count':sum(bool(r.get('precipitation')) for r in results),
             'limitation':'Absence in these samples does not prove that a station never measures precipitation.'}
-    save_json(DATA/'reports/partner_precipitation_check.json',report)
+    save_json(resolve_runtime_path(DATA/'reports/partner_precipitation_check.json'),report)
     print('Partner samples',len(results),'with valid precipitation',report['valid_precipitation_count'])
 
 if __name__=='__main__':main()

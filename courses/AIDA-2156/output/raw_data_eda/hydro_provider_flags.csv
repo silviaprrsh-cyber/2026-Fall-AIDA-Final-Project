@@ -1,0 +1,32 @@
+group,station,name,variable,unit,quality_flag,approval,observations
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,,Final/Finales,73601
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,,Provisional/Provisoire,74425
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,20||20,Provisional/Provisoire,7179
+hydrometric,05CB007,Dickson Dam Tunnel Outlet,discharge,m3/s,30||30,Provisional/Provisoire,852
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,,Provisional/Provisoire,108883
+hydrometric,05CB001,Little Red Deer River near the Mouth,discharge,m3/s,10||10,Provisional/Provisoire,48799
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,,Provisional/Provisoire,93869
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,10||10,Provisional/Provisoire,48716
+hydrometric,05CC007,Medicine River near Eckville,discharge,m3/s,20||20,Provisional/Provisoire,13803
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,,Final/Finales,57321
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,,Provisional/Provisoire,61430
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,10||10,Final/Finales,12654
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,10||10,Provisional/Provisoire,26881
+hydrometric,05CC002,Red Deer River at Red Deer,discharge,m3/s,20||20,Provisional/Provisoire,288
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,,Final/Finales,67183
+hydrometric,05CC002,Red Deer River at Red Deer,gauge stage,m,,Provisional/Provisoire,88474
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,,Final/Finales,51589
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,,Provisional/Provisoire,53388
+hydrometric,05CC003,Sylvan Lake,gauge stage,m,20||20,Final/Finales,813
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,,,55290
+weather_full_archive,3025484,Red Deer Regional A,precipitation,mm,M,,966
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,,,56221
+weather_full_archive,3025484,Red Deer Regional A,air temperature,deg C,M,,35
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,,,56224
+weather_full_archive,3025484,Red Deer Regional A,relative humidity,%,M,,32
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,,,13325
+weather_project_snapshots,3025484,Red Deer Regional A,precipitation,mm,M,,33
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,,,13348
+weather_project_snapshots,3025484,Red Deer Regional A,air temperature,deg C,M,,10
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,,,13349
+weather_project_snapshots,3025484,Red Deer Regional A,relative humidity,%,M,,9

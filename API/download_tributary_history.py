@@ -1,5 +1,6 @@
 """Archive HYDAT station metadata and complete paged daily records once."""
 
+from project_paths import resolve_runtime_path, archive_relative
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -10,7 +11,7 @@ from urllib.parse import urlsplit
 
 from API.client import fetch
 
-ROOT = Path(__file__).resolve().parents[1]
+from project_paths import ROOT
 BASE = "https://api.weather.gc.ca/collections"
 
 
@@ -28,7 +29,7 @@ def acquire(url, relative, params=None):
 
 
 def station_history(sid, run):
-    result = {"station_id": sid, "pages": [], "complete": False}
+    result = {"station_id": sid, "pages": [], "complete": False, "page_matched_counts": []}
     url = BASE + "/hydrometric-daily-mean/items"
     params = {"STATION_NUMBER": sid, "sortby": "DATE", "limit": 10000, "f": "json"}
     seen, total, expected, previous = set(), 0, None, None
@@ -41,8 +42,7 @@ def station_history(sid, run):
             features = obj["features"]
             if expected is None:
                 expected = obj.get("numberMatched")
-            elif obj.get("numberMatched", expected) != expected:
-                raise ValueError("Matched count changed during pagination")
+            result["page_matched_counts"].append(obj.get("numberMatched"))
             for f in features:
                 p = f["properties"]
                 if p.get("STATION_NUMBER") != sid:
@@ -55,13 +55,15 @@ def station_history(sid, run):
                 seen.add(key)
                 previous = p["DATE"]
             total += len(features)
-            result["pages"].append(path.relative_to(ROOT).as_posix())
+            result["pages"].append(archive_relative(path, ROOT).as_posix())
             next_links = [x["href"] for x in obj.get("links", []) if x.get("rel") == "next"]
             if not next_links:
                 if isinstance(expected, int) and total != expected:
                     raise ValueError(f"Incomplete count {total}/{expected}")
                 result.update(complete=True, record_count=total, number_matched=expected,
                               status="downloaded" if total else "no_records")
+                if any(count != expected for count in result["page_matched_counts"]):
+                    result["count_caveat"] = "Intermediate page counts differ. Unique records and terminal total match the first-page count."
                 break
             if not features:
                 raise ValueError("Empty page with a next link")
@@ -98,18 +100,20 @@ def main():
         return
     if not args.candidates:
         parser.error("Use --discover or --candidates")
-    candidates = json.loads((ROOT / args.candidates).read_text(encoding="utf-8"))
+    candidates = json.loads((resolve_runtime_path(ROOT / args.candidates)).read_text(encoding="utf-8"))
     ids = sorted({x["station_id"] for x in candidates})
     report = {"run": run, "candidate_file": args.candidates,
               "historical_resolution": "daily mean", "requested_period": "all available dates",
               "results": []}
-    directory = ROOT / "data/reports/tributary_history" / run
+    directory = resolve_runtime_path(ROOT / "data/reports/tributary_history" / run)
     directory.mkdir(parents=True, exist_ok=False)
     with ThreadPoolExecutor(max_workers=3) as pool:
         for result in pool.map(lambda sid: station_history(sid, run), ids):
             report["results"].append(result)
             (directory / "download_manifest.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(directory / "download_manifest.json", flush=True)
+    if any(not result["complete"] for result in report["results"]):
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":

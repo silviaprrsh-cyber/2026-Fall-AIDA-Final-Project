@@ -1,0 +1,5 @@
+# AIDA 2156 formal EDA runtime record
+# Verified CPython == 3.13.11 on Windows x64 (AMD64).
+# Python standard library only; no pip dependencies.
+# Isolated flags: -B -E -S, see output/clean-copy-replay.txt.
+# This record excludes the separate GIS, database, CV, ML and Windows demo environments.

@@ -1,5 +1,6 @@
 """Independent source schedules, persisted cursors, raw provenance and stop input."""
 from __future__ import annotations
+from project_paths import resolve_runtime_path, archive_relative
 import csv
 import io
 import json
@@ -65,7 +66,7 @@ def source_schedules(stations):
 
 class ObservationStore:
     def __init__(self,path=None):
-        self.path=Path(path or DATA/'processed/observations.sqlite3')
+        self.path=Path(path or resolve_runtime_path(DATA/'processed/observations.sqlite3'))
         self.path.parent.mkdir(parents=True,exist_ok=True)
         with self.connect() as db:
             db.execute('CREATE TABLE IF NOT EXISTS observations (source TEXT, station TEXT, record_id TEXT, observed_at TEXT, payload TEXT, raw_path TEXT, updated_at TEXT, PRIMARY KEY(source,station,record_id))')
@@ -135,7 +136,7 @@ class Collector:
                 payload={'station_id':sid,'water_level_m':row[2] or None,'level_grade':row[3],
                          'level_symbol':row[4],'level_qa':row[5],'discharge_m3_s':row[6] or None,
                          'discharge_grade':row[7],'discharge_symbol':row[8],'discharge_qa':row[9]}
-                records.append((stamp,stamp,payload,str(path.relative_to(DATA))))
+                records.append((stamp,stamp,payload,str(archive_relative(path, DATA))))
             previous=self.store.cursor(kind,sid)
             if previous and records and parse_time(previous)<min(parse_time(r[1]) for r in records):
                 log({'event':'water_retrieval_window_gap','station':sid,'previous':previous,'earliest_returned':min(r[1] for r in records),'at':now()})
@@ -180,7 +181,7 @@ def listen_for_stop(stop,stream=None):
 
 
 def load_config(path=None):
-    cfg=json.loads(Path(path or ROOT/'config/stations.json').read_text(encoding='utf-8'))
+    cfg=json.loads(Path(path or resolve_runtime_path(ROOT/'config/stations.json')).read_text(encoding='utf-8'))
     for station in cfg['stations']:
         if station.get('enabled'):
             station_interval(station['sources'])
@@ -221,7 +222,7 @@ def run(config, *, collect_immediately=True, dry_run=False, selected=None,
     deadline=started+duration_seconds if duration_seconds is not None else None
     deadline_utc=(started_utc+timedelta(seconds=duration_seconds)).isoformat() if duration_seconds is not None else None
     run_id=started_utc.strftime('%Y%m%dT%H%M%S')+'_'+uuid4().hex[:8]
-    stop_file=DATA/'state'/f'{run_id}.stop'
+    stop_file=resolve_runtime_path(DATA/'state'/f'{run_id}.stop')
     stop_reason=['stop_or_keyboard_interrupt_or_stdin_closed']
     def deadline_watch():
         while not stop.wait(0.2):
@@ -235,21 +236,21 @@ def run(config, *, collect_immediately=True, dry_run=False, selected=None,
          for key,job in schedules.items()}
     pending={};jobs=0;completed=0;errors=0
     initial_water=set(water_ids) if collect_immediately else set()
-    state_path=DATA/'state'/f'{run_id}.json'
+    state_path=resolve_runtime_path(DATA/'state'/f'{run_id}.json')
     def write_state(status):
         state={'run_id':run_id,'pid':os.getpid(),'status':status,
                'started_at_utc':started_utc.isoformat(),'deadline_utc':deadline_utc,
                'duration_seconds':duration_seconds,'jobs_submitted':jobs,
                'jobs_completed':completed,'jobs_with_errors':errors,'dry_run':dry_run,
                'station_count':len(stations),'source_schedule_count':len(schedules),
-               'stop_file':str(stop_file.relative_to(ROOT)),
+               'stop_file':str(archive_relative(stop_file, ROOT)),
                'datamart_mode':'initial_snapshot_then_amqps_notifications',
                'datamart_notifications':notifications.status() if notifications else None}
         if status=='stopped':
             state.update(stopped_at_utc=now(),reason=stop_reason[0])
         save_json(state_path,state)
-        save_json(DATA/'state/active_run.json',state)
-        if status=='stopped':save_json(DATA/'state/last_run.json',state)
+        save_json(resolve_runtime_path(DATA/'state/active_run.json'),state)
+        if status=='stopped':save_json(resolve_runtime_path(DATA/'state/last_run.json'),state)
         return state
     control='Run python -m API stop to stop.' if detached else 'Type stop then Enter to stop.'
     print(f'{len(stations)} monitoring points; {len(schedules)} independent source schedules. {control} Dry run={dry_run}',flush=True)

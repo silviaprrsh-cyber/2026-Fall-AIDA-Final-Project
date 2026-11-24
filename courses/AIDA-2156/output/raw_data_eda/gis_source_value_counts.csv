@@ -1,0 +1,176 @@
+archive,layer,field,value,count
+red_deer,Survey_Points,Class,ADP Calibration,59
+red_deer,Survey_Points,Class,Bridge,3294
+red_deer,Survey_Points,Class,Cross Section,28936
+red_deer,Survey_Points,Class,Culvert,228
+red_deer,Survey_Points,Class,Flood Control Structure,1516
+red_deer,Survey_Points,Class,Flood Control Structure (Culvert),2
+red_deer,Survey_Points,Class,LiDAR Check Point,72
+red_deer,Survey_Points,Class,Road (Ford),12
+red_deer,Survey_Points,Class,Storm Drain,35
+red_deer,Survey_Points,Class,Survey Control,825
+red_deer,Survey_Points,Date,2017-08-29,426
+red_deer,Survey_Points,Date,2017-08-30,1125
+red_deer,Survey_Points,Date,2017-08-31,1064
+red_deer,Survey_Points,Date,2017-09-01,982
+red_deer,Survey_Points,Date,2017-09-02,792
+red_deer,Survey_Points,Date,2017-09-03,494
+red_deer,Survey_Points,Date,2017-09-12,347
+red_deer,Survey_Points,Date,2017-09-13,919
+red_deer,Survey_Points,Date,2017-09-14,821
+red_deer,Survey_Points,Date,2017-09-15,1428
+red_deer,Survey_Points,Date,2017-09-16,1955
+red_deer,Survey_Points,Date,2017-09-17,2212
+red_deer,Survey_Points,Date,2017-09-18,1867
+red_deer,Survey_Points,Date,2017-09-19,1529
+red_deer,Survey_Points,Date,2017-09-20,2172
+red_deer,Survey_Points,Date,2017-09-21,872
+red_deer,Survey_Points,Date,2017-09-22,2037
+red_deer,Survey_Points,Date,2017-09-23,1561
+red_deer,Survey_Points,Date,2017-09-24,2711
+red_deer,Survey_Points,Date,2017-09-25,1416
+red_deer,Survey_Points,Date,2017-09-26,1120
+red_deer,Survey_Points,Date,2017-09-27,1786
+red_deer,Survey_Points,Date,2017-10-11,355
+red_deer,Survey_Points,Date,2017-10-12,274
+red_deer,Survey_Points,Date,2017-10-13,227
+red_deer,Survey_Points,Date,2017-10-14,318
+red_deer,Survey_Points,Date,2017-10-15,271
+red_deer,Survey_Points,Date,2017-10-16,412
+red_deer,Survey_Points,Date,2017-10-17,552
+red_deer,Survey_Points,Date,2017-10-30,1166
+red_deer,Survey_Points,Date,2017-10-31,216
+red_deer,Survey_Points,Date,2017-11-01,318
+red_deer,Survey_Points,Date,2017-11-02,337
+red_deer,Survey_Points,Date,2017-11-03,380
+red_deer,Survey_Points,Date,2017-11-04,172
+red_deer,Survey_Points,Date,2017-11-29,105
+red_deer,Survey_Points,Date,2018-06-25,240
+red_deer,Survey_Cross_Sections,Date,2017-08-29,20
+red_deer,Survey_Cross_Sections,Date,2017-08-30,47
+red_deer,Survey_Cross_Sections,Date,2017-08-31,34
+red_deer,Survey_Cross_Sections,Date,2017-09-01,26
+red_deer,Survey_Cross_Sections,Date,2017-09-02,25
+red_deer,Survey_Cross_Sections,Date,2017-09-03,18
+red_deer,Survey_Cross_Sections,Date,2017-09-12,10
+red_deer,Survey_Cross_Sections,Date,2017-09-13,32
+red_deer,Survey_Cross_Sections,Date,2017-09-14,37
+red_deer,Survey_Cross_Sections,Date,2017-09-15,29
+red_deer,Survey_Cross_Sections,Date,2017-09-16,25
+red_deer,Survey_Cross_Sections,Date,2017-09-17,41
+red_deer,Survey_Cross_Sections,Date,2017-09-18,37
+red_deer,Survey_Cross_Sections,Date,2017-09-19,33
+red_deer,Survey_Cross_Sections,Date,2017-09-20,30
+red_deer,Survey_Cross_Sections,Date,2017-09-21,14
+red_deer,Survey_Cross_Sections,Date,2017-09-22,16
+red_deer,Survey_Cross_Sections,Date,2017-09-23,13
+red_deer,Survey_Cross_Sections,Date,2017-09-24,15
+red_deer,Survey_Cross_Sections,Date,2017-09-25,18
+red_deer,Survey_Cross_Sections,Date,2017-09-26,11
+red_deer,Survey_Cross_Sections,Date,2017-09-27,8
+red_deer,Survey_Cross_Sections,Date,2017-10-11,11
+red_deer,Survey_Cross_Sections,Date,2017-10-12,9
+red_deer,Survey_Cross_Sections,Date,2017-10-13,8
+red_deer,Survey_Cross_Sections,Date,2017-10-14,9
+red_deer,Survey_Cross_Sections,Date,2017-10-15,7
+red_deer,Survey_Cross_Sections,Date,2017-10-16,9
+red_deer,Survey_Cross_Sections,Date,2017-10-31,2
+red_deer,Survey_Cross_Sections,RiverCode,Piper Creek,134
+red_deer,Survey_Cross_Sections,RiverCode,Red Deer River,154
+red_deer,Survey_Cross_Sections,RiverCode,Waskasoo Creek,306
+county_markerville,FLD_CrossSectionTopoSurvey,PtType,<missing>,5
+county_markerville,FLD_CrossSectionTopoSurvey,PtType,GROUND,3976
+county_markerville,FLD_CrossSectionTopoSurvey,PtType,ROCK,232
+county_markerville,FLD_CrossSectionTopoSurvey,PtType,UNDERWATER,5970
+county_markerville,FLD_CrossSectionTopoSurvey,PtType,WATERLINE,678
+county_markerville,FLD_ProposedCrossSectionLines,RiverName,Little Red Deer River,74
+county_markerville,FLD_ProposedCrossSectionLines,RiverName,Medicine River,71
+county_markerville,FLD_ProposedCrossSectionLines,RiverName,Red Deer River,115
+upper_red_deer,Survey_Points,Class,ADP Calibration,10
+upper_red_deer,Survey_Points,Class,AEP HWM Survey Temp Benchmark,6
+upper_red_deer,Survey_Points,Class,Bridge,66
+upper_red_deer,Survey_Points,Class,Cross Section,17881
+upper_red_deer,Survey_Points,Class,Culvert,79
+upper_red_deer,Survey_Points,Class,Flood Control Structure,491
+upper_red_deer,Survey_Points,Class,Flood Control Structure (Culvert),18
+upper_red_deer,Survey_Points,Class,LiDAR Check Point,4
+upper_red_deer,Survey_Points,Class,SONAR Calibration,9
+upper_red_deer,Survey_Points,Class,Survey Control,309
+upper_red_deer,Survey_Points,Class,Weir,26
+upper_red_deer,Survey_Points,Date,2013-10-01,1219
+upper_red_deer,Survey_Points,Date,2017-09-27,138
+upper_red_deer,Survey_Points,Date,2017-09-28,1442
+upper_red_deer,Survey_Points,Date,2017-09-29,8693
+upper_red_deer,Survey_Points,Date,2017-09-30,408
+upper_red_deer,Survey_Points,Date,2017-10-01,390
+upper_red_deer,Survey_Points,Date,2017-10-02,343
+upper_red_deer,Survey_Points,Date,2017-10-03,229
+upper_red_deer,Survey_Points,Date,2017-10-04,1299
+upper_red_deer,Survey_Points,Date,2017-10-05,321
+upper_red_deer,Survey_Points,Date,2017-10-06,526
+upper_red_deer,Survey_Points,Date,2017-10-07,514
+upper_red_deer,Survey_Points,Date,2017-10-08,628
+upper_red_deer,Survey_Points,Date,2017-10-09,315
+upper_red_deer,Survey_Points,Date,2017-10-11,362
+upper_red_deer,Survey_Points,Date,2017-10-12,513
+upper_red_deer,Survey_Points,Date,2017-10-13,489
+upper_red_deer,Survey_Points,Date,2017-10-16,427
+upper_red_deer,Survey_Points,Date,2017-10-17,263
+upper_red_deer,Survey_Points,Date,2017-10-18,289
+upper_red_deer,Survey_Points,Date,2017-10-27,91
+upper_red_deer,Survey_Cross_Sections,Year,2013,49
+upper_red_deer,Survey_Cross_Sections,Year,2017,269
+upper_red_deer,Survey_Cross_Sections,RiverCode,Bearberry Creek,123
+upper_red_deer,Survey_Cross_Sections,RiverCode,Fishway,7
+upper_red_deer,Survey_Cross_Sections,RiverCode,Red Deer River,188
+drumheller,CrossSection,CODE,BAR,487
+drumheller,CrossSection,CODE,BATHY,11279
+drumheller,CrossSection,CODE,BBAR,10
+drumheller,CrossSection,CODE,BED,5233
+drumheller,CrossSection,CODE,BNK,3367
+drumheller,CrossSection,CODE,BOB,749
+drumheller,CrossSection,CODE,BOV,20
+drumheller,CrossSection,CODE,CLD,6
+drumheller,CrossSection,CODE,CONC SLAB,7
+drumheller,CrossSection,CODE,GND,4994
+drumheller,CrossSection,CODE,PATH,9
+drumheller,CrossSection,CODE,ROAD,155
+drumheller,CrossSection,CODE,RR,7
+drumheller,CrossSection,CODE,TBAR,10
+drumheller,CrossSection,CODE,TOB,884
+drumheller,CrossSection,CODE,WALL,11
+drumheller,CrossSection,SURV_DATE,2018-07-10,825
+drumheller,CrossSection,SURV_DATE,2018-07-11,1984
+drumheller,CrossSection,SURV_DATE,2018-07-12,1996
+drumheller,CrossSection,SURV_DATE,2018-07-13,1011
+drumheller,CrossSection,SURV_DATE,2018-07-16,578
+drumheller,CrossSection,SURV_DATE,2018-07-17,2010
+drumheller,CrossSection,SURV_DATE,2018-07-18,2160
+drumheller,CrossSection,SURV_DATE,2018-07-19,1480
+drumheller,CrossSection,SURV_DATE,2018-07-20,1271
+drumheller,CrossSection,SURV_DATE,2018-07-23,1095
+drumheller,CrossSection,SURV_DATE,2018-07-24,673
+drumheller,CrossSection,SURV_DATE,2018-07-25,2410
+drumheller,CrossSection,SURV_DATE,2018-07-26,1328
+drumheller,CrossSection,SURV_DATE,2018-07-27,710
+drumheller,CrossSection,SURV_DATE,2018-08-13,377
+drumheller,CrossSection,SURV_DATE,2018-08-14,1089
+drumheller,CrossSection,SURV_DATE,2018-08-16,599
+drumheller,CrossSection,SURV_DATE,2018-08-17,285
+drumheller,CrossSection,SURV_DATE,2018-08-21,488
+drumheller,CrossSection,SURV_DATE,2018-08-22,597
+drumheller,CrossSection,SURV_DATE,2018-08-23,789
+drumheller,CrossSection,SURV_DATE,2018-08-27,634
+drumheller,CrossSection,SURV_DATE,2018-08-28,903
+drumheller,CrossSection,SURV_DATE,2018-08-29,870
+drumheller,CrossSection,SURV_DATE,2018-08-30,467
+drumheller,CrossSection,SURV_DATE,2018-08-31,40
+drumheller,CrossSection,SURV_DATE,2018-09-17,64
+drumheller,CrossSection,SURV_DATE,2018-09-18,363
+drumheller,CrossSection,SURV_DATE,2018-09-19,113
+drumheller,CrossSection,SURV_DATE,<missing>,19
+drumheller,XS_Planned,RIVER,Kneehills Cr,55
+drumheller,XS_Planned,RIVER,Michichi Cr,38
+drumheller,XS_Planned,RIVER,Red Deer,209
+drumheller,XS_Planned,RIVER,Rosebud,120
+drumheller,XS_Planned,RIVER,Willow Cr,13

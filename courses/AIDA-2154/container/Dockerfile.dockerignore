@@ -1,0 +1,12 @@
+**
+!container/
+container/**
+!container/Dockerfile
+!container/requirements.txt
+!container/infer.py
+!container/install-runtime.ps1
+!src/
+src/**
+!src/cv_tools/
+src/cv_tools/**
+!src/cv_tools/model.py

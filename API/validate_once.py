@@ -1,12 +1,13 @@
 """One bounded validation run per endpoint, resumed from cached raw responses."""
+from project_paths import resolve_runtime_path, archive_relative
 import concurrent.futures
 import json
 import math
 import sys
 from pathlib import Path
 from datetime import datetime, timezone
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from rdr.catalog import build_catalog
+
+from rdr_gis.catalog import build_catalog
 from API.observations import hydrometric, hydro_csv, swob, parse_time
 from rdr.storage import DATA, save_json, now
 
@@ -32,10 +33,10 @@ def main():
             return {'station_id':s['station_id'],'error':str(exc)}
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
         waters=list(pool.map(water,stations))
-    save_json(DATA/'reports/hydrometric_validation.json',waters)
+    save_json(resolve_runtime_path(DATA/'reports/hydrometric_validation.json'),waters)
     candidates={}
     for name in ['swob_stations','swob_partners']:
-        for f in json.loads((DATA/f'sources/eccc_weather_geomet/raw/discovery/{name}.json').read_text())['features']:
+        for f in json.loads((resolve_runtime_path(DATA/f'sources/eccc_weather_geomet/raw/discovery/{name}.json')).read_text())['features']:
             p=f['properties'];c=f['geometry']['coordinates']
             candidates[str(p['msc_id'])]={'weather_id':str(p['msc_id']),'name':p.get('name',p.get('name_en')),
                'longitude':c[0],'latitude':c[1],'provider':p.get('data_provider',p.get('data_provider_en'))}
@@ -61,9 +62,9 @@ def main():
                              'precipitation_period_seconds':result['latest_precipitation']['period_seconds']})
                 break
         links.append(link)
-    save_json(DATA/'reports/weather_validation.json',list(validation.values()))
-    save_json(DATA/'processed/weather_links.json',links)
-    save_json(DATA/'reports/validation_run.json',{'completed_at_utc':now(),'hydrometric_stations':len(stations),
+    save_json(resolve_runtime_path(DATA/'reports/weather_validation.json'),list(validation.values()))
+    save_json(resolve_runtime_path(DATA/'processed/weather_links.json'),links)
+    save_json(resolve_runtime_path(DATA/'reports/validation_run.json'),{'completed_at_utc':now(),'hydrometric_stations':len(stations),
                'weather_endpoints':len(validation),'linked_with_precipitation':sum(bool(x['weather_id']) for x in links),
                'mode':'single cached snapshot, no continuous polling'})
 

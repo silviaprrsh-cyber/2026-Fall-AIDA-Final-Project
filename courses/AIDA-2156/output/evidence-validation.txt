@@ -1,0 +1,2 @@
+Documentation verification 2026-11-11 UTC
+Five saved model hashes match their training reports. Existing prediction arrays confirm identical 12,350 test origins, target timestamps and labels for the 80/20 and weighted comparison, and a matching earlier reverse subset. Tables extracted from saved files only; no training or inference rerun. No confidence intervals, fresh-environment run, licence approval or final package validator result is claimed. This is not a clean-run log.

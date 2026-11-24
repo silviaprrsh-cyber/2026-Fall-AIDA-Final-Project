@@ -1,0 +1,49 @@
+AIDA 2362: verified portable GIS submission manifest
+
+Manifest UTC: 2026-11-24T03:16:01+00:00
+QGIS version verified: 3.44.14-Solothurn
+Archive name: AIDA2362_FinalProject_Miles_Zhang.zip
+Status: READY FOR D2L UPLOAD (pending Week 15 live QGIS demo, classmate peer review of two projects, and final D2L upload).
+Survey clearance: Alberta Environment and Protected Areas (EPA) confirmed on 2026-11-23 that the provided Red Deer River survey data is publicly available information and may be used in this course submission with EPA attribution. Private email correspondence (Protected A) and original raw geodatabases are excluded.
+Active QGIS entry inside extracted ZIP: project/dickson_to_joffre.qgz (current Dickson Dam to 05CC002 reach, ~56.0 km, P01-P05).
+Excluded from ZIP: project/history/, original government geodatabases/reports, OSM tile caches, private emails, credentials, virtual environments, Chinese local companions (*CN.md/*CN.docx), and unrelated course folders.
+Verified ZIP SHA-256: ae43b04e8e1fb68e9d47cde41d12c4c8ec23465ebe8d64f72a64ec63774b8c59 (9501498 bytes)
+Clean-extraction QGIS audit: outputs/zip-extraction-validation.json (8 relative local vector layers, 246 features, 0 invalid geometries, 2 layouts, 25 m / 50 m Select by Expression passed).
+
+SHA-256  relative file
+b9ba2563bbb84db2ea1525785a9f60029011070f344142202e4bb3e93bcad18e  README.md
+cf7fe8958db20d835042219d787c38eb123babfa175ba1c7593e98f440c659d9  ai-use-declaration.md
+129778655e0b8f3da99becc6224421eca38939546c98371c5a04689cc2420636  data/README.md
+c1f97814bd109d43284cb538b0c9fd1cc7d1e6d457dd53fda94c3f13575363ec  data/layer-inventory.csv
+970a580f7c03f99cd15124b3d1666bc897bcbe78a530670dd580a12b0000166c  data/layer-inventory.md
+663944d2797c6b869341da0af5387d3932efe891ff6b307d8932c1103b0b3e21  decision-brief.md
+0bf9eecfba057e540d37b7b1dd7c9958e152f2b5b4a2c7e26c3312372e4fcfd7  docs/README.md
+6d53717d39b6c3237ac7917414627b839f8b961a09f238f853a43ac711521389  docs/gis-project-report.docx
+df974ea96e715d413858c38d0c25c7438a4403fb4b56bda750ad717133185573  governance-review.md
+78aa50540fb7294dcca3957f8e681cbb7d2eb55e668f9ef67c16e18f303f3bba  outputs/Overhead view - Dickson to Joffre.pdf
+226ac849bb88c8c35270d74f1e9233e6ff93628022506aa2ff170867279e2691  outputs/Overhead view - Original full project.pdf
+9e1aaad9a89f07fbf07035cfd55529ac3d076ec894460e5829b8485a3bd17791  outputs/Overhead view.pdf
+5dba6c787189a3c57c064bc7afa086097ed4eac3575474cdc50c62d4e56a227b  outputs/README.md
+a8b87c30e80e212b00128d77d9d2efe3438427d0a80413273d7a329f051a85d5  outputs/current-qgis-validation.json
+85fc15862378856a1d9d34ae0dd33d0192e06ed37ab23ceebce5cb3d6a5f7d20  outputs/map-feature-equivalent.csv
+1dd74b27306bc9e646ca3dc26d7b3221f0c7a71a43fbe04f81dd1af7e854a5b6  outputs/map-text-equivalent.md
+1c409dde4d868e322223b2cd9774d92eb05b786e842703b3547e385573bc5df7  outputs/qgis-reopen-and-demo.md
+d867bf8750ffa04da389f0f474a14d3b107b0431697008e37a2f71fe56e8bf9d  outputs/section-proximity-sensitivity.csv
+c71c2e1d7607b3e2442e9532cac57d4e00c14e8d4e73bc13ca34b7bceaa90e44  outputs/section-proximity-sensitivity.md
+ab9475b5b444d29566f79673f2573f0224b4432631a666a73be8355595e5db91  project/README.md
+061c36d3336eb1b1a1fccb60b08635154108030944f227647d63aca2ad6b1464  project/alberta_flood_surveys/county_markerville/cross_section_lines.geojson
+5843a7ad1960d5a9b400f49cfc7bf88f84f976ba24945a324d93bd8d57e0b791  project/alberta_flood_surveys/red_deer/cross_section_lines.geojson
+a7d39a9cfad0ea279c6b93c065693cca20c6d8c99af171d4b7e1a86b9d23d988  project/derived_prediction_targets/prediction_points.geojson
+9301a11dd63ddf9bce1461bd4be2b54ad0bcf3c61a5548a7f721ba032a52c993  project/derived_weather_associations/areas.geojson
+c48f27b86c43a13ba0804d50f39730338d8355991ceb16f9e89b1f3119ea6b32  project/dickson_to_joffre.qgz
+a15bb62d138d65bbe2461b1eaa30c67d11782ee72f42f548f677fbbf31674b3b  project/eccc_hydrometric_geomet/historical_tributary_stations.geojson
+59972827a92406d74045939b2b2c9075f8e7e56c2187d4afbf1a11251a516481  project/eccc_hydrometric_geomet/stations.geojson
+6dea28c70221fa08ad78f890450e08c338f9eec45198205e5b43167a2e151c37  project/eccc_weather_geomet/stations.geojson
+24a66300a211ea21f651d8a237ec783b2712d909eea8869bba71296f6b6aebf4  project/manifest.json
+0f8e0ae2f7901daa161e91ec28cf2b94bd43d590a225e1743d5ceecdca57b0cd  project/map_overview.png
+9acbea9e9567693591d1b7f4f5616516e26b344ce5ebf27a545fcf6817c21eca  project/nrcan_nhn/selected_rivers.geojson
+ec049b3d34d414e3542a97c70e1ba717f58cba72276f89427765483e5a9a1254  release-checklist.md
+206c172f8b1f6805e2eb28725ad780cce8ee6f520c67a1392fc044c87deeecab  src/gis_tools/build_and_verify_release_zip.py
+6389b4755b8f2c12debc97feb944afe2b767a0d746915c61bc247288c9b7bba9  src/gis_tools/build_prediction_points.py
+fc0baa0166e13a804c1908f0a85416d615caf6674a5465e87ab5a943b9b6df67  src/gis_tools/section_proximity_sensitivity.py
+1f3e0cebee0165d7a495b7dda0a3107aa8b92ff27583ccd1f0e99fcaffef61b1  src/gis_tools/validate_course_package.py

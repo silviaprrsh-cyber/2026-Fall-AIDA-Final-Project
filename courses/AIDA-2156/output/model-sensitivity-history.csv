@@ -1,0 +1,3 @@
+id,status,baseline,changed,evidence,result,decision_impact,limitations
+S1,existing exploratory comparison; compound specification,reverse_v1,reverse_8020 training population and stopping scheme,output/identical-test-comparison.csv,common12350 Q MAE9.382940 to8.346269; stageMAE0.147439 to0.087938,improvement on common rows; retain experimental-only disposition,does not isolate percentage; cannot replace planned quality/inclusion EDA
+S2,existing exploratory comparison; compound specification,reverse_8020,Q>=100 weight5 and high-flow internal validation,output/identical-test-comparison.csv,Q>=100 MAE23.456127 to17.360280; overall8.346269 to9.427686,high-flow tradeoff; do not promote as generally better model,same test inspected repeatedly; no independent-event inference

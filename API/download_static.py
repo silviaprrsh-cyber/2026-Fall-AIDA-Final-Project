@@ -1,11 +1,12 @@
 """One-time official river geometry and survey/report acquisition; resumable."""
+from project_paths import resolve_runtime_path, archive_relative
 import concurrent.futures
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from rdr.storage import DATA, save_json
 from API.client import fetch, get_json
 
@@ -13,7 +14,7 @@ GIS = 'https://geospatial.alberta.ca/titan/rest/services/environment'
 
 def reports():
     resources = {}
-    for p in (DATA / 'sources/alberta_flood_studies/raw/discovery').glob('*flood*.html'):
+    for p in (resolve_runtime_path(DATA / 'sources/alberta_flood_studies/raw/discovery')).glob('*flood*.html'):
         if p.name == 'flood_studies.html':
             continue
         soup = BeautifulSoup(p.read_bytes(), 'html.parser')
@@ -46,7 +47,7 @@ def reports():
         return item
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
         result = list(pool.map(download, resources.values()))
-    save_json(DATA / 'processed/flood_resource_inventory.json', result)
+    save_json(resolve_runtime_path(DATA / 'processed/flood_resource_inventory.json'), result)
 
 
 def arc_query(layer, name, params):

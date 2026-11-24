@@ -1,0 +1,192 @@
+{
+  "scope_id": "dickson_to_05CC002",
+  "scope_start": "Gleniffer Lake outlet / Dickson Dam downstream (tunnel outlet reference)",
+  "scope_end": "Red Deer River at Red Deer, station 05CC002",
+  "scope_mainstem_length_m": 55995.46964053899,
+  "scope_gauge_to_centerline_distance_m": 69.42321319770804,
+  "scope_register": "courses/AIDA-2362/data/reports/scope_05CC002.json",
+  "gdal_version": "3.13.3",
+  "source_layer_and_table_count": 33,
+  "source_archives": {
+    "red_deer": {
+      "source_database": "courses/AIDA-2362/data/sources/alberta_flood_surveys/manual/Red Deer/SURVEY_DATA.gdb",
+      "principal_points": {
+        "layer": "Survey_Points",
+        "count": 34979,
+        "typed_cross_section_points": 28936,
+        "elevation_field": "Elevation",
+        "finite_elevation_count": 34979,
+        "missing_or_nonfinite_elevations": 0,
+        "elevation_min_m": 799.4758100555345,
+        "elevation_max_m": 899.037,
+        "empty_geometry_count": 0,
+        "duplicate_records_beyond_first_by_exact_xy_and_elevation": 160
+      },
+      "principal_lines": {
+        "layer": "Survey_Cross_Sections",
+        "count": 594,
+        "status": "surveyed",
+        "empty_geometry_count": 0,
+        "missing_section_id_count": 0,
+        "section_id_duplicates_beyond_first_within_archive": 0,
+        "points_matched_by_original_section_id": 28936,
+        "points_unmatched_by_original_section_id": 0,
+        "line_records_with_matching_section_id": 594
+      },
+      "source_report_reference": "courses/AIDA-2362/data/sources/alberta_flood_surveys/manual/Red Deer/ep-draft-red-deer-survey-base-data-report-mar-2021.pdf",
+      "source_report_pdf_pages": "8",
+      "source_report_present": true
+    },
+    "county_markerville": {
+      "source_database": "courses/AIDA-2362/data/sources/alberta_flood_surveys/manual/Red Deer County and Markerville/A_FieldSurvey.gdb",
+      "principal_points": {
+        "layer": "FLD_CrossSectionTopoSurvey",
+        "count": 10861,
+        "typed_cross_section_points": null,
+        "elevation_field": "Elevation",
+        "finite_elevation_count": 10861,
+        "missing_or_nonfinite_elevations": 0,
+        "elevation_min_m": 858.107,
+        "elevation_max_m": 945.872,
+        "empty_geometry_count": 0,
+        "duplicate_records_beyond_first_by_exact_xy_and_elevation": 921
+      },
+      "principal_lines": {
+        "layer": "FLD_ProposedCrossSectionLines",
+        "count": 260,
+        "status": "planned",
+        "empty_geometry_count": 0,
+        "missing_section_id_count": 0,
+        "section_id_duplicates_beyond_first_within_archive": 0
+      },
+      "source_report_reference": "courses/AIDA-2362/data/sources/alberta_flood_surveys/manual/Red Deer County and Markerville/epa-draft-red-deer-county-markerville-main-report-mar-2024.pdf",
+      "source_report_pdf_pages": "13–14",
+      "source_report_present": true
+    },
+    "upper_red_deer": {
+      "source_database": "courses/AIDA-2362/data/sources/alberta_flood_surveys/manual/Upper Red Deer/SURVEY_DATA.gdb",
+      "principal_points": {
+        "layer": "Survey_Points",
+        "count": 18899,
+        "typed_cross_section_points": 17881,
+        "elevation_field": "Elevation",
+        "finite_elevation_count": 18899,
+        "missing_or_nonfinite_elevations": 0,
+        "elevation_min_m": 911.968423538,
+        "elevation_max_m": 1207.721,
+        "empty_geometry_count": 0,
+        "duplicate_records_beyond_first_by_exact_xy_and_elevation": 57
+      },
+      "principal_lines": {
+        "layer": "Survey_Cross_Sections",
+        "count": 318,
+        "status": "surveyed",
+        "empty_geometry_count": 0,
+        "missing_section_id_count": 0,
+        "section_id_duplicates_beyond_first_within_archive": 0,
+        "points_matched_by_original_section_id": 17840,
+        "points_unmatched_by_original_section_id": 41,
+        "line_records_with_matching_section_id": 316
+      },
+      "source_report_reference": "courses/AIDA-2362/data/sources/alberta_flood_surveys/manual/Upper Red Deer/ep-draft-upper-red-deer-survey-base-data-report-jun-2022.pdf",
+      "source_report_pdf_pages": "8",
+      "source_report_present": true
+    },
+    "drumheller": {
+      "source_database": "courses/AIDA-2362/data/sources/alberta_flood_surveys/manual/Drumheller/Geodatabase_v104/DrumhellerRHS_Survey.gdb",
+      "principal_points": {
+        "layer": "CrossSection",
+        "count": 27228,
+        "typed_cross_section_points": null,
+        "elevation_field": "ELEV",
+        "finite_elevation_count": 27228,
+        "missing_or_nonfinite_elevations": 0,
+        "elevation_min_m": 659.78,
+        "elevation_max_m": 702.533,
+        "empty_geometry_count": 0,
+        "duplicate_records_beyond_first_by_exact_xy_and_elevation": 0
+      },
+      "principal_lines": {
+        "layer": "XS_Planned",
+        "count": 435,
+        "status": "planned",
+        "empty_geometry_count": 0,
+        "missing_section_id_count": 0,
+        "section_id_duplicates_beyond_first_within_archive": 0
+      },
+      "source_report_reference": "courses/AIDA-2362/data/sources/alberta_flood_surveys/manual/Drumheller/ep-draft-drumheller-survey-base-data-report-mar-2020.pdf",
+      "source_report_pdf_pages": "11, 13",
+      "source_report_present": true
+    }
+  },
+  "scope_line_count": 229,
+  "verified_source_line_links": 229,
+  "scope_lines_by_status": {
+    "planned": 191,
+    "surveyed": 38
+  },
+  "scope_lines_by_river_and_status": {
+    "LITTLE RED DEER RIVER": {
+      "planned": 15
+    },
+    "MEDICINE RIVER": {
+      "planned": 68
+    },
+    "RED DEER RIVER": {
+      "planned": 108,
+      "surveyed": 38
+    }
+  },
+  "scope_raw_surveyed_lines_by_date": {
+    "2017-09-23": 12,
+    "2017-09-24": 12,
+    "2017-09-26": 11,
+    "2017-10-16": 3
+  },
+  "scope_survey_points_linked_by_original_id": 5268,
+  "scope_lines_marked_profile_verified": 0,
+  "scope_lines_marked_bank_elevations_verified": 0,
+  "scope_lines_with_both_bank_candidates": 0,
+  "scope_mainstem_chainage": {
+    "basis": "Existing QGIS scope chainages, not a new channel routing calculation.",
+    "mainstem_spans_m_by_archive": {
+      "county_markerville": {
+        "min_m": 347.004,
+        "max_m": 45240.581
+      },
+      "red_deer": {
+        "min_m": 45227.031,
+        "max_m": 55960.799
+      }
+    },
+    "largest_gap_between_adjacent_mainstem_lines": {
+      "upstream_id": "county_markerville:RED DEER RIVER:RDR095",
+      "downstream_id": "county_markerville:RED DEER RIVER:RDR094",
+      "distance_m": 1096.481,
+      "cross_archive": false
+    },
+    "closest_adjacent_mainstem_pair_across_archives": {
+      "upstream_id": "red_deer:RED DEER RIVER:R1",
+      "downstream_id": "county_markerville:RED DEER RIVER:RDR006",
+      "distance_m": 13.55,
+      "cross_archive": true
+    }
+  },
+  "target_count": 5,
+  "targets_marked_on_section": 1,
+  "checks": {
+    "working_line_count_matches_scope_register": true,
+    "working_section_ids_unique": true,
+    "working_sources_used_only_once": true,
+    "all_working_lines_match_original_source": true,
+    "working_targets_match_scope_register": true,
+    "all_target_section_references_resolve": true
+  },
+  "interpretation": [
+    "Source links validate the source feature ID, section ID, river name and nonempty source geometry; they do not compare the source and mapped geometries vertex by vertex.",
+    "A proposed line with candidate topographic survey points is not a verified surveyed profile. County points lack a shared line ID and a per-feature survey date.",
+    "Check the referenced survey PDFs for vertical datum and campaign dates; this script does not parse PDF text. Horizontal CRS or line proximity does not establish comparable gauge zero or hydraulic transfer.",
+    "Target relationships and profile/bank verification flags are read from the working GIS layers. P-series targets are not observed gauges.",
+    "Exact duplicate XY/elevation tuples do not determine why the records repeat."
+  ]
+}

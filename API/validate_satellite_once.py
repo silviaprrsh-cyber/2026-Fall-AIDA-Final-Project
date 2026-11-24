@@ -1,6 +1,7 @@
 """Run one bounded CDSE discovery and image retrieval check; never schedule polling."""
 
 from __future__ import annotations
+from project_paths import resolve_runtime_path, archive_relative
 
 import csv
 import hashlib
@@ -20,7 +21,7 @@ from PIL import Image
 from pyproj import Transformer
 from shapely.geometry import box, shape
 
-ROOT = Path(__file__).resolve().parents[1]
+from project_paths import ROOT, WORKSPACE
 STAC = "https://stac.dataspace.copernicus.eu/v1/search"
 TOKEN = "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token"
 PROCESS = "https://sh.dataspace.copernicus.eu/process/v1"
@@ -58,7 +59,7 @@ def write_json(path, value):
 
 def credentials():
     """Read explicit key/value entries without executing or expanding their contents."""
-    source = ROOT / ".env"
+    source = WORKSPACE / ".env"
     values = {}
     if source.exists():
         for line in source.read_text(encoding="utf-8-sig").splitlines():
@@ -126,17 +127,17 @@ def inspect_pixels(folder, bounds):
 def main():
     now = datetime.now(timezone.utc)
     run_id = now.strftime("%Y%m%dT%H%M%S%fZ")
-    folder = ROOT / "data/sources/copernicus_sentinel2/raw/satellite" / run_id
+    folder = resolve_runtime_path(ROOT / "data/sources/copernicus_sentinel2/raw/satellite" / run_id)
     folder.mkdir(parents=True, exist_ok=False)
     report = {
         "run_id": run_id, "started_at": now.isoformat(), "status": "started",
         "mode": "one_shot", "project_scope": "Full basin scope unchanged",
         "trial_station": "05CC002", "continuous_collection_started": False,
         "cv_training_started": False, "endpoints": {"stac": STAC, "process": PROCESS},
-        "raw_directory": str(folder.relative_to(ROOT)),
+        "raw_directory": str(archive_relative(folder, ROOT)),
     }
     try:
-        with (ROOT / "data/processed/station_master.csv").open(encoding="utf-8-sig", newline="") as handle:
+        with (resolve_runtime_path(ROOT / "data/processed/station_master.csv")).open(encoding="utf-8-sig", newline="") as handle:
             station = next(r for r in csv.DictReader(handle) if r["station_id"] == "05CC002")
         lon, lat = float(station["longitude"]), float(station["latitude"])
         forward = Transformer.from_crs(4326, 32612, always_xy=True)
@@ -223,12 +224,12 @@ def main():
                        "reflectance_bands": ["B04", "B03", "B02", "B08"],
                        "quality_bands": ["SCL", "dataMask"],
                        "quality_note": "SCL is resampled onto the 10 m output grid, not native 10 m classification; it is not a trained CV mask.",
-                       "artifacts": [{"path": str(p.relative_to(ROOT)), "bytes": p.stat().st_size,
+                       "artifacts": [{"path": str(archive_relative(p, ROOT)), "bytes": p.stat().st_size,
                                       "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
                                      for p in sorted(folder.iterdir()) if p.is_file()]})
         report["pixel_validation"] = inspect_pixels(folder, bounds)
         report["status"] = "passed"
-        print("Downloaded:", folder.relative_to(ROOT), flush=True)
+        print("Downloaded:", archive_relative(folder, ROOT), flush=True)
     except Exception as exc:
         report["status"] = "failed"
         # Only our own deliberately sanitized error messages are exposed.
@@ -237,7 +238,7 @@ def main():
     finally:
         report["finished_at"] = datetime.now(timezone.utc).isoformat()
         write_json(folder / "validation.json", report)
-        write_json(ROOT / "data/reports/satellite_validation_once.json", report)
+        write_json(resolve_runtime_path(ROOT / "data/reports/satellite_validation_once.json"), report)
     return 1 if report["status"] == "failed" else 0
 
 

@@ -1,0 +1,42 @@
+{
+  "date_utc": "2026-11-08",
+  "source": "Final_project/movetest",
+  "destination": "aida-final-project-miles-zhang",
+  "copied_and_sha256_verified_files": 26136,
+  "merged_readmes": 12,
+  "teacher_readmes_preserved": 14,
+  "source_preserved": true,
+  "git_history_preserved": true,
+  "environment_lock_installed": true,
+  "pip_check": "passed",
+  "api_enabled_station_ids": [
+    "05CB001",
+    "05CB007",
+    "05CC002",
+    "05CC007"
+  ],
+  "qgis": {
+    "opens": true,
+    "all_layers_valid": true,
+    "layouts": [
+      "Simple OSM overview",
+      "Overhead view"
+    ]
+  },
+  "postgresql": {
+    "read_only_loading": "passed",
+    "schema": "rdr_unit_0f36881e431d0966",
+    "candidate_count": 95053,
+    "ready_for_calibration": true
+  },
+  "training_performed": false,
+  "acquisition_started": false,
+  "git_commit_or_push_performed": false,
+  "secrets_and_raw_data_ignored": true,
+  "root_data_dictionary_and_provenance_allowed_in_git": true,
+  "limitations": [
+    "Existing local PostgreSQL service is reused; no database server is bundled.",
+    "Input archives must be distributed separately subject to permission.",
+    "Old models are retained; new scope model has not been trained."
+  ]
+}
