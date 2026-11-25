@@ -34,6 +34,18 @@ Invoke-RestMethod http://127.0.0.1:8765/api/v1/snapshot
 
 Demo uses explicitly synthetic station observations and a memory implementation of the deployment store; it never contacts PostgreSQL or ECCC. It runs the actual immutable weights. With complete synthetic inputs, 0 h, +3 h and +9 h are numeric. Demo observation times/values are not live environmental data.
 
+### Start locally in live mode with loopback PostgreSQL (`--local-pg`)
+
+To run the exact same PostgreSQL `rdr_live_v1` schema and live ECCC GeoMet API ingestion on your own Windows workstation without weakening remote cloud TLS rules, pass **`--local-pg`** (or set `RDR_ALLOW_LOCAL_PG=1`). When `RDR_DEPLOYMENT_DSN` is not explicitly set, `--local-pg` automatically reads `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, and `PGPASSWORD` from your local Git-ignored `.env` file (see `.env.example`), strictly requiring `PGHOST` to be loopback (`127.0.0.1` / `localhost`). Any non-loopback host still requires `RDR_DEPLOYMENT_DSN` with `sslmode=verify-full` and a valid CA certificate:
+
+```powershell
+$env:PYTHONPATH = "$PWD\courses\AIDA-2156\deployment"
+# One-time schema initialization (creates isolated rdr_live_v1 schema only):
+.\.venv\Scripts\python.exe -B -m server.service --mode live --local-pg --init-db
+# Run live ECCC collector + read-only HTTP API (/api/v1/snapshot and /api/v1/history48h):
+.\.venv\Scripts\python.exe -B -m server.service --mode live --local-pg --port 8765
+```
+
 ## Configure the deployment database and service
 
 1. Prepare a **new** database for this deployment with PostgreSQL 15 or newer. Use a dedicated, private endpoint or restricted network and separate migration/runtime roles. Do not aim the server at the existing project database. Allow the VM outbound HTTPS to `api.weather.gc.ca` and TCP/TLS to the configured PostgreSQL host/port. Enable synchronized system time.

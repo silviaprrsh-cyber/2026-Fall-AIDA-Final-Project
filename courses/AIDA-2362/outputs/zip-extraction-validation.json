@@ -1,9 +1,9 @@
 {
-  "validation_utc": "2026-11-24T03:16:00+00:00",
+  "validation_utc": "2026-11-25T15:27:47+00:00",
   "qgis_version": "3.44.14-Solothurn",
   "archive_name": "AIDA2362_FinalProject_Miles_Zhang.zip",
-  "archive_sha256": "ae43b04e8e1fb68e9d47cde41d12c4c8ec23465ebe8d64f72a64ec63774b8c59",
-  "archive_bytes": 9501498,
+  "archive_sha256": "3512847bb115485a84c155696bb1044b1aaadcb42c6a5a2414a7bfd81c250b68",
+  "archive_bytes": 9550327,
   "archive_member_count": 37,
   "extracted_qgz_reopened": true,
   "all_vector_layers_resolved_inside_extracted_zip": true,

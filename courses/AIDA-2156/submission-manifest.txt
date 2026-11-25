@@ -11,7 +11,7 @@ Run instructions are in analysis/README.md; the exact isolated commands and outp
 
 COURSE EVIDENCE  |  SHA-256  |  bytes  |  path  |  purpose
 Paths are relative to courses/AIDA-2156 and this manifest is excluded from its own hash list.
-3732b80a6533a314329889fe153268a9374d11e35aa9d0b4321f9977f54530a3       22584  README.md  |  entry point
+121b10c12bc952887a2c87942bcca80387b6b0eb702d48bdaf84120c6bb22099       24294  README.md  |  entry point
 a21217a1c182af7160d765df812809fb95928ba557b5347c7cd877950f6ed92b       20437  READMECN.md  |  entry point (Chinese)
 5146d714e14f523294088ca03ab2add2f7c5891611c211d01a53db82732ad606         296  requirements-eda.lock.txt  |  environment
 0b36ad5df6725bfc0e598555615b712f94b86ec46c4771cab839d32ad9dfcea1        6094  analysis-plan.md  |  research question
@@ -45,7 +45,7 @@ ec87a895ecd0c06127b74711ac2eccc0bd1869b44105694bab937a06a24bd169        2373  ai
 224175f4d86cf4ee5cf1a3dbb7047ac82de2d7752533c4c6ea4be5944c3d6718        2110  ai-use-declarationCN.md  |  AI disclosure (Chinese, finalized 2026-11-22)
 a980a91fe05e5d88648f2c56eb249da4fef76a776df165555d22216078d2bfa2        3465  retrospective.md  |  retrospective (finalized 2026-11-22)
 2617e171602daaa8dacff06bae19f388e9f6f8cdf89e4e03b5e42b0bb07f2db9        3028  retrospectiveCN.md  |  retrospective (Chinese, finalized 2026-11-22)
-a1b8153784c660ea450e02a6f2bc802c00100328889e8f5610b0e0e0c290813d         412  peer-review.md  |  peer review position; genuine record pending
+86a9bc191fd264c9710ff27e9bafde6ce30fbede53abb507a954e091c08fbd55        2109  peer-review.md  |  peer review position; genuine record pending
 fcf96f99e0cb529e241ab5824679a98a74278c91d80ffe7e2c09115acf755826         367  peer-reviewCN.md  |  peer review position (Chinese); genuine record pending
 5d150588ec5334c459e7e674316abd37d0084bc3902eaaf500a3635f04390b11       14162  output/final_eda/coverage.csv  |  formal replay result
 4ee046790b6bb2d96e5269dd2651bb83697f4a55061f1c71fcf406232e6a9948        1781  output/final_eda/distributions.csv  |  formal replay result

@@ -1,6 +1,8 @@
 # Snapshot API v1
 
-Routes: `GET /healthz` and `GET /api/v1/snapshot`. Optional Bearer on the second route. Do not embed credentials in a URL. The snapshots use UTC ISO-8601 on every clock and contain no credentials or binary model.
+Routes: `GET /healthz`, `GET /api/v1/snapshot`, and optional additive `GET /api/v1/history48h`. Optional Bearer applies to both `/api/v1/*` routes. Do not embed credentials in a URL. The snapshots use UTC ISO-8601 on every clock and contain no credentials or binary model.
+
+- `GET /api/v1/history48h` (additive v1 endpoint): returns bounded past-48-hour time series for client point-inspector charts — observed station water levels (`levels`, metres on ECCC assumed gauge datum), thinned 48-hour discharges (`flows`, m3/s), hourly airport rain (`rain`, mm), and past-48-hour 0 h V4 depth estimates (`depths`, m). Never modifies `/api/v1/snapshot` semantics or PostgreSQL `rdr_live_v1` schema.
 
 - `mode`: `demo` (synthetic observations) or `live` (official provider, database-backed).
 - `generated_at`: issue/collection timestamp after the batch has been saved and before inference; not the observed clock.

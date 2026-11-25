@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Red Deer River · Hydro-GIS Research Receiver</title>
+<style>
+:root {
+  --bg: #080d18;
+  --surface: #0f172a;
+  --surface-2: #162136;
+  --surface-3: #1e2d47;
+  --border: #24344f;
+  --border-hi: #38527a;
+  --text: #e2e8f0;
+  --text-strong: #f8fafc;
+  --muted: #94a3b8;
+  --dim: #64748b;
+  --teal: #14b8a6;
+  --cyan: #38bdf8;
+  --emerald: #10b981;
+  --purple: #a855f7;
+  --amber: #f59e0b;
+  --red: #f87171;
+  --warn-bg: rgba(245, 158, 11, 0.13);
+  --warn-border: rgba(245, 158, 11, 0.38);
+  --warn-text: #fcd34d;
+  --err-bg: rgba(239, 68, 68, 0.14);
+  --err-border: rgba(239, 68, 68, 0.42);
+  --err-text: #fca5a5;
+  --ok-bg: rgba(16, 185, 129, 0.14);
+  --ok-border: rgba(16, 185, 129, 0.42);
+  --ok-text: #6ee7b7;
+  --info-bg: rgba(56, 189, 248, 0.15);
+  --info-border: rgba(56, 189, 248, 0.45);
+  --info-text: #7dd3fc;
+  --map-bg: #070c16;
+  --map-grid: rgba(148, 163, 184, 0.08);
+  --map-label-bg: rgba(9, 14, 26, 0.88);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.48);
+}
+[data-theme="light"] {
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --surface-3: #e2e8f0;
+  --border: #cbd5e1;
+  --border-hi: #94a3b8;
+  --text: #1e293b;
+  --text-strong: #0f172a;
+  --muted: #475569;
+  --dim: #64748b;
+  --teal: #0d9488;
+  --cyan: #0284c7;
+  --emerald: #059669;
+  --purple: #7c3aed;
+  --amber: #d97706;
+  --red: #dc2626;
+  --warn-bg: #fffbeb;
+  --warn-border: #fcd34d;
+  --warn-text: #92400e;
+  --err-bg: #fef2f2;
+  --err-border: #fca5a5;
+  --err-text: #991b1b;
+  --ok-bg: #ecfdf5;
+  --ok-border: #6ee7b7;
+  --ok-text: #065f46;
+  --info-bg: #e0f2fe;
+  --info-border: #7dd3fc;
+  --info-text: #0369a1;
+  --map-bg: #e8f0f6;
+  --map-grid: rgba(15, 23, 42, 0.08);
+  --map-label-bg: rgba(255, 255, 255, 0.94);
+  --shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg); color: var(--text); font-size: 13px;
+  -webkit-font-smoothing: antialiased; user-select: none;
+}
+.mono { font-family: "Cascadia Mono", "Consolas", monospace; font-variant-numeric: tabular-nums; }
+.app { display: flex; flex-direction: column; width: 100%; height: 100%; }
+
+/* Top Command Bar */
+.topbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 14px; background: var(--surface);
+  border-bottom: 1px solid var(--border); flex-shrink: 0; flex-wrap: nowrap;
+}
+.brand { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.brand-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--cyan));
+  box-shadow: 0 0 12px var(--teal);
+}
+.brand-title { font-size: 14.5px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.2px; }
+.brand-sub { font-size: 10.5px; color: var(--muted); }
+
+/* Mode Switcher (3 Distinct Modes) */
+.mode-switch {
+  display: inline-flex; align-items: center; gap: 3px; padding: 3px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 9px; flex-shrink: 0;
+}
+.mode-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 7px; border: none; background: transparent;
+  color: var(--muted); font-size: 11.5px; font-weight: 700; cursor: pointer;
+  transition: all 0.14s ease; white-space: nowrap;
+}
+.mode-btn:hover { color: var(--text-strong); background: var(--surface-3); }
+.mode-btn.active-live { background: var(--ok-bg); color: var(--ok-text); box-shadow: inset 0 0 0 1px var(--ok-border); }
+.mode-btn.active-replay { background: var(--info-bg); color: var(--info-text); box-shadow: inset 0 0 0 1px var(--info-border); }
+.mode-btn.active-demo { background: var(--warn-bg); color: var(--warn-text); box-shadow: inset 0 0 0 1px var(--warn-border); }
+.m-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700;
+  border: 1px solid var(--border); white-space: nowrap;
+}
+.pill-demo { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn-text); }
+.pill-live { background: var(--ok-bg); border-color: var(--ok-border); color: var(--ok-text); }
+.pill-replay { background: var(--info-bg); border-color: var(--info-border); color: var(--info-text); }
+.pill-err  { background: var(--err-bg); border-color: var(--err-border); color: var(--err-text); }
+.pill-muted{ background: var(--surface-2); border-color: var(--border); color: var(--muted); }
+
+.conn-bar { display: flex; align-items: center; gap: 5px; margin-left: auto; flex: 0 1 auto; min-width: 0; }
+.url-input {
+  width: clamp(130px, 15vw, 205px); padding: 5px 8px; border-radius: 7px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  color: var(--text-strong); font-size: 11.5px; outline: none;
+  font-family: "Cascadia Mono", Consolas, monospace;
+}
+.url-input:focus { border-color: var(--teal); box-shadow: 0 0 0 2px rgba(20,184,166,0.2); }
+.btn {
+  padding: 5px 10px; border-radius: 7px; font-size: 11.5px; font-weight: 600;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  cursor: pointer; transition: all 0.14s ease; white-space: nowrap;
+}
+.btn:hover { background: var(--surface-3); border-color: var(--border-hi); }
+.btn-primary { background: linear-gradient(135deg, #0d9488, #0284c7); border-color: transparent; color: #fff; }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-icon { padding: 5px 9px; font-size: 13px; }
+.poll-badge { font-size: 11px; color: var(--muted); min-width: 64px; text-align: right; }
+
+/* Compliance Notice Strip */
+.banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 4px 14px; font-size: 11.5px; flex-shrink: 0;
+  background: var(--warn-bg); border-bottom: 1px solid var(--warn-border); color: var(--warn-text);
+}
+.banner.is-err { background: var(--err-bg); border-color: var(--err-border); color: var(--err-text); }
+.banner.is-info { background: var(--info-bg); border-color: var(--info-border); color: var(--info-text); }
+.banner-left { display: flex; align-items: center; gap: 7px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.banner-right { display: flex; align-items: center; gap: 14px; font-size: 11px; opacity: 0.94; white-space: nowrap; }
+
+/* Main Split Workspace */
+.workspace { flex: 1; display: flex; min-height: 0; overflow: hidden; }
+
+/* Left Map Pane */
+.map-pane {
+  position: relative; flex: 1 1 auto; min-width: 300px;
+  background: var(--map-bg); overflow: hidden;
+  border-right: 1px solid var(--border);
+}
+#gisCanvas { display: block; width: 100%; height: 100%; cursor: grab; }
+#gisCanvas.pointer { cursor: pointer; }
+#gisCanvas:active { cursor: grabbing; }
+
+.map-toolbar {
+  position: absolute; top: 10px; left: 10px; right: 10px;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+  pointer-events: none; z-index: 6; flex-wrap: wrap;
+}
+.map-group {
+  display: flex; align-items: center; gap: 3px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; box-shadow: var(--shadow); pointer-events: auto;
+}
+.seg-btn {
+  padding: 5px 9px; border-radius: 7px; border: none; background: transparent;
+  color: var(--muted); font-size: 11px; font-weight: 700; cursor: pointer;
+  transition: all 0.14s ease; white-space: nowrap;
+}
+.seg-btn:hover { color: var(--text-strong); background: var(--surface-2); }
+.seg-btn.active { background: rgba(20, 184, 166, 0.2); color: var(--teal); box-shadow: inset 0 0 0 1px rgba(20, 184, 166, 0.45); }
+.seg-btn.active-amber { background: var(--warn-bg); color: var(--warn-text); box-shadow: inset 0 0 0 1px var(--warn-border); }
+
+.bm-select {
+  padding: 4px 8px; border-radius: 7px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--text-strong);
+  font-size: 11px; font-weight: 600; cursor: pointer; outline: none;
+}
+
+/* Layer Popover */
+.layer-panel {
+  position: absolute; top: 52px; right: 10px; width: 262px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 10px 12px; box-shadow: var(--shadow);
+  z-index: 12; display: none;
+}
+.layer-panel.open { display: block; }
+.layer-title { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin-bottom: 7px; }
+.layer-row {
+  display: flex; align-items: center; gap: 8px; padding: 4px 2px;
+  font-size: 12px; cursor: pointer; border-radius: 5px;
+}
+.layer-row:hover { background: var(--surface-2); }
+.layer-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.layer-cnt { margin-left: auto; font-size: 11px; color: var(--dim); }
+
+/* Map Zoom Controls */
+.zoom-controls {
+  position: absolute; right: 12px; bottom: 44px;
+  display: flex; flex-direction: column; gap: 4px; z-index: 6;
+  transition: bottom 0.2s ease;
+}
+.map-pane.has-replay .zoom-controls { bottom: 116px; }
+.zoom-btn {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-strong); font-size: 16px; font-weight: 700;
+  cursor: pointer; box-shadow: var(--shadow); display: grid; place-items: center;
+}
+.zoom-btn:hover { background: var(--surface-2); border-color: var(--teal); }
+.zoom-btn.fit { font-size: 11px; font-weight: 800; }
+
+/* Feature Inspector Card + Past 48h Chart */
+.inspector {
+  position: absolute; left: 12px; bottom: 42px; width: 372px; max-width: calc(100% - 76px);
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 12px; padding: 11px 13px; box-shadow: var(--shadow);
+  z-index: 9; display: none; transition: bottom 0.2s ease;
+}
+.map-pane.has-replay .inspector { bottom: 116px; }
+.inspector.open { display: block; }
+.insp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.insp-id { font-size: 14px; font-weight: 800; color: var(--text-strong); }
+.insp-name { font-size: 11.5px; color: var(--muted); line-height: 1.3; margin-top: 2px; }
+.insp-close {
+  border: none; background: transparent; color: var(--muted); font-size: 17px;
+  cursor: pointer; line-height: 1; padding: 2px 6px; border-radius: 5px;
+}
+.insp-close:hover { background: var(--surface-2); color: var(--text-strong); }
+.insp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+.insp-kv { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 8px; }
+.insp-k { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.45px; color: var(--dim); }
+.insp-v { font-size: 12.5px; font-weight: 700; color: var(--text-strong); margin-top: 1px; }
+.insp-chart-box {
+  margin-top: 8px; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 9px; padding: 7px 9px 5px;
+}
+.insp-chart-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  font-size: 10.5px; font-weight: 700; color: var(--text); margin-bottom: 4px;
+}
+.insp-chart-sub { font-size: 9.5px; font-weight: 600; color: var(--dim); }
+#inspSvg { width: 100%; height: 92px; display: block; }
+.insp-note { font-size: 10.5px; color: var(--muted); margin-top: 7px; line-height: 1.38; }
+
+/* Replay Timeline Bar */
+.replay-bar {
+  position: absolute; left: 12px; right: 12px; bottom: 38px;
+  background: var(--surface); border: 1px solid var(--info-border);
+  border-radius: 12px; padding: 8px 12px; box-shadow: var(--shadow);
+  z-index: 8; display: none; flex-direction: column; gap: 6px;
+}
+.map-pane.has-replay .replay-bar { display: flex; }
+.replay-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rbtn {
+  padding: 4px 9px; border-radius: 7px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--text-strong); font-size: 11.5px; font-weight: 700;
+  cursor: pointer; transition: all 0.12s ease;
+}
+.rbtn:hover { background: var(--surface-3); border-color: var(--cyan); }
+.rbtn.playing { background: linear-gradient(135deg, #0d9488, #0284c7); border-color: transparent; color: #fff; }
+.replay-clock { font-size: 12.5px; font-weight: 800; color: var(--cyan); }
+.replay-idx { font-size: 11px; color: var(--muted); }
+.speed-group { display: inline-flex; gap: 3px; margin-left: auto; }
+.spd-btn {
+  padding: 3px 7px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--muted); font-size: 10.5px; font-weight: 700; cursor: pointer;
+}
+.spd-btn.active { background: var(--info-bg); border-color: var(--info-border); color: var(--info-text); }
+.jump-group { display: inline-flex; gap: 4px; }
+.jump-btn {
+  padding: 2px 7px; border-radius: 5px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--muted); font-size: 10px; font-weight: 600; cursor: pointer;
+}
+.jump-btn:hover { color: var(--text-strong); border-color: var(--teal); }
+.scrubber-row { display: flex; align-items: center; gap: 10px; }
+.scrubber {
+  flex: 1; height: 6px; accent-color: var(--cyan); cursor: pointer;
+}
+
+/* Map Footer Bar */
+.map-footer {
+  position: absolute; left: 10px; right: 10px; bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  pointer-events: none; z-index: 4; font-size: 10.5px; color: var(--muted);
+}
+.map-chip {
+  background: var(--map-label-bg); border: 1px solid var(--border);
+  border-radius: 7px; padding: 3px 8px; backdrop-filter: blur(6px);
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.scale-bar { width: 66px; height: 6px; border: 1.5px solid var(--teal); border-top: none; }
+
+/* Right Telemetry Sidebar */
+.sidebar {
+  flex: 0 0 clamp(335px, 34vw, 415px); width: clamp(335px, 34vw, 415px); min-width: 0;
+  display: flex; flex-direction: column;
+  background: var(--bg); overflow-y: auto; overflow-x: hidden; padding: 10px; gap: 9px;
+}
+.sidebar::-webkit-scrollbar { width: 7px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+.section-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 10px 12px;
+}
+.sec-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.sec-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.65px; color: var(--muted); }
+.sec-sub { font-size: 10.5px; color: var(--dim); }
+
+/* Value Jump Highlight */
+@keyframes pulseTick {
+  0% { color: var(--cyan); }
+  100% { color: var(--text-strong); }
+}
+.tick-flash { animation: pulseTick 0.35s ease-out; }
+
+/* Flow KPI Grid */
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.kpi-card {
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 8px 10px; cursor: pointer; transition: all 0.14s ease;
+}
+.kpi-card:hover { border-color: var(--teal); transform: translateY(-1px); }
+.kpi-card.selected { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan); }
+.kpi-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.kpi-id { font-size: 12px; font-weight: 800; color: var(--cyan); }
+.kpi-name { font-size: 10.5px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi-val-row { display: flex; align-items: baseline; justify-content: space-between; gap: 4px; margin-top: 5px; }
+.kpi-val { font-size: 19px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.4px; }
+.kpi-unit { font-size: 10.5px; color: var(--muted); font-weight: 600; }
+.kpi-lvl { font-size: 10.5px; color: var(--teal); font-weight: 700; }
+.kpi-time { font-size: 10px; color: var(--dim); margin-top: 2px; }
+
+.status-tag {
+  font-size: 9.5px; font-weight: 700; padding: 2px 6px; border-radius: 999px;
+  border: 1px solid var(--border); white-space: nowrap;
+}
+.st-ok { background: var(--ok-bg); border-color: var(--ok-border); color: var(--ok-text); }
+.st-warn { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn-text); }
+.st-err { background: var(--err-bg); border-color: var(--err-border); color: var(--err-text); }
+.st-dim { background: var(--surface-3); border-color: var(--border); color: var(--muted); }
+
+/* Rain Compact Bar */
+.rain-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-top: 7px; padding: 7px 10px; border-radius: 10px;
+  background: var(--surface-2); border: 1px solid var(--border); cursor: pointer;
+}
+.rain-bar:hover { border-color: var(--purple); }
+.rain-bar.selected { border-color: var(--purple); box-shadow: 0 0 0 1px var(--purple); }
+.rain-meta { font-size: 10px; color: var(--dim); margin-top: 2px; }
+
+/* Horizon Segmented Control */
+.horizon-tabs {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 9px; padding: 3px; margin-bottom: 8px;
+}
+.htab {
+  padding: 5px 8px; border: none; border-radius: 7px; background: transparent;
+  color: var(--muted); font-size: 11.5px; font-weight: 700; cursor: pointer;
+}
+.htab:hover { color: var(--text-strong); }
+.htab.active {
+  background: linear-gradient(135deg, rgba(20,184,166,0.22), rgba(56,189,248,0.22));
+  color: var(--text-strong); box-shadow: inset 0 0 0 1px rgba(56,189,248,0.45);
+}
+
+/* Longitudinal Depth Profile Chart */
+.profile-box {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 7px 10px 5px; margin-bottom: 8px;
+}
+.profile-head { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: var(--muted); margin-bottom: 4px; }
+#profileSvg { width: 100%; height: 104px; display: block; }
+
+/* Node List */
+.node-list { display: flex; flex-direction: column; gap: 5px; }
+.node-row {
+  display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 8px;
+  padding: 6px 9px; border-radius: 9px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.14s ease;
+}
+.node-row:hover { border-color: var(--teal); }
+.node-row.selected { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan); }
+.node-row.dimmed { opacity: 0.4; }
+.node-badge {
+  font-size: 11.5px; font-weight: 800; text-align: center; padding: 3px 0;
+  border-radius: 6px; background: rgba(56,189,248,0.14); color: var(--cyan);
+}
+.node-badge.terminal { background: rgba(20,184,166,0.2); color: var(--teal); }
+.node-info-title { font-size: 11.5px; font-weight: 600; color: var(--text-strong); display: flex; align-items: center; gap: 5px; }
+.node-info-sub { font-size: 10px; color: var(--dim); margin-top: 1px; }
+.survey-chip {
+  font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px;
+  background: var(--ok-bg); border: 1px solid var(--ok-border); color: var(--ok-text);
+}
+.node-val { font-size: 14.5px; font-weight: 800; color: var(--text-strong); text-align: right; }
+.node-val-sub { font-size: 9.5px; color: var(--dim); text-align: right; }
+
+.unavail-box {
+  background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text);
+  border-radius: 9px; padding: 8px 10px; font-size: 11px; line-height: 1.4; margin-bottom: 8px;
+}
+
+/* Collapsible Attribution & Governance Details */
+details.gov-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 8px 11px; font-size: 11px; color: var(--muted);
+}
+details.gov-card summary {
+  cursor: pointer; font-weight: 700; color: var(--text); list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+}
+details.gov-card[open] summary { margin-bottom: 7px; }
+.gov-body { display: flex; flex-direction: column; gap: 5px; line-height: 1.45; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Top Command Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-title">Red Deer River · Hydro-GIS</div>
+        <div class="brand-sub">56.0 km Dickson Dam → 05CC002 Receiver</div>
+      </div>
+    </div>
+
+    <!-- 3 Explicit Mode Buttons -->
+    <div class="mode-switch" role="tablist" aria-label="Data Source Mode">
+      <button id="modeLive" class="mode-btn" data-mode="live"><span class="m-dot"></span>Live</button>
+      <button id="modeReplay" class="mode-btn" data-mode="replay"><span class="m-dot"></span>Replay</button>
+      <button id="modeDemo" class="mode-btn active-demo" data-mode="demo"><span class="m-dot"></span>Demo</button>
+    </div>
+
+    <span id="netPill" class="pill pill-muted">Waiting</span>
+
+    <div class="conn-bar">
+      <input id="urlInput" class="url-input" type="text" value="http://127.0.0.1:8765" spellcheck="false" aria-label="Server base URL" />
+      <button id="btnConnect" class="btn btn-primary">Connect</button>
+      <button id="btnRefresh" class="btn">Refresh</button>
+      <span id="pollBadge" class="poll-badge mono">Poll: 60s</span>
+      <button id="btnTheme" class="btn btn-icon" title="Switch Dark / Light Theme">☀</button>
+    </div>
+  </header>
+
+  <!-- Compliance & Clock Strip -->
+  <div id="noticeBanner" class="banner">
+    <div class="banner-left">
+      <span>⚠</span>
+      <span id="bannerText">COURSE DEMO ONLY. Not for real flood forecasting, warnings, emergency response, or safety decisions.</span>
+    </div>
+    <div class="banner-right mono">
+      <span id="clockObs">Obs: —</span>
+      <span id="clockSnap">Snap: —</span>
+    </div>
+  </div>
+
+  <!-- Main Workspace -->
+  <main class="workspace">
+    <!-- Left Interactive GIS Map -->
+    <section id="mapPane" class="map-pane">
+      <canvas id="gisCanvas"></canvas>
+
+      <div class="map-toolbar">
+        <div class="map-group" title="AIDA 2362 Section Proximity Sensitivity Filter">
+          <button class="seg-btn active" data-filter="all">All (5)</button>
+          <button class="seg-btn" data-filter="25">≤ 25 m (3·Planned)</button>
+          <button class="seg-btn" data-filter="50">≤ 50 m (5·+Surveyed P04/P05)</button>
+        </div>
+        <div class="map-group">
+          <select id="basemapSelect" class="bm-select" title="Select Basemap">
+            <option value="auto" selected>Map: Auto (Global + AB Offline)</option>
+            <option value="esri_topo">Map: Esri Topo (Global)</option>
+            <option value="esri_sat">Map: Esri Satellite (Global)</option>
+            <option value="nrcan_offline">Map: NRCan Offline (AB + Reach)</option>
+            <option value="grid">Map: Vector Grid Only</option>
+          </select>
+          <button id="btnLayers" class="seg-btn">Layers (8) ▾</button>
+        </div>
+      </div>
+
+      <div id="layerPanel" class="layer-panel">
+        <div class="layer-title">AIDA 2362 Active GIS Layers (246 Features)</div>
+        <div id="layerList"></div>
+      </div>
+
+      <!-- Bottom-Left Point Inspector + Past 48h Chart -->
+      <div id="inspector" class="inspector">
+        <div class="insp-head">
+          <div>
+            <div id="inspId" class="insp-id">—</div>
+            <div id="inspName" class="insp-name">—</div>
+          </div>
+          <button id="inspClose" class="insp-close" title="Close">×</button>
+        </div>
+        <div id="inspGrid" class="insp-grid"></div>
+        <div class="insp-chart-box">
+          <div class="insp-chart-head">
+            <span id="inspChartTitle">Past 48h Series</span>
+            <span id="inspChartSub" class="insp-chart-sub mono">48h window</span>
+          </div>
+          <svg id="inspSvg" viewBox="0 0 340 92" preserveAspectRatio="none"></svg>
+        </div>
+        <div id="inspNote" class="insp-note"></div>
+      </div>
+
+      <!-- Replay Timeline Scrubber Bar -->
+      <div id="replayBar" class="replay-bar">
+        <div class="replay-top">
+          <button id="btnStepBack" class="rbtn" title="Step -1 hour">⏮</button>
+          <button id="btnPlay" class="rbtn">▶ Play</button>
+          <button id="btnStepFwd" class="rbtn" title="Step +1 hour">⏭</button>
+          <span id="replayClock" class="replay-clock mono">—</span>
+          <span id="replayIdx" class="replay-idx mono">0 / 0</span>
+          <div class="jump-group" title="Quick Jump">
+            <button class="jump-btn" data-jump="start">May 2025</button>
+            <button class="jump-btn" data-jump="peak">Peak Flow</button>
+            <button class="jump-btn" data-jump="winter">Winter 2026</button>
+            <button class="jump-btn" data-jump="summer26">Summer 2026</button>
+          </div>
+          <div class="speed-group">
+            <button class="spd-btn" data-fps="2">1×</button>
+            <button class="spd-btn active" data-fps="5">2×</button>
+            <button class="spd-btn" data-fps="12">5×</button>
+            <button class="spd-btn" data-fps="25">10×</button>
+          </div>
+        </div>
+        <div class="scrubber-row">
+          <span id="replayStartLbl" class="mono" style="font-size:10px;color:var(--dim);">2025-05</span>
+          <input id="replaySlider" class="scrubber" type="range" min="0" max="100" value="0" />
+          <span id="replayEndLbl" class="mono" style="font-size:10px;color:var(--dim);">2026-11</span>
+        </div>
+      </div>
+
+      <div class="zoom-controls">
+        <button id="btnZoomIn" class="zoom-btn" title="Zoom In">+</button>
+        <button id="btnZoomOut" class="zoom-btn" title="Zoom Out">−</button>
+        <button id="btnFit" class="zoom-btn fit" title="Fit 56 km Red Deer Reach">FIT</button>
+        <button id="btnFitAb" class="zoom-btn fit" title="Zoom Out to All of Alberta">AB</button>
+      </div>
+
+      <div class="map-footer">
+        <div class="map-chip mono">
+          <div class="scale-bar"></div>
+          <span id="scaleLabel">5 km</span>
+          <span style="opacity:0.45">|</span>
+          <span id="coordLabel">52.16°N, 114.08°W</span>
+        </div>
+        <div class="map-chip">
+          <span>EPSG:4326 / 3400</span>
+          <span style="opacity:0.45">|</span>
+          <span id="bmCredit">Basemap: NRCan CBMT (OGL-Canada) · EPA · ECCC</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Telemetry & Model Sidebar -->
+    <aside class="sidebar">
+      <!-- Observed Flows & Rain -->
+      <section class="section-card">
+        <div class="sec-head">
+          <span class="sec-title">Observed River Gauges</span>
+          <span class="sec-sub">Click any card or map point for 48h chart</span>
+        </div>
+        <div id="flowGrid" class="kpi-grid"></div>
+        <div id="rainCard" class="rain-bar">
+          <div>
+            <div style="font-weight:700;color:var(--text-strong);font-size:12px;">☁ 3025484 · Red Deer Regional A (Airport)</div>
+            <div id="rainMeta" class="rain-meta">Regional airport precipitation (mm), not basin rainfall</div>
+          </div>
+          <div style="text-align:right">
+            <div id="rainVal" class="mono" style="font-size:17px;font-weight:800;color:var(--text-strong);">— mm</div>
+            <span id="rainStatus" class="status-tag st-dim">Missing</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- V4 Depth Estimates -->
+      <section class="section-card">
+        <div class="sec-head">
+          <span class="sec-title">V4 Experimental Water Depth</span>
+          <span id="horizonStatus" class="status-tag st-dim">Unavailable</span>
+        </div>
+        <div class="horizon-tabs">
+          <button class="htab active" data-h="0">Current (0 h)</button>
+          <button class="htab" data-h="3">+3 hours</button>
+          <button class="htab" data-h="9">+9 hours</button>
+        </div>
+        <div id="horizonMeta" class="sec-sub mono" style="margin-bottom:7px;">Target valid UTC: —</div>
+        <div id="unavailBox" class="unavail-box" style="display:none;"></div>
+
+        <div class="profile-box">
+          <div class="profile-head">
+            <span>Longitudinal Profile (Dickson Dam → 05CC002)</span>
+            <span class="mono">Depth (m)</span>
+          </div>
+          <svg id="profileSvg" viewBox="0 0 380 104" preserveAspectRatio="none"></svg>
+        </div>
+
+        <div id="nodeList" class="node-list"></div>
+      </section>
+
+      <!-- Provenance & Governance Drawer -->
+      <details class="gov-card">
+        <summary>
+          <span>Provenance, Licences &amp; Governance</span>
+          <span style="color:var(--dim);font-size:10px;">Expand ▾</span>
+        </summary>
+        <div class="gov-body">
+          <div>Estimates are limited by upstream travel time and records available at issuance. No later upstream flows are forecast; missing or late inputs yield Unavailable.</div>
+          <div id="govClocks" class="mono" style="font-size:10.5px;">Last contact: —</div>
+          <div><strong>Open-Licensed Offline Basemap &amp; Data:</strong> Offline Canada Base Map (CBMT) &amp; NHN river geometry from Natural Resources Canada (Open Government Licence — Canada); hydrometric &amp; climate series from ECCC (assumed gauge datum confirmed 2026-11-17); Red Deer River cross-section surveys credited to Government of Alberta — Environment and Protected Areas (EPA, written confirmation 2026-11-23).</div>
+          <div><strong>Optional Online Streaming Basemaps (never cached/embedded):</strong> Esri World Dark/Light Gray Canvas, World Topo Map, and World Imagery (Powered by Esri, HERE, Garmin, Maxar, Earthstar Geographics).</div>
+        </div>
+      </details>
+    </aside>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const state = {
+    viewMode: "demo", // "live" | "replay" | "demo"
+    gis: null,
+    basemapMeta: null,
+    basemapImg: null,
+    abWideMeta: null,
+    abWideImg: null,
+    replay: null,
+    replayIdx: 0,
+    replayPeakIdx: 0,
+    replayPlaying: false,
+    replayFps: 5,
+    replayTimer: null,
+    serverSnapshot: null,
+    serverHistory48h: null,
+    frozenDemoSnap: null,
+    frozenDemoHist: null,
+    meta: { serverUrl: "http://127.0.0.1:8765", working: false, error: null, lastContact: null },
+    horizon: 0,
+    filterMode: "all",
+    basemapMode: "auto", // "auto" | "esri_sat" | "nrcan_offline" | "grid"
+    selectedItem: null, // { kind, id }
+    layers: {
+      weather_area: true,
+      sections_planned: true,
+      sections_surveyed: true,
+      rivers: true,
+      hist_stations: true,
+      weather_station: true,
+      stations: true,
+      targets: true
+    },
+    cam: { cx: -114.08, cy: 52.19, scale: 140000 },
+    bounds: { minLon: -114.44, maxLon: -113.74, minLat: 51.99, maxLat: 52.36 },
+    dragging: false,
+    dragStart: null,
+    tileCache: new Map(),
+    hitTargets: [],
+    pulsePhase: 0
+  };
+
+  const LAYER_META = [
+    { key: "targets", label: "Prediction Targets (P01–P05 + P06)", color: "#38bdf8" },
+    { key: "stations", label: "Active ECCC River Gauges", color: "#14b8a6" },
+    { key: "rivers", label: "NRCan NHN Rivers (56 km Reach)", color: "#0ea5e9" },
+    { key: "sections_surveyed", label: "EPA Surveyed Cross-Sections", color: "#10b981" },
+    { key: "sections_planned", label: "Planned Cross-Sections", color: "#64748b" },
+    { key: "weather_station", label: "Airport Weather Station (3025484)", color: "#a855f7" },
+    { key: "hist_stations", label: "Historical / Lake Refs (Sylvan Lake)", color: "#f59e0b" },
+    { key: "weather_area", label: "Weather Corridor (Schematic Only)", color: "#0d9488" }
+  ];
+
+  // Built-in deterministic Frozen Demo snapshot + 48h series (works immediately even if server is in Live mode or stopped)
+  function buildBuiltInDemo() {
+    const baseSec = Math.floor(Date.UTC(2026, 6, 15, 18, 0, 0) / 1000);
+    const fmt = s => new Date(s * 1000).toISOString().replace(".000Z", "Z");
+    const ids = ["05CB007", "05CB001", "05CC007", "05CC002"];
+    const names = [
+      "Dickson Dam Tunnel Outlet", "Little Red Deer River near the Mouth",
+      "Medicine River near Eckville", "Red Deer River at Red Deer"
+    ];
+    const baseQ = [52.4, 8.35, 3.18, 72.8];
+    const baseL = [1.74, 0.96, 0.81, 2.86];
+    const flows = ids.map((id, i) => ({
+      id, title: names[i], value: baseQ[i], status: "Available", clock: fmt(baseSec)
+    }));
+    const mkGroup = (h, vals) => ({
+      hours: h, state: "Experimental",
+      note: h === 0 ? "Frozen synthetic demonstration snapshot (0h)." : `Frozen synthetic demonstration (+${h}h).`,
+      target: fmt(baseSec + h * 3600), generated: fmt(baseSec),
+      depths: vals.map((v, i) => ({
+        id: `P0${i + 1}`,
+        title: i === 5 ? "Terminal water-depth proxy (05CC002)" : "Intermediate latent estimate (unverified)",
+        value: v, status: "Experimental", clock: fmt(baseSec + h * 3600)
+      }))
+    });
+    const snap = {
+      mode: "demo", state: "Available", cached: false,
+      warning: "COURSE DEMO ONLY. Synthetic frozen demonstration snapshot (not live ECCC data).",
+      newest: fmt(baseSec), generated: fmt(baseSec),
+      flows,
+      rain: { id: "3025484", title: "Red Deer Regional A", value: 0.4, status: "Available", period: "1 h accumulation", source: "Synthetic demonstration", clock: fmt(baseSec - 3600) },
+      groups: [
+        mkGroup(0, [1.412, 1.488, 1.564, 1.642, 1.715, 2.842]),
+        mkGroup(3, [1.435, 1.509, 1.582, 1.661, 1.738, 2.871]),
+        mkGroup(9, [1.468, 1.540, 1.615, 1.694, 1.769, 2.905])
+      ]
+    };
+    const levels = {}, hFlows = {}, depths = {};
+    ids.forEach((id, i) => { levels[id] = []; hFlows[id] = []; });
+    levels["05CC003"] = [];
+    ["P01","P02","P03","P04","P05","P06"].forEach(p => depths[p] = []);
+    const rainH = [];
+    for (let k = 48; k >= 0; k--) {
+      const ts = baseSec - k * 3600;
+      const iso = fmt(ts);
+      const wave = Math.sin((48 - k) / 9.5);
+      ids.forEach((id, i) => {
+        const qv = +(baseQ[i] * (1 + 0.08 * wave + 0.02 * Math.cos(k / 3 + i))).toFixed(2);
+        const lv = +(baseL[i] + 0.14 * wave + 0.02 * Math.cos(k / 4 + i)).toFixed(3);
+        hFlows[id].push([iso, qv]);
+        levels[id].push([iso, lv]);
+      });
+      levels["05CC003"].push([iso, +(936.42 + 0.015 * Math.sin(k / 14)).toFixed(3)]);
+      rainH.push([iso, k % 11 === 2 ? 0.8 : k % 11 === 3 ? 0.4 : 0.0]);
+      [1.412, 1.488, 1.564, 1.642, 1.715, 2.842].forEach((dv, i) => {
+        depths[`P0${i + 1}`].push([iso, +(dv + 0.09 * wave + 0.015 * Math.sin(k / 4 + i)).toFixed(3)]);
+      });
+    }
+    return { snap, hist: { levels, flows: hFlows, rain: rainH, depths } };
+  }
+
+  const builtIn = buildBuiltInDemo();
+  state.frozenDemoSnap = builtIn.snap;
+  state.frozenDemoHist = builtIn.hist;
+
+  // Web Mercator helpers
+  function lonToX(lon) { return (lon + 180) / 360; }
+  function latToY(lat) {
+    const rad = lat * Math.PI / 180;
+    return (1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2;
+  }
+  function xToLon(x) { return x * 360 - 180; }
+  function yToLat(y) {
+    const n = Math.PI - 2 * Math.PI * y;
+    return 180 / Math.PI * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
+  }
+
+  const canvas = document.getElementById("gisCanvas");
+  const ctx = canvas.getContext("2d");
+  let viewW = 800, viewH = 600, dpr = 1;
+
+  function resizeCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    viewW = Math.max(300, Math.floor(rect.width));
+    viewH = Math.max(240, Math.floor(rect.height));
+    canvas.width = Math.floor(viewW * dpr);
+    canvas.height = Math.floor(viewH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawMap();
+  }
+
+  function worldToScreen(lon, lat) {
+    const wx = lonToX(lon), wy = latToY(lat);
+    const cx = lonToX(state.cam.cx), cy = latToY(state.cam.cy);
+    return [
+      viewW * 0.5 + (wx - cx) * state.cam.scale,
+      viewH * 0.5 + (wy - cy) * state.cam.scale
+    ];
+  }
+  function screenToWorld(sx, sy) {
+    const cx = lonToX(state.cam.cx), cy = latToY(state.cam.cy);
+    const wx = cx + (sx - viewW * 0.5) / state.cam.scale;
+    const wy = cy + (sy - viewH * 0.5) / state.cam.scale;
+    return [xToLon(wx), yToLat(wy)];
+  }
+
+  function fitBounds(b, pad) {
+    const x0 = lonToX(b.minLon), x1 = lonToX(b.maxLon);
+    const y0 = latToY(b.maxLat), y1 = latToY(b.minLat);
+    const sx = (viewW * pad) / Math.max(1e-6, x1 - x0);
+    const sy = (viewH * pad) / Math.max(1e-6, y1 - y0);
+    state.cam.scale = Math.min(sx, sy);
+    state.cam.cx = (b.minLon + b.maxLon) * 0.5;
+    state.cam.cy = (b.minLat + b.maxLat) * 0.5;
+    drawMap();
+  }
+
+  function fitReach() {
+    fitBounds(state.bounds, 0.82);
+  }
+
+  function fitAlberta() {
+    fitBounds({ minLon: -120.5, maxLon: -109.8, minLat: 48.9, maxLat: 60.1 }, 0.90);
+  }
+
+  function flyTo(lon, lat, minScale) {
+    state.cam.cx = lon;
+    state.cam.cy = lat;
+    if (minScale && state.cam.scale < minScale) state.cam.scale = minScale;
+    drawMap();
+  }
+
+  function computeBoundsFromGis(gis) {
+    let minLon = 180, maxLon = -180, minLat = 90, maxLat = -90;
+    function scan(coords) {
+      if (typeof coords[0] === "number") {
+        if (coords[0] < minLon) minLon = coords[0];
+        if (coords[0] > maxLon) maxLon = coords[0];
+        if (coords[1] < minLat) minLat = coords[1];
+        if (coords[1] > maxLat) maxLat = coords[1];
+      } else {
+        for (let i = 0; i < coords.length; i++) scan(coords[i]);
+      }
+    }
+    ["rivers", "stations", "targets"].forEach(k => (gis[k] || []).forEach(f => scan(f.g)));
+    if (minLon < maxLon) {
+      state.bounds = { minLon: minLon - 0.03, maxLon: maxLon + 0.03, minLat: minLat - 0.02, maxLat: maxLat + 0.02 };
+    }
+  }
+
+  function fmtUtc(epochSec) {
+    if (!epochSec) return "—";
+    const d = new Date(epochSec * 1000);
+    return d.toISOString().slice(0, 19).replace("T", " ") + " UTC";
+  }
+
+  // Synthesize active Snapshot + 48h history according to selected viewMode ("live" | "replay" | "demo")
+  function getActiveSnapshot() {
+    if (state.viewMode === "replay" && state.replay) {
+      const r = state.replay;
+      const i = Math.max(0, Math.min(r.count - 1, state.replayIdx));
+      const ts = r.ts[i];
+      const clk = fmtUtc(ts);
+      const stNames = {
+        "05CB007": "Dickson Dam Tunnel Outlet",
+        "05CB001": "Little Red Deer River near the Mouth",
+        "05CC007": "Medicine River near Eckville",
+        "05CC002": "Red Deer River at Red Deer"
+      };
+      const flows = ["05CB007", "05CB001", "05CC007", "05CC002"].map(sid => ({
+        id: sid, title: stNames[sid], value: r.q[sid][i], level: r.lvl[sid][i],
+        status: r.q[sid][i] != null ? "Available" : "Missing", clock: clk
+      }));
+      const rainVal = r.rain[i];
+      const mkG = (h, arr) => {
+        const vals = arr.map(col => col[i]);
+        const ok = vals.some(v => v != null);
+        return {
+          hours: h, state: ok ? "Experimental" : "Unavailable",
+          note: ok ? `Historical ECCC replay evaluated by pinned V4 weights (+${h}h).` : `Required historical rain/flow span incomplete for +${h}h at this timestamp.`,
+          target: fmtUtc(ts + h * 3600), generated: clk,
+          depths: vals.map((v, k) => ({
+            id: `P0${k + 1}`, value: v, status: v != null ? "Experimental" : "Unavailable", clock: fmtUtc(ts + h * 3600)
+          }))
+        };
+      };
+      return {
+        mode: "replay", state: "Available", cached: false,
+        warning: `HISTORICAL REPLAY (${r.span_start.slice(0, 10)} → ${r.span_end.slice(0, 10)}) — Real ECCC observations + frozen V4 model. Not operational.`,
+        newest: clk, generated: clk,
+        flows,
+        rain: { id: "3025484", title: "Red Deer Regional A", value: rainVal, status: rainVal != null ? "Available" : "Missing", period: "1 h accumulation", source: "ECCC Historical Archive", clock: fmtUtc(ts - 3600) },
+        groups: [mkG(0, r.d0), mkG(3, r.d3), mkG(9, r.d9)]
+      };
+    }
+    if (state.viewMode === "demo") {
+      if (state.serverSnapshot && state.serverSnapshot.mode === "demo") return state.serverSnapshot;
+      return state.frozenDemoSnap;
+    }
+    // Live mode
+    if (state.serverSnapshot && state.serverSnapshot.mode === "live") return state.serverSnapshot;
+    return null;
+  }
+
+  function getPast48hSeries(kind, id) {
+    if (state.viewMode === "replay" && state.replay) {
+      const r = state.replay;
+      const endIdx = Math.max(0, Math.min(r.count - 1, state.replayIdx));
+      const endTs = r.ts[endIdx];
+      const minTs = endTs - 48 * 3600;
+      const pts = [];
+      let j = endIdx;
+      while (j > 0 && r.ts[j - 1] >= minTs) j--;
+      for (let k = j; k <= endIdx; k++) {
+        const tsIso = new Date(r.ts[k] * 1000).toISOString();
+        let val = null;
+        if (kind === "station" || kind === "hist") {
+          val = r.lvl[id] ? r.lvl[id][k] : null;
+        } else if (kind === "target") {
+          const pIdx = parseInt(id.slice(1), 10) - 1;
+          val = (pIdx >= 0 && pIdx < 6) ? r.d0[pIdx][k] : null;
+        } else if (kind === "weather") {
+          val = r.rain[k];
+        }
+        if (val != null) pts.push([tsIso, val]);
+      }
+      return pts;
+    }
+    const hist = (state.viewMode === "demo" && (!state.serverSnapshot || state.serverSnapshot.mode !== "demo"))
+      ? state.frozenDemoHist
+      : state.serverHistory48h;
+    if (!hist) return [];
+    if (kind === "station" || kind === "hist") return (hist.levels && hist.levels[id]) || [];
+    if (kind === "target") return (hist.depths && hist.depths[id]) || [];
+    if (kind === "weather") return hist.rain || [];
+    return [];
+  }
+
+  function getLatestLevel(stationId) {
+    const pts = getPast48hSeries("station", stationId);
+    return pts.length ? pts[pts.length - 1][1] : null;
+  }
+
+  function getGroup(snap, hours) {
+    if (!snap || !snap.groups) return null;
+    return snap.groups.find(g => g.hours === hours) || null;
+  }
+  function getDepthReading(snap, nodeId, hours) {
+    const g = getGroup(snap, hours == null ? state.horizon : hours);
+    return g && g.depths ? (g.depths.find(d => d.id === nodeId) || null) : null;
+  }
+  function getFlowReading(snap, stationId) {
+    return snap && snap.flows ? (snap.flows.find(f => f.id === stationId) || null) : null;
+  }
+
+  function targetPassesFilter(props) {
+    if (state.filterMode === "all") return true;
+    const off = Math.abs(Number(props.offset_m ?? 9999));
+    return state.filterMode === "25" ? off <= 25 : off <= 50;
+  }
+
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function drawOfflineNrcan(isDark) {
+    ctx.save();
+    if (isDark) {
+      ctx.filter = "invert(0.90) hue-rotate(180deg) brightness(0.76) contrast(1.08) saturate(0.85)";
+    } else {
+      ctx.globalAlpha = 0.90;
+    }
+    // 1. Full Alberta province context layer (OGL-Canada)
+    if (state.abWideImg && state.abWideImg.complete && state.abWideMeta) {
+      const [minLon, minLat, maxLon, maxLat] = state.abWideMeta.bbox_lonlat;
+      const [sx0, sy0] = worldToScreen(minLon, maxLat);
+      const [sx1, sy1] = worldToScreen(maxLon, minLat);
+      ctx.drawImage(state.abWideImg, sx0, sy0, sx1 - sx0, sy1 - sy0);
+    }
+    // 2. High-resolution Red Deer reach detail layer seamlessly overlaid when zoomed in
+    if (state.cam.scale > 32000 && state.basemapImg && state.basemapImg.complete && state.basemapMeta) {
+      const [minLon, minLat, maxLon, maxLat] = state.basemapMeta.bbox_lonlat;
+      const [sx0, sy0] = worldToScreen(minLon, maxLat);
+      const [sx1, sy1] = worldToScreen(maxLon, minLat);
+      ctx.drawImage(state.basemapImg, sx0, sy0, sx1 - sx0, sy1 - sy0);
+    }
+    ctx.restore();
+  }
+
+  // Basemap Rendering (Auto Global Streaming + Full-Alberta OGL-Canada Offline Fallback)
+  function drawBasemap() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const credit = document.getElementById("bmCredit");
+
+    if (state.basemapMode === "grid") {
+      credit.textContent = "Vector Grid Only · NRCan NHN (OGL) · EPA · ECCC";
+      return;
+    }
+
+    // Always draw offline NRCan OGL-Canada Alberta + Red Deer underneath for instant render & offline safety
+    drawOfflineNrcan(isDark);
+
+    if (state.basemapMode === "nrcan_offline") {
+      credit.textContent = "Offline Map: NRCan CBMT Alberta (OGL-Canada) · EPA · ECCC";
+      return;
+    }
+
+    // Global Online Streaming Tiles (Zero API-Key Esri Global Services — z=3..16/17 across whole world!)
+    const zFloat = Math.log2(state.cam.scale / 256);
+    const maxZ = state.basemapMode === "auto" ? 15 : 17;
+    const z = Math.max(3, Math.min(maxZ, Math.round(zFloat)));
+    const n = Math.pow(2, z);
+    const tilePx = state.cam.scale / n;
+    const [tlLon, tlLat] = screenToWorld(0, 0);
+    const [brLon, brLat] = screenToWorld(viewW, viewH);
+    const tx0 = Math.max(0, Math.floor(lonToX(Math.max(-179.9, tlLon)) * n));
+    const tx1 = Math.min(n - 1, Math.floor(lonToX(Math.min(179.9, brLon)) * n));
+    const ty0 = Math.max(0, Math.floor(latToY(Math.min(85.0, tlLat)) * n));
+    const ty1 = Math.min(n - 1, Math.floor(latToY(Math.max(-85.0, brLat)) * n));
+    if ((tx1 - tx0 + 1) * (ty1 - ty0 + 1) > 72) return;
+
+    const tileLayers = [];
+    if (state.basemapMode === "auto") {
+      if (isDark) {
+        tileLayers.push({ id: "esri_dk_b", url: (z, ty, tx) => `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/${z}/${ty}/${tx}`, alpha: 1.0 });
+        tileLayers.push({ id: "esri_dk_r", url: (z, ty, tx) => `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/${z}/${ty}/${tx}`, alpha: 0.92 });
+      } else {
+        tileLayers.push({ id: "esri_lt_b", url: (z, ty, tx) => `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/${z}/${ty}/${tx}`, alpha: 1.0 });
+        tileLayers.push({ id: "esri_lt_r", url: (z, ty, tx) => `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/${z}/${ty}/${tx}`, alpha: 0.92 });
+      }
+    } else if (state.basemapMode === "esri_topo") {
+      tileLayers.push({ id: "esri_topo", url: (z, ty, tx) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${ty}/${tx}`, alpha: isDark ? 0.85 : 0.96, darkTint: isDark });
+    } else if (state.basemapMode === "esri_sat") {
+      tileLayers.push({ id: "esri_sat", url: (z, ty, tx) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${ty}/${tx}`, alpha: isDark ? 0.88 : 0.95 });
+      tileLayers.push({ id: "esri_lbl", url: (z, ty, tx) => `https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/${z}/${ty}/${tx}`, alpha: 0.85 });
+    }
+
+    let loadedAny = false;
+    for (const tl of tileLayers) {
+      ctx.save();
+      ctx.globalAlpha = tl.alpha;
+      if (tl.darkTint) ctx.filter = "invert(0.90) hue-rotate(180deg) brightness(0.78) contrast(1.06)";
+      for (let tx = tx0; tx <= tx1; tx++) {
+        for (let ty = ty0; ty <= ty1; ty++) {
+          const key = `${tl.id}/${z}/${tx}/${ty}`;
+          let img = state.tileCache.get(key);
+          if (!img) {
+            img = new Image();
+            img.onload = () => drawMap();
+            img.src = tl.url(z, ty, tx);
+            if (state.tileCache.size > 360) {
+              state.tileCache.delete(state.tileCache.keys().next().value);
+            }
+            state.tileCache.set(key, img);
+          }
+          if (img.complete && img.naturalWidth > 0) {
+            loadedAny = true;
+            const [sx, sy] = worldToScreen(xToLon(tx / n), yToLat(ty / n));
+            ctx.drawImage(img, sx, sy, tilePx + 0.75, tilePx + 0.75);
+          }
+        }
+      }
+      ctx.restore();
+    }
+
+    if (loadedAny) {
+      credit.textContent = state.basemapMode === "esri_sat"
+        ? "Global Satellite: Esri (Maxar, Earthstar) · EPA · ECCC"
+        : state.basemapMode === "esri_topo"
+          ? "Global Topo: Esri World Topo · NRCan · EPA · ECCC"
+          : "Global Map: Esri Canvas · NRCan (OGL) · EPA · ECCC";
+    } else {
+      credit.textContent = "Offline Fallback: NRCan CBMT Alberta (OGL-Canada) · EPA · ECCC";
+    }
+  }
+
+  function drawGraticule() {
+    const [tlLon, tlLat] = screenToWorld(0, 0);
+    const [brLon, brLat] = screenToWorld(viewW, viewH);
+    const span = Math.abs(brLon - tlLon);
+    const step = span > 1 ? 0.25 : span > 0.35 ? 0.1 : span > 0.12 ? 0.05 : 0.02;
+    ctx.save();
+    ctx.strokeStyle = cssVar("--map-grid");
+    ctx.lineWidth = 1;
+    const startLon = Math.floor(tlLon / step) * step;
+    for (let lon = startLon; lon <= brLon + step; lon += step) {
+      const [sx] = worldToScreen(lon, 52.2);
+      ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, viewH); ctx.stroke();
+    }
+    const startLat = Math.floor(brLat / step) * step;
+    for (let lat = startLat; lat <= tlLat + step; lat += step) {
+      const [, sy] = worldToScreen(-114.0, lat);
+      ctx.beginPath(); ctx.moveTo(0, sy); ctx.lineTo(viewW, sy); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawLineString(coords) {
+    if (!coords || coords.length < 2) return;
+    ctx.beginPath();
+    for (let i = 0; i < coords.length; i++) {
+      const [sx, sy] = worldToScreen(coords[i][0], coords[i][1]);
+      if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+  }
+  function drawPolygon(rings) {
+    if (!rings || !rings.length) return;
+    ctx.beginPath();
+    rings.forEach(ring => {
+      for (let i = 0; i < ring.length; i++) {
+        const [sx, sy] = worldToScreen(ring[i][0], ring[i][1]);
+        if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.closePath();
+    });
+    ctx.fill(); ctx.stroke();
+  }
+
+  // Returns badge bounding box so BOTH dot AND floating label pill are clickable!
+  // place: "top" (default) | "bottom" | "left" | "right" | "top-right"
+  function drawBadge(x, y, text, accentColor, isSelected, place) {
+    ctx.save();
+    ctx.font = "700 11px 'Segoe UI', sans-serif";
+    const padX = 6, h = 19;
+    const w = ctx.measureText(text).width + padX * 2;
+    let rx = Math.round(x - w / 2), ry = Math.round(y - h - 10);
+    if (place === "bottom") { ry = Math.round(y + 11); }
+    else if (place === "left") { rx = Math.round(x - w - 11); ry = Math.round(y - h / 2); }
+    else if (place === "right") { rx = Math.round(x + 11); ry = Math.round(y - h / 2); }
+    else if (place === "top-right") { rx = Math.round(x + 8); ry = Math.round(y - h - 8); }
+    else if (place === "bottom-right") { rx = Math.round(x + 8); ry = Math.round(y + 8); }
+    ctx.fillStyle = cssVar("--map-label-bg");
+    ctx.strokeStyle = isSelected ? "#38bdf8" : accentColor;
+    ctx.lineWidth = isSelected ? 2 : 1.25;
+    ctx.beginPath();
+    ctx.roundRect(rx, ry, w, h, 5);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = cssVar("--text-strong");
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, rx + padX, ry + h / 2 + 0.5);
+    ctx.restore();
+    return { x: rx, y: ry, w, h };
+  }
+
+  function drawMap() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    ctx.fillStyle = cssVar("--map-bg");
+    ctx.fillRect(0, 0, viewW, viewH);
+
+    drawBasemap();
+    drawGraticule();
+
+    const gis = state.gis;
+    if (!gis) return;
+    const snap = getActiveSnapshot();
+    const selId = state.selectedItem ? state.selectedItem.id : null;
+    state.hitTargets = [];
+
+    // 1. Weather Corridor
+    if (state.layers.weather_area && gis.weather_area) {
+      ctx.save();
+      ctx.fillStyle = isDark ? "rgba(20, 184, 166, 0.08)" : "rgba(13, 148, 136, 0.09)";
+      ctx.strokeStyle = isDark ? "rgba(20, 184, 166, 0.36)" : "rgba(13, 148, 136, 0.44)";
+      ctx.setLineDash([6, 4]); ctx.lineWidth = 1.2;
+      gis.weather_area.forEach(f => {
+        if (f.t === "MultiPolygon") f.g.forEach(poly => drawPolygon(poly));
+        else drawPolygon(f.g);
+      });
+      ctx.restore();
+    }
+
+    // 2. Planned Sections (191)
+    if (state.layers.sections_planned && gis.sections_planned) {
+      ctx.save();
+      ctx.strokeStyle = isDark ? "rgba(148, 163, 184, 0.38)" : "rgba(71, 85, 105, 0.40)";
+      ctx.lineWidth = 1.1;
+      gis.sections_planned.forEach(f => drawLineString(f.g));
+      ctx.restore();
+    }
+
+    // 3. Surveyed EPA Sections (38)
+    const matchedSurveyIds = new Set(["red_deer:RED DEER RIVER:R11", "red_deer:RED DEER RIVER:R19"]);
+    if (state.layers.sections_surveyed && gis.sections_surveyed) {
+      ctx.save();
+      gis.sections_surveyed.forEach(f => {
+        const isMatched = state.filterMode === "50" && matchedSurveyIds.has(f.p.id);
+        ctx.strokeStyle = isMatched ? "#34d399" : (isDark ? "rgba(16, 185, 129, 0.85)" : "rgba(5, 150, 105, 0.90)");
+        ctx.lineWidth = isMatched ? 3.4 : 1.8;
+        drawLineString(f.g);
+      });
+      ctx.restore();
+    }
+
+    // 4. Rivers
+    if (state.layers.rivers && gis.rivers) {
+      gis.rivers.forEach(f => {
+        const isMain = f.p.role === "selected_mainstem";
+        ctx.save();
+        if (isMain) {
+          ctx.strokeStyle = isDark ? "rgba(56, 189, 248, 0.32)" : "rgba(2, 132, 199, 0.24)";
+          ctx.lineWidth = 9; ctx.lineCap = "round"; ctx.lineJoin = "round";
+          drawLineString(f.g);
+          ctx.strokeStyle = isDark ? "#38bdf8" : "#0284c7";
+          ctx.lineWidth = 3.6;
+          drawLineString(f.g);
+        } else {
+          ctx.strokeStyle = f.p.role === "ungauged_mapped_tributary"
+            ? (isDark ? "rgba(148, 163, 184, 0.72)" : "rgba(100, 116, 139, 0.78)")
+            : (isDark ? "#2dd4bf" : "#0d9488");
+          ctx.lineWidth = f.p.role === "ungauged_mapped_tributary" ? 1.8 : 2.5;
+          if (f.p.role === "ungauged_mapped_tributary") ctx.setLineDash([4, 4]);
+          drawLineString(f.g);
+        }
+        ctx.restore();
+      });
+    }
+
+    // 5. Historical / Lake Reference Stations
+    if (state.layers.hist_stations && gis.hist_stations) {
+      gis.hist_stations.forEach(f => {
+        const [sx, sy] = worldToScreen(f.g[0], f.g[1]);
+        const sel = selId === f.p.id;
+        ctx.save();
+        ctx.translate(sx, sy); ctx.rotate(Math.PI / 4);
+        ctx.fillStyle = "#f59e0b"; ctx.strokeStyle = isDark ? "#080d18" : "#fff"; ctx.lineWidth = 2;
+        ctx.fillRect(-5.5, -5.5, 11, 11); ctx.strokeRect(-5.5, -5.5, 11, 11);
+        ctx.restore();
+        const shortLbl = f.p.id === "05CC003" ? "05CC003 Sylvan Lake" : "05CC012 Hist.";
+        const box = drawBadge(sx, sy, shortLbl, "#f59e0b", sel);
+        state.hitTargets.push({ x: sx, y: sy, r: 14, box, kind: "hist", id: f.p.id, feature: f });
+      });
+    }
+
+    // 6. Airport Weather Station
+    if (state.layers.weather_station && gis.weather_station) {
+      gis.weather_station.forEach(f => {
+        const [sx, sy] = worldToScreen(f.g[0], f.g[1]);
+        const sel = selId === f.p.id;
+        const rain = snap && snap.rain;
+        const valTxt = rain && rain.value != null ? ` ${rain.value.toFixed(1)}mm` : "";
+        ctx.save();
+        ctx.beginPath(); ctx.arc(sx, sy, sel ? 8.5 : 7, 0, Math.PI * 2);
+        ctx.fillStyle = "#a855f7"; ctx.fill();
+        ctx.strokeStyle = isDark ? "#080d18" : "#fff"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.restore();
+        const box = drawBadge(sx, sy, "☁ CYQF" + valTxt, "#a855f7", sel);
+        state.hitTargets.push({ x: sx, y: sy, r: 15, box, kind: "weather", id: f.p.id, feature: f });
+      });
+    }
+
+    // 7. Active Hydrometric Stations (4)
+    if (state.layers.stations && gis.stations) {
+      gis.stations.forEach(f => {
+        const [sx, sy] = worldToScreen(f.g[0], f.g[1]);
+        const sel = selId === f.p.id || (f.p.id === "05CC002" && selId === "P06");
+        const flow = getFlowReading(snap, f.p.id);
+        const valStr = flow && flow.value != null ? ` ${flow.value.toFixed(1)} m³/s` : "";
+        ctx.save();
+        ctx.beginPath(); ctx.arc(sx, sy, sel ? 9.5 : 7.2, 0, Math.PI * 2);
+        ctx.fillStyle = "#14b8a6"; ctx.fill();
+        ctx.strokeStyle = isDark ? "#080d18" : "#fff"; ctx.lineWidth = 2.2; ctx.stroke();
+        ctx.restore();
+        const label = f.p.id === "05CC002" ? `05CC002 (P06)${valStr}` : `${f.p.id}${valStr}`;
+        const place = f.p.id === "05CC002" ? "top-right" : f.p.id === "05CB001" ? "bottom" : "top";
+        const box = drawBadge(sx, sy, label, "#14b8a6", sel, place);
+        state.hitTargets.push({ x: sx, y: sy, r: 16, box, kind: "station", id: f.p.id, feature: f });
+      });
+    }
+
+    // 8. Prediction Targets P01-P05
+    if (state.layers.targets && gis.targets) {
+      gis.targets.forEach(f => {
+        const [sx, sy] = worldToScreen(f.g[0], f.g[1]);
+        const active = targetPassesFilter(f.p);
+        const sel = selId === f.p.id;
+        const isSurveyed = f.p.surveyed;
+        const depth = getDepthReading(snap, f.p.id);
+        const dStr = depth && depth.value != null ? ` ${depth.value.toFixed(2)}m` : "";
+
+        ctx.save();
+        ctx.globalAlpha = active ? 1 : 0.28;
+        if (state.filterMode === "50" && isSurveyed) {
+          const pulse = 11 + Math.sin(state.pulsePhase) * 4.5;
+          ctx.beginPath(); ctx.arc(sx, sy, pulse, 0, Math.PI * 2);
+          ctx.strokeStyle = "rgba(16, 185, 129, 0.88)"; ctx.lineWidth = 2.5; ctx.stroke();
+        }
+        if (sel) {
+          ctx.beginPath(); ctx.arc(sx, sy, 13, 0, Math.PI * 2);
+          ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2.5; ctx.stroke();
+        }
+        ctx.beginPath(); ctx.arc(sx, sy, 7, 0, Math.PI * 2);
+        ctx.fillStyle = isSurveyed ? "#10b981" : "#f43f5e"; ctx.fill();
+        ctx.strokeStyle = isDark ? "#080d18" : "#fff"; ctx.lineWidth = 2; ctx.stroke();
+        const tPlace = f.p.id === "P04" ? "left" : f.p.id === "P05" ? "bottom-right" : "top";
+        const box = drawBadge(sx, sy, `${f.p.id}${dStr}`, isSurveyed ? "#10b981" : "#f43f5e", sel, tPlace);
+        ctx.restore();
+        state.hitTargets.push({ x: sx, y: sy, r: 16, box, kind: "target", id: f.p.id, feature: f });
+      });
+    }
+
+    updateScaleBar();
+  }
+
+  function hitTest(mx, my) {
+    for (let i = state.hitTargets.length - 1; i >= 0; i--) {
+      const t = state.hitTargets[i];
+      if (Math.hypot(t.x - mx, t.y - my) <= t.r) return t;
+      if (t.box && mx >= t.box.x && mx <= t.box.x + t.box.w && my >= t.box.y && my <= t.box.y + t.box.h) return t;
+    }
+    return null;
+  }
+
+  function updateScaleBar() {
+    const [l1] = screenToWorld(viewW * 0.5, viewH * 0.5);
+    const [l2] = screenToWorld(viewW * 0.5 + 66, viewH * 0.5);
+    const km = Math.abs(l2 - l1) * 111.32 * Math.cos(state.cam.cy * Math.PI / 180);
+    document.getElementById("scaleLabel").textContent = km >= 1 ? `${km.toFixed(1)} km` : `${Math.round(km * 1000)} m`;
+  }
+
+  function findFeatureBySelection(sel) {
+    if (!sel || !state.gis) return null;
+    if (sel.kind === "target") {
+      if (sel.id === "P06") {
+        const st = state.gis.stations.find(x => x.p.id === "05CC002");
+        return st ? { kind: "target", id: "P06", feature: { p: { id: "P06", name: "Terminal Water-Depth Proxy (05CC002)", chainage_m: 56000, offset_m: 0, section_id: "Terminal gauge 05CC002", surveyed: false }, g: st.g } } : null;
+      }
+      const f = state.gis.targets.find(x => x.p.id === sel.id);
+      return f ? { kind: "target", id: sel.id, feature: f } : null;
+    }
+    if (sel.kind === "station") {
+      const f = state.gis.stations.find(x => x.p.id === sel.id);
+      return f ? { kind: "station", id: sel.id, feature: f } : null;
+    }
+    if (sel.kind === "weather") {
+      const f = state.gis.weather_station && state.gis.weather_station[0];
+      return f ? { kind: "weather", id: f.p.id, feature: f } : null;
+    }
+    if (sel.kind === "hist") {
+      const f = state.gis.hist_stations.find(x => x.p.id === sel.id);
+      return f ? { kind: "hist", id: sel.id, feature: f } : null;
+    }
+    return null;
+  }
+
+  // Render Past 48h Chart inside Bottom-Left Inspector Card
+  function renderInspector48hChart(kind, id, pts) {
+    const svg = document.getElementById("inspSvg");
+    const W = 340, H = 92, padL = 34, padR = 10, padT = 10, padB = 18;
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const gridCol = isDark ? "rgba(148,163,184,0.16)" : "rgba(15,23,42,0.12)";
+    const textCol = isDark ? "#94a3b8" : "#475569";
+
+    if (!pts || !pts.length) {
+      svg.innerHTML = `<text x="${W/2}" y="${H/2+4}" text-anchor="middle" fill="${textCol}" font-size="11" font-family="Segoe UI">No 48h telemetry available in this mode / season</text>`;
+      return;
+    }
+
+    const vals = pts.map(p => p[1]);
+    const isRain = kind === "weather";
+    const strokeCol = isRain ? "#a855f7" : (kind === "target" ? "#38bdf8" : "#14b8a6");
+    let minV = isRain ? 0 : Math.min(...vals);
+    let maxV = Math.max(...vals);
+    if (isRain) {
+      maxV = Math.max(1.0, maxV * 1.15);
+    } else {
+      const span = Math.max(0.05, maxV - minV);
+      minV = minV - span * 0.12;
+      maxV = maxV + span * 0.15;
+    }
+    const yOf = v => padT + (1 - (v - minV) / Math.max(1e-6, maxV - minV)) * (H - padT - padB);
+    const xOf = idx => pts.length === 1 ? (padL + W - padR) / 2 : padL + (idx / (pts.length - 1)) * (W - padL - padR);
+
+    let html = "";
+    for (let i = 0; i <= 2; i++) {
+      const v = minV + (maxV - minV) * (i / 2);
+      const y = yOf(v);
+      html += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="${gridCol}" stroke-dasharray="2,3"/>`;
+      html += `<text x="${padL - 4}" y="${y + 3}" text-anchor="end" fill="${textCol}" font-size="9" font-family="Consolas">${v >= 100 ? v.toFixed(1) : v.toFixed(2)}</text>`;
+    }
+
+    if (isRain) {
+      const barW = Math.max(2.5, ((W - padL - padR) / Math.max(1, pts.length)) * 0.72);
+      pts.forEach((p, i) => {
+        const x = xOf(i) - barW / 2;
+        const y = yOf(p[1]);
+        const bh = Math.max(0, (H - padB) - y);
+        if (bh > 0.5) {
+          html += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}" rx="1.2" fill="${strokeCol}" opacity="0.88"/>`;
+        }
+      });
+    } else {
+      const poly = pts.map((p, i) => `${xOf(i).toFixed(1)},${yOf(p[1]).toFixed(1)}`).join(" ");
+      const area = `${xOf(0).toFixed(1)},${H - padB} ${poly} ${xOf(pts.length - 1).toFixed(1)},${H - padB}`;
+      html += `<defs><linearGradient id="inspGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${strokeCol}" stop-opacity="0.34"/>
+        <stop offset="100%" stop-color="${strokeCol}" stop-opacity="0.02"/>
+      </linearGradient></defs>`;
+      html += `<polygon points="${area}" fill="url(#inspGrad)"/>`;
+      html += `<polyline points="${poly}" fill="none" stroke="${strokeCol}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+      const lx = xOf(pts.length - 1), ly = yOf(pts[pts.length - 1][1]);
+      html += `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="3.6" fill="${strokeCol}" stroke="${isDark ? "#0f172a" : "#fff"}" stroke-width="1.5"/>`;
+    }
+
+    html += `<text x="${padL}" y="${H - 4}" fill="${textCol}" font-size="9" font-family="Consolas">-48h</text>`;
+    html += `<text x="${(padL + W - padR) / 2}" y="${H - 4}" text-anchor="middle" fill="${textCol}" font-size="9" font-family="Consolas">-24h</text>`;
+    html += `<text x="${W - padR}" y="${H - 4}" text-anchor="end" fill="${strokeCol}" font-size="9" font-weight="700" font-family="Consolas">Now</text>`;
+    svg.innerHTML = html;
+  }
+
+  function renderInspector() {
+    const el = document.getElementById("inspector");
+    const resolved = findFeatureBySelection(state.selectedItem);
+    if (!resolved) { el.classList.remove("open"); return; }
+
+    const snap = getActiveSnapshot();
+    const f = resolved.feature;
+    const kind = resolved.kind;
+    const id = resolved.id;
+
+    document.getElementById("inspId").textContent = id + (kind === "target" && f.p.surveyed ? "  ★ Surveyed (≤50 m)" : "");
+    document.getElementById("inspName").textContent = f.p.name || "";
+
+    const kvs = [];
+    const pts = getPast48hSeries(kind, id);
+    const chartTitle = document.getElementById("inspChartTitle");
+    const chartSub = document.getElementById("inspChartSub");
+
+    if (kind === "target") {
+      const d0 = getDepthReading(snap, id, 0);
+      const d3 = getDepthReading(snap, id, 3);
+      const d9 = getDepthReading(snap, id, 9);
+      kvs.push(["Chainage", `${((f.p.chainage_m || 0) / 1000).toFixed(2)} km`]);
+      kvs.push(["Nearest Section", id === "P06" ? "Terminal 05CC002" : `${(f.p.offset_m || 0).toFixed(1)} m (${f.p.surveyed ? "Surveyed" : "Planned"})`]);
+      kvs.push(["0h / +3h Depth", `${d0 && d0.value != null ? d0.value.toFixed(3) : "—"} / ${d3 && d3.value != null ? d3.value.toFixed(3) : "—"} m`]);
+      kvs.push(["+9h Depth", d9 && d9.value != null ? `${d9.value.toFixed(3)} m` : "Unavailable"]);
+      chartTitle.textContent = "Past 48h Predicted Depth (m)";
+      chartSub.textContent = `${pts.length} pts · V4 0h`;
+      document.getElementById("inspNote").textContent = id === "P06"
+        ? "Terminal stage proxy at 05CC002 (V4 node P06); experimental output, not surveyed depth."
+        : `Section: ${f.p.section_id || "—"} · Latent unverified V4 model estimate.`;
+    } else if (kind === "station") {
+      const flow = getFlowReading(snap, id);
+      const lvl = getLatestLevel(id);
+      kvs.push(["Discharge", flow && flow.value != null ? `${flow.value.toFixed(2)} m³/s` : "—"]);
+      kvs.push(["Water Level", lvl != null ? `${lvl.toFixed(3)} m` : "—"]);
+      kvs.push(["Status", flow ? flow.status : "Missing"]);
+      kvs.push(["Coordinates", `${f.g[1].toFixed(4)}°N, ${Math.abs(f.g[0]).toFixed(4)}°W`]);
+      chartTitle.textContent = "Past 48h Observed Water Level (m)";
+      chartSub.textContent = `${pts.length} pts · ECCC datum`;
+      document.getElementById("inspNote").textContent = id === "05CC002"
+        ? "Terminal reach gauge (mapped to V4 node P06). Level uses ECCC assumed gauge datum."
+        : `ECCC hydrometric station (${f.p.river || ""}). Water level uses ECCC assumed gauge datum (confirmed 2026-11-17).`;
+    } else if (kind === "weather") {
+      const r = snap && snap.rain;
+      const sum48 = pts.reduce((a, p) => a + (p[1] || 0), 0);
+      kvs.push(["Latest 1h Rain", r && r.value != null ? `${r.value.toFixed(2)} mm` : "—"]);
+      kvs.push(["48h Total Rain", pts.length ? `${sum48.toFixed(1)} mm` : "—"]);
+      kvs.push(["Status", r ? r.status : "Missing"]);
+      kvs.push(["Station", "CYQF · WMO 71878"]);
+      chartTitle.textContent = "Past 48h Hourly Precipitation (mm)";
+      chartSub.textContent = `${pts.length} hrs · Airport`;
+      document.getElementById("inspNote").textContent = "Regional airport hourly precipitation (Red Deer Regional A) — single point, not basin-averaged rainfall.";
+    } else {
+      const lvl = getLatestLevel(id);
+      kvs.push(["Water Level", lvl != null ? `${lvl.toFixed(3)} m` : "—"]);
+      kvs.push(["Role", f.p.id === "05CC003" ? "Lake Reference" : "Historical Ref"]);
+      kvs.push(["River / Lake", f.p.river || "—"]);
+      kvs.push(["Coordinates", `${f.g[1].toFixed(4)}°N, ${Math.abs(f.g[0]).toFixed(4)}°W`]);
+      chartTitle.textContent = "Past 48h Observed Water Level (m)";
+      chartSub.textContent = `${pts.length} pts`;
+      document.getElementById("inspNote").textContent = f.p.id === "05CC003"
+        ? "Sylvan Lake has a 6-month winter monitoring gap (Nov–Apr); analyzed separately per AIDA 2156 P-S2."
+        : "Historical tributary reference station retained for GIS spatial context.";
+    }
+
+    document.getElementById("inspGrid").innerHTML = kvs.map(([k, v]) =>
+      `<div class="insp-kv"><div class="insp-k">${escHtml(k)}</div><div class="insp-v mono">${escHtml(v)}</div></div>`
+    ).join("");
+    renderInspector48hChart(kind, id, pts);
+    el.classList.add("open");
+  }
+
+  function selectFeature(kind, id, shouldFly) {
+    state.selectedItem = kind && id ? { kind, id } : null;
+    if (shouldFly && state.selectedItem) {
+      const resolved = findFeatureBySelection(state.selectedItem);
+      if (resolved && resolved.feature && resolved.feature.g) {
+        flyTo(resolved.feature.g[0], resolved.feature.g[1], 240000);
+      }
+    }
+    renderInspector();
+    renderSidebar();
+    drawMap();
+  }
+
+  function escHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  }
+  function statusClass(st) {
+    if (!st) return "st-dim";
+    if (st === "Available" || st === "Experimental") return "st-ok";
+    if (st.startsWith("Cached") || st === "Stale") return "st-warn";
+    return "st-err";
+  }
+
+  function renderProfileSvg(group) {
+    const svg = document.getElementById("profileSvg");
+    const chainKm = { P01: 12.98, P02: 23.01, P03: 33.21, P04: 48.71, P05: 50.83, P06: 56.00 };
+    const pts = [];
+    if (group && group.depths) {
+      group.depths.forEach(d => { if (d.value != null) pts.push({ id: d.id, km: chainKm[d.id] || 0, val: d.value }); });
+    }
+    const W = 380, H = 104, padL = 32, padR = 14, padT = 12, padB = 20;
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const gridCol = isDark ? "rgba(148,163,184,0.16)" : "rgba(15,23,42,0.12)";
+    const textCol = isDark ? "#94a3b8" : "#475569";
+
+    if (!pts.length) {
+      svg.innerHTML = `<text x="${W/2}" y="${H/2+4}" text-anchor="middle" fill="${textCol}" font-size="11.5" font-family="Segoe UI">No model depth values available for this horizon</text>`;
+      return;
+    }
+    const vals = pts.map(p => p.val);
+    const minV = Math.max(0, Math.min(...vals) * 0.85);
+    const maxV = Math.max(minV + 0.5, Math.max(...vals) * 1.12);
+    const xOf = km => padL + (km / 58.0) * (W - padL - padR);
+    const yOf = v => padT + (1 - (v - minV) / (maxV - minV)) * (H - padT - padB);
+
+    let html = `<defs><linearGradient id="profGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.02"/>
+    </linearGradient></defs>`;
+    for (let i = 0; i <= 2; i++) {
+      const v = minV + (maxV - minV) * (i / 2);
+      const y = yOf(v);
+      html += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="${gridCol}" stroke-dasharray="3,3"/>`;
+      html += `<text x="${padL - 5}" y="${y + 3}" text-anchor="end" fill="${textCol}" font-size="9.5" font-family="Consolas">${v.toFixed(1)}</text>`;
+    }
+    const linePts = pts.map(p => `${xOf(p.km).toFixed(1)},${yOf(p.val).toFixed(1)}`).join(" ");
+    const areaPts = `${xOf(pts[0].km).toFixed(1)},${H - padB} ${linePts} ${xOf(pts[pts.length - 1].km).toFixed(1)},${H - padB}`;
+    html += `<polygon points="${areaPts}" fill="url(#profGrad)"/>`;
+    html += `<polyline points="${linePts}" fill="none" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+    const selId = state.selectedItem ? state.selectedItem.id : null;
+    pts.forEach(p => {
+      const x = xOf(p.km), y = yOf(p.val);
+      const sel = selId === p.id || (p.id === "P06" && selId === "05CC002");
+      const col = p.id === "P06" ? "#14b8a6" : (p.id === "P04" || p.id === "P05") ? "#10b981" : "#38bdf8";
+      html += `<circle cx="${x}" cy="${y}" r="${sel ? 5.5 : 4}" fill="${col}" stroke="${isDark ? "#0f172a" : "#fff"}" stroke-width="1.8"/>`;
+      html += `<text x="${x}" y="${H - 5}" text-anchor="middle" fill="${sel ? "#38bdf8" : textCol}" font-size="9.5" font-weight="${sel ? "700" : "600"}" font-family="Consolas">${p.id}</text>`;
+    });
+    svg.innerHTML = html;
+  }
+
+  function renderSidebar() {
+    const snap = getActiveSnapshot();
+    const meta = state.meta;
+    const selId = state.selectedItem ? state.selectedItem.id : null;
+
+    // Mode Buttons State
+    document.getElementById("modeLive").className = "mode-btn" + (state.viewMode === "live" ? " active-live" : "");
+    document.getElementById("modeReplay").className = "mode-btn" + (state.viewMode === "replay" ? " active-replay" : "");
+    document.getElementById("modeDemo").className = "mode-btn" + (state.viewMode === "demo" ? " active-demo" : "");
+    document.getElementById("mapPane").classList.toggle("has-replay", state.viewMode === "replay");
+
+    const netPill = document.getElementById("netPill");
+    const banner = document.getElementById("noticeBanner");
+    const bannerText = document.getElementById("bannerText");
+
+    if (state.viewMode === "replay") {
+      netPill.className = "pill pill-replay";
+      netPill.textContent = state.replayPlaying ? "Replaying · Real ECCC" : "Replay Paused";
+      banner.className = "banner is-info";
+      bannerText.textContent = snap ? snap.warning : "Loading full 18-month historical replay…";
+    } else if (state.viewMode === "demo") {
+      const fromSrv = state.serverSnapshot && state.serverSnapshot.mode === "demo";
+      netPill.className = "pill pill-demo";
+      netPill.textContent = fromSrv ? "Server Demo Connected" : "Built-in Frozen Demo";
+      banner.className = "banner";
+      bannerText.textContent = (snap && snap.warning) || "COURSE DEMO ONLY. Synthetic frozen demonstration snapshot.";
+    } else {
+      // Live mode
+      if (meta.error) {
+        netPill.className = "pill pill-err";
+        netPill.textContent = "Live Server Offline";
+        banner.className = "banner is-err";
+        bannerText.textContent = meta.error + " Start server with --mode live --local-pg to stream live ECCC + PostgreSQL data.";
+      } else if (!snap) {
+        netPill.className = "pill pill-demo";
+        netPill.textContent = state.serverSnapshot ? `Server is in ${state.serverSnapshot.mode.toUpperCase()} mode` : "Waiting for Live Server";
+        banner.className = "banner";
+        bannerText.textContent = state.serverSnapshot
+          ? "Connected server is running --mode demo. Switch server to --mode live --local-pg (with PostgreSQL) for live ECCC telemetry."
+          : "Waiting for live PostgreSQL + ECCC server snapshot…";
+      } else {
+        netPill.className = snap.cached ? "pill pill-demo" : "pill pill-live";
+        netPill.textContent = snap.cached ? "Cached Live" : `LIVE · ${snap.state}`;
+        banner.className = "banner";
+        bannerText.textContent = snap.warning || "COURSE RESEARCH ONLY. Live ECCC observations stored in PostgreSQL rdr_live_v1.";
+      }
+    }
+
+    document.getElementById("clockObs").textContent = "Obs: " + (snap && snap.newest ? snap.newest : "—");
+    document.getElementById("clockSnap").textContent = "Snap: " + (snap && snap.generated ? snap.generated : "—");
+    document.getElementById("govClocks").textContent = `Mode: ${state.viewMode.toUpperCase()} | Last contact: ${meta.lastContact || "—"} | Server: ${meta.serverUrl}`;
+
+    // Flow KPI Cards
+    const defaultFlows = [
+      { id: "05CB007", title: "Dickson Dam Tunnel Outlet", value: null, status: "Missing", clock: "—" },
+      { id: "05CB001", title: "Little Red Deer near Mouth", value: null, status: "Missing", clock: "—" },
+      { id: "05CC007", title: "Medicine River near Eckville", value: null, status: "Missing", clock: "—" },
+      { id: "05CC002", title: "Red Deer River at Red Deer", value: null, status: "Missing", clock: "—" }
+    ];
+    const flows = (snap && snap.flows && snap.flows.length) ? snap.flows : defaultFlows;
+    const flowGrid = document.getElementById("flowGrid");
+    flowGrid.innerHTML = flows.map(r => {
+      const sel = selId === r.id;
+      const valTxt = r.value != null ? r.value.toFixed(2) : "—";
+      const lvl = r.level != null ? r.level : getLatestLevel(r.id);
+      const lvlTxt = lvl != null ? `Stage ${lvl.toFixed(2)} m` : "Stage —";
+      const st = snap && snap.cached && r.value != null ? "Cached / " + r.status : r.status;
+      return `<div class="kpi-card ${sel ? "selected" : ""}" data-station="${r.id}">
+        <div class="kpi-top">
+          <span class="kpi-id mono">${escHtml(r.id)}</span>
+          <span class="status-tag ${statusClass(st)}">${escHtml(st)}</span>
+        </div>
+        <div class="kpi-name" title="${escHtml(r.title)}">${escHtml(r.title)}</div>
+        <div class="kpi-val-row">
+          <div><span class="kpi-val mono">${valTxt}</span> <span class="kpi-unit">m³/s</span></div>
+          <span class="kpi-lvl mono">${lvlTxt}</span>
+        </div>
+        <div class="kpi-time mono">${escHtml(r.clock || "—")}</div>
+      </div>`;
+    }).join("");
+
+    flowGrid.querySelectorAll(".kpi-card").forEach(card => {
+      card.addEventListener("click", () => selectFeature("station", card.getAttribute("data-station"), true));
+    });
+
+    // Rain Card
+    const rain = snap && snap.rain;
+    const rSt = rain ? (snap.cached && rain.value != null ? "Cached / " + rain.status : rain.status) : "Missing";
+    document.getElementById("rainVal").textContent = (rain && rain.value != null ? rain.value.toFixed(2) : "—") + " mm";
+    const rBadge = document.getElementById("rainStatus");
+    rBadge.textContent = rSt;
+    rBadge.className = "status-tag " + statusClass(rSt);
+    document.getElementById("rainCard").classList.toggle("selected", selId === "3025484");
+    document.getElementById("rainMeta").textContent = rain && rain.source
+      ? `${rain.source} · ${rain.period || "1h"} · ${rain.clock || "—"}`
+      : "Regional airport precipitation (mm), not basin rainfall";
+
+    // Horizon Depths
+    const group = getGroup(snap, state.horizon);
+    const hStatus = document.getElementById("horizonStatus");
+    const hStateTxt = group ? (snap && snap.cached && group.state === "Experimental" ? "Cached / " + group.state : group.state) : "Unavailable";
+    hStatus.textContent = hStateTxt;
+    hStatus.className = "status-tag " + statusClass(hStateTxt);
+    document.getElementById("horizonMeta").textContent = group
+      ? `Target valid: ${group.target || "—"}  |  Generated: ${group.generated || "—"}`
+      : "Target valid: —";
+
+    const unavailBox = document.getElementById("unavailBox");
+    if (group && group.state !== "Experimental") {
+      unavailBox.style.display = "block";
+      unavailBox.textContent = group.note || "No qualifying upstream observations were supplied for this horizon.";
+    } else {
+      unavailBox.style.display = "none";
+    }
+
+    renderProfileSvg(group);
+
+    const nodeMeta = {
+      P01: { label: "After Confluences", km: "13.0 km", off: 0.0, surveyed: false },
+      P02: { label: "Highway 54", km: "23.0 km", off: 5.8, surveyed: false },
+      P03: { label: "Township Rd 370", km: "33.2 km", off: 7.1, surveyed: false },
+      P04: { label: "Sylvan Creek Mouth", km: "48.7 km", off: 47.0, surveyed: true },
+      P05: { label: "Highway 2", km: "50.8 km", off: 32.3, surveyed: true },
+      P06: { label: "Terminal Proxy (05CC002)", km: "56.0 km", off: 0, surveyed: false, terminal: true }
+    };
+    const depths = (group && group.depths && group.depths.length) ? group.depths :
+      ["P01","P02","P03","P04","P05","P06"].map(id => ({ id, value: null, status: "Unavailable" }));
+
+    const nodeList = document.getElementById("nodeList");
+    nodeList.innerHTML = depths.map(d => {
+      const m = nodeMeta[d.id] || { label: d.id, km: "—", off: 999, surveyed: false };
+      const dim = !m.terminal && state.filterMode === "25" && m.off > 25;
+      const sel = selId === d.id || (d.id === "P06" && selId === "05CC002");
+      const valTxt = d.value != null ? d.value.toFixed(3) + " m" : "—";
+      return `<div class="node-row ${sel ? "selected" : ""} ${dim ? "dimmed" : ""}" data-node="${d.id}">
+        <div class="node-badge mono ${m.terminal ? "terminal" : ""}">${d.id}</div>
+        <div>
+          <div class="node-info-title">
+            <span>${escHtml(m.label)}</span>
+            ${m.surveyed ? `<span class="survey-chip">EPA Surveyed</span>` : ""}
+          </div>
+          <div class="node-info-sub">${m.km} · ${m.terminal ? "Gauge 05CC002 proxy" : `Latent · Section offset ${m.off.toFixed(1)} m`}</div>
+        </div>
+        <div>
+          <div class="node-val mono">${valTxt}</div>
+          <div class="node-val-sub">${escHtml(d.status)}</div>
+        </div>
+      </div>`;
+    }).join("");
+
+    nodeList.querySelectorAll(".node-row").forEach(row => {
+      row.addEventListener("click", () => selectFeature("target", row.getAttribute("data-node"), true));
+    });
+  }
+
+  function updateReplayBar() {
+    const r = state.replay;
+    if (!r) return;
+    const slider = document.getElementById("replaySlider");
+    slider.max = String(Math.max(0, r.count - 1));
+    slider.value = String(state.replayIdx);
+    document.getElementById("replayClock").textContent = fmtUtc(r.ts[state.replayIdx]);
+    document.getElementById("replayIdx").textContent = `${(state.replayIdx + 1).toLocaleString()} / ${r.count.toLocaleString()}`;
+    document.getElementById("replayStartLbl").textContent = r.span_start.slice(0, 7);
+    document.getElementById("replayEndLbl").textContent = r.span_end.slice(0, 7);
+    const btnPlay = document.getElementById("btnPlay");
+    btnPlay.textContent = state.replayPlaying ? "⏸ Pause" : "▶ Play";
+    btnPlay.classList.toggle("playing", state.replayPlaying);
+  }
+
+  function setReplayPlaying(playing) {
+    state.replayPlaying = playing;
+    if (state.replayTimer) { clearInterval(state.replayTimer); state.replayTimer = null; }
+    if (playing && state.replay) {
+      const ms = Math.max(35, Math.round(1000 / state.replayFps));
+      state.replayTimer = setInterval(() => {
+        if (!state.replay || state.viewMode !== "replay") { setReplayPlaying(false); return; }
+        state.replayIdx = (state.replayIdx + 1) % state.replay.count;
+        updateReplayBar();
+        renderSidebar();
+        renderInspector();
+        drawMap();
+      }, ms);
+    }
+    updateReplayBar();
+    renderSidebar();
+  }
+
+  function setViewMode(mode) {
+    state.viewMode = mode;
+    if (mode !== "replay") setReplayPlaying(false);
+    else updateReplayBar();
+    renderSidebar();
+    renderInspector();
+    drawMap();
+  }
+
+  function buildLayerControls() {
+    const el = document.getElementById("layerList");
+    el.innerHTML = LAYER_META.map(m => {
+      const cnt = state.gis && state.gis[m.key] ? state.gis[m.key].length : 0;
+      return `<label class="layer-row">
+        <input type="checkbox" data-layer="${m.key}" ${state.layers[m.key] ? "checked" : ""}/>
+        <span class="layer-swatch" style="background:${m.color}"></span>
+        <span>${escHtml(m.label)}</span>
+        <span class="layer-cnt mono">${cnt}</span>
+      </label>`;
+    }).join("");
+    el.querySelectorAll("input[data-layer]").forEach(cb => {
+      cb.addEventListener("change", () => {
+        state.layers[cb.getAttribute("data-layer")] = cb.checked;
+        drawMap();
+      });
+    });
+  }
+
+  function sendToHost(payload) {
+    if (window.chrome && window.chrome.webview) window.chrome.webview.postMessage(payload);
+  }
+
+  if (window.chrome && window.chrome.webview) {
+    window.chrome.webview.addEventListener("message", ev => {
+      const msg = typeof ev.data === "string" ? JSON.parse(ev.data) : ev.data;
+      if (msg.type === "state") {
+        if (msg.serverUrl) {
+          state.meta.serverUrl = msg.serverUrl;
+          const inp = document.getElementById("urlInput");
+          if (document.activeElement !== inp) inp.value = msg.serverUrl;
+        }
+        state.meta.working = !!msg.working;
+        state.meta.error = msg.error || null;
+        state.meta.lastContact = msg.lastContact || null;
+        state.serverSnapshot = msg.snapshot || null;
+        if (msg.history48h) state.serverHistory48h = msg.history48h;
+        // Auto-select Live tab if a real live server responds on first connect
+        if (msg.autoSwitchMode && (msg.autoSwitchMode === "live" || msg.autoSwitchMode === "demo")) {
+          if (state.viewMode !== "replay") state.viewMode = msg.autoSwitchMode;
+        }
+        renderSidebar();
+        renderInspector();
+        drawMap();
+      } else if (msg.type === "tick") {
+        document.getElementById("pollBadge").textContent = state.meta.working ? "Polling…" : `Poll: ${msg.seconds}s`;
+      }
+    });
+  }
+
+  // Load local embedded assets via clean virtual HTTPS host (appassets.local)
+  async function loadEmbeddedAssets() {
+    try {
+      const [gisRes, bmRes, abRes, repRes] = await Promise.all([
+        fetch("gis_bundle.json"),
+        fetch("nrcan_cbmt_basemap.json"),
+        fetch("nrcan_ab_wide.json"),
+        fetch("replay_history.json")
+      ]);
+      if (gisRes.ok) {
+        state.gis = await gisRes.json();
+        computeBoundsFromGis(state.gis);
+        buildLayerControls();
+      }
+      if (bmRes.ok) {
+        state.basemapMeta = await bmRes.json();
+        const img = new Image();
+        img.onload = () => drawMap();
+        img.src = "nrcan_cbmt_basemap.jpg";
+        state.basemapImg = img;
+      }
+      if (abRes.ok) {
+        state.abWideMeta = await abRes.json();
+        const abImg = new Image();
+        abImg.onload = () => drawMap();
+        abImg.src = "nrcan_ab_wide.jpg";
+        state.abWideImg = abImg;
+      }
+      if (repRes.ok) {
+        state.replay = await repRes.json();
+        // Find peak flow index at 05CC002 for quick jump
+        let bestI = 0, bestQ = -1;
+        const arr = state.replay.q["05CC002"] || [];
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i] != null && arr[i] > bestQ) { bestQ = arr[i]; bestI = i; }
+        }
+        state.replayPeakIdx = bestI;
+        // Start replay slightly before peak flow so opening Replay immediately shows exciting hydrograph dynamics!
+        state.replayIdx = Math.max(0, bestI - 24);
+        updateReplayBar();
+      }
+      fitReach();
+      renderSidebar();
+      drawMap();
+    } catch (e) {
+      console.error("Asset load error:", e);
+    }
+    sendToHost({ action: "ready" });
+  }
+
+  // Event Bindings
+  document.querySelectorAll(".mode-btn").forEach(btn => {
+    btn.addEventListener("click", () => setViewMode(btn.getAttribute("data-mode")));
+  });
+  document.getElementById("btnConnect").addEventListener("click", () => {
+    sendToHost({ action: "connect", url: document.getElementById("urlInput").value.trim() });
+  });
+  document.getElementById("urlInput").addEventListener("keydown", e => {
+    if (e.key === "Enter") sendToHost({ action: "connect", url: e.target.value.trim() });
+  });
+  document.getElementById("btnRefresh").addEventListener("click", () => sendToHost({ action: "refresh" }));
+  document.getElementById("rainCard").addEventListener("click", () => selectFeature("weather", "3025484", true));
+  document.getElementById("btnTheme").addEventListener("click", () => {
+    const html = document.documentElement;
+    const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    html.setAttribute("data-theme", next);
+    document.getElementById("btnTheme").textContent = next === "dark" ? "☀" : "🌙";
+    renderSidebar();
+    renderInspector();
+    drawMap();
+  });
+  document.getElementById("basemapSelect").addEventListener("change", e => {
+    state.basemapMode = e.target.value;
+    drawMap();
+  });
+  document.getElementById("btnLayers").addEventListener("click", () => {
+    document.getElementById("layerPanel").classList.toggle("open");
+  });
+  document.getElementById("inspClose").addEventListener("click", () => selectFeature(null, null, false));
+
+  document.querySelectorAll("[data-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.filterMode = btn.getAttribute("data-filter");
+      document.querySelectorAll("[data-filter]").forEach(b => b.classList.remove("active", "active-amber"));
+      btn.classList.add(state.filterMode === "25" ? "active-amber" : "active");
+      renderSidebar();
+      drawMap();
+    });
+  });
+
+  document.querySelectorAll(".htab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      state.horizon = Number(tab.getAttribute("data-h"));
+      document.querySelectorAll(".htab").forEach(t => t.classList.toggle("active", t === tab));
+      renderSidebar();
+      renderInspector();
+      drawMap();
+    });
+  });
+
+  // Replay Controls
+  document.getElementById("btnPlay").addEventListener("click", () => setReplayPlaying(!state.replayPlaying));
+  document.getElementById("btnStepBack").addEventListener("click", () => {
+    if (!state.replay) return;
+    setReplayPlaying(false);
+    state.replayIdx = Math.max(0, state.replayIdx - 1);
+    updateReplayBar(); renderSidebar(); renderInspector(); drawMap();
+  });
+  document.getElementById("btnStepFwd").addEventListener("click", () => {
+    if (!state.replay) return;
+    setReplayPlaying(false);
+    state.replayIdx = Math.min(state.replay.count - 1, state.replayIdx + 1);
+    updateReplayBar(); renderSidebar(); renderInspector(); drawMap();
+  });
+  document.getElementById("replaySlider").addEventListener("input", e => {
+    if (!state.replay) return;
+    state.replayIdx = Number(e.target.value);
+    updateReplayBar(); renderSidebar(); renderInspector(); drawMap();
+  });
+  document.querySelectorAll(".spd-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.replayFps = Number(btn.getAttribute("data-fps"));
+      document.querySelectorAll(".spd-btn").forEach(b => b.classList.toggle("active", b === btn));
+      if (state.replayPlaying) setReplayPlaying(true);
+    });
+  });
+  document.querySelectorAll(".jump-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (!state.replay) return;
+      const w = btn.getAttribute("data-jump");
+      const ts = state.replay.ts;
+      const findDate = iso => {
+        const target = Math.floor(Date.parse(iso) / 1000);
+        let lo = 0, hi = ts.length - 1;
+        while (lo < hi) { const mid = (lo + hi) >> 1; if (ts[mid] < target) lo = mid + 1; else hi = mid; }
+        return lo;
+      };
+      if (w === "start") state.replayIdx = 0;
+      else if (w === "peak") state.replayIdx = Math.max(0, state.replayPeakIdx - 12);
+      else if (w === "winter") state.replayIdx = findDate("2026-01-15T12:00:00Z");
+      else if (w === "summer26") state.replayIdx = findDate("2026-06-20T12:00:00Z");
+      updateReplayBar(); renderSidebar(); renderInspector(); drawMap();
+    });
+  });
+
+  document.getElementById("btnZoomIn").addEventListener("click", () => { state.cam.scale = Math.min(8e6, state.cam.scale * 1.45); drawMap(); });
+  document.getElementById("btnZoomOut").addEventListener("click", () => { state.cam.scale = Math.max(1200, state.cam.scale / 1.45); drawMap(); });
+  document.getElementById("btnFit").addEventListener("click", () => fitReach());
+  document.getElementById("btnFitAb").addEventListener("click", () => fitAlberta());
+
+  // Map Pan / Zoom / Click / Hover Pointer
+  canvas.addEventListener("wheel", e => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const [lonBefore, latBefore] = screenToWorld(mx, my);
+    const factor = e.deltaY < 0 ? 1.24 : 1 / 1.24;
+    state.cam.scale = Math.max(1200, Math.min(8e6, state.cam.scale * factor));
+    const [lonAfter, latAfter] = screenToWorld(mx, my);
+    state.cam.cx += (lonBefore - lonAfter);
+    state.cam.cy += (latBefore - latAfter);
+    drawMap();
+  }, { passive: false });
+
+  canvas.addEventListener("mousedown", e => {
+    state.dragging = true;
+    state.dragStart = { x: e.clientX, y: e.clientY, cx: state.cam.cx, cy: state.cam.cy, moved: false };
+  });
+  window.addEventListener("mousemove", e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    if (mx >= 0 && mx <= viewW && my >= 0 && my <= viewH) {
+      const [lon, lat] = screenToWorld(mx, my);
+      document.getElementById("coordLabel").textContent = `${lat.toFixed(4)}°N, ${Math.abs(lon).toFixed(4)}°W`;
+      if (!state.dragging) {
+        canvas.classList.toggle("pointer", !!hitTest(mx, my));
+      }
+    }
+    if (!state.dragging || !state.dragStart) return;
+    const dx = e.clientX - state.dragStart.x, dy = e.clientY - state.dragStart.y;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) state.dragStart.moved = true;
+    const cx0 = lonToX(state.dragStart.cx), cy0 = latToY(state.dragStart.cy);
+    state.cam.cx = xToLon(cx0 - dx / state.cam.scale);
+    state.cam.cy = yToLat(cy0 - dy / state.cam.scale);
+    drawMap();
+  });
+  window.addEventListener("mouseup", e => {
+    if (state.dragging && state.dragStart && !state.dragStart.moved) {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+      const hit = hitTest(mx, my);
+      if (hit) selectFeature(hit.kind, hit.id, false);
+      else document.getElementById("layerPanel").classList.remove("open");
+    }
+    state.dragging = false;
+    state.dragStart = null;
+  });
+  canvas.addEventListener("dblclick", () => fitReach());
+
+  function animLoop() {
+    if (state.filterMode === "50") {
+      state.pulsePhase += 0.08;
+      drawMap();
+    }
+    requestAnimationFrame(animLoop);
+  }
+  requestAnimationFrame(animLoop);
+
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+  renderSidebar();
+  loadEmbeddedAssets();
+})();
+</script>
+</body>
+</html>

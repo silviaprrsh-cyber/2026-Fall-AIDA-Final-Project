@@ -1,14 +1,17 @@
-// Red Deer River read-only research receiver for Windows.
+// Red Deer River Hydro-GIS read-only research receiver for Windows (.NET Framework 4.8 + WebView2).
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,10 +19,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.WinForms;
 
-[assembly: AssemblyTitle("Red Deer River Research Receiver")]
-[assembly: AssemblyProduct("AIDA 2156 Red Deer River Course Demo")]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyTitle("Red Deer River Hydro-GIS Research Receiver")]
+[assembly: AssemblyProduct("AIDA 2156/2362 Red Deer River Hydro-GIS Course Demo")]
+[assembly: AssemblyVersion("2.1.0.0")]
 [assembly: TargetFramework(".NETFramework,Version=v4.8", FrameworkDisplayName = ".NET Framework 4.8")]
 
 namespace RedDeerResearch
@@ -60,9 +65,8 @@ namespace RedDeerResearch
     internal static class Contract
     {
         public const string DefaultUrl = "http://127.0.0.1:8765";
-        public const string Disclaimer = "COURSE DEMO ONLY. Not for real flood forecasting, warnings, emergency response, evacuation, river operations, or safety decisions.";
-        public const string Limit = "Estimates are limited by upstream travel time and records already available at issuance. No later upstream flows are forecast; a horizon with missing or not-yet-available data is unavailable.";
         private const int MaxBytes = 128 * 1024;
+        private const int MaxHistoryBytes = 512 * 1024;
         private static readonly Regex Zone = new Regex(@"(Z|[+-]\d\d:\d\d)$", RegexOptions.CultureInvariant);
         private static readonly Regex Bearer = new Regex(@"^[A-Za-z0-9._~+/\-]+=*\z", RegexOptions.CultureInvariant);
         private static readonly string[] Stations = { "05CB007", "05CB001", "05CC007", "05CC002" };
@@ -77,7 +81,6 @@ namespace RedDeerResearch
             { "short_route_rain_window_incomplete_for_projection", "The required short-route precipitation window is incomplete." },
             { "little_exact_nominal_sample_absent", "The required Little Red Deer River reading was not available at issuance." },
             { "little_exact_sample_unavailable_at_issuance", "The required Little Red Deer River reading was not available at issuance." },
-            { "waiting_for_first_poll", "The service is waiting for its first data collection." },
             { "medicine_candidate_source_span_incomplete", "The required Medicine River history is incomplete." },
             { "medicine_no_arriving_parcels", "No qualifying Medicine River observations could be routed to this target." },
             { "medicine_rain_window_incomplete_for_projection", "The required Medicine River precipitation window is incomplete." },
@@ -99,14 +102,14 @@ namespace RedDeerResearch
                 throw new InvalidDataException("Remote servers require HTTPS. Plain HTTP is local only.");
             string path = u.AbsolutePath.TrimEnd('/');
             if (path.EndsWith("/api/v1/snapshot", StringComparison.OrdinalIgnoreCase) ||
+                path.EndsWith("/api/v1/history48h", StringComparison.OrdinalIgnoreCase) ||
                 path.EndsWith("/healthz", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException("Enter the server base URL, without /api/v1/snapshot or /healthz.");
             return u.GetLeftPart(UriPartial.Authority) + path;
         }
 
-        public static async Task<Snapshot> Fetch(string url, string token)
+        private static async Task<string> FetchJson(Uri endpoint, string token, int maxBytes)
         {
-            var endpoint = new Uri(Url(url) + "/api/v1/snapshot");
             if (!String.IsNullOrEmpty(token) && (token.Length > 4096 || !Bearer.IsMatch(token)))
                 throw new InvalidDataException("Invalid RDR_API_TOKEN format.");
             try
@@ -117,7 +120,7 @@ namespace RedDeerResearch
                 using (var req = new HttpRequestMessage(HttpMethod.Get, endpoint))
                 {
                     req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    req.Headers.UserAgent.ParseAdd("RedDeerRiver-WindowsReceiver/1.0");
+                    req.Headers.UserAgent.ParseAdd("RedDeerRiver-HydroGISReceiver/2.1");
                     req.Headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
                     if (!String.IsNullOrEmpty(token))
                         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -127,9 +130,9 @@ namespace RedDeerResearch
                             throw new InvalidDataException("Service returned HTTP " + ((int)res.StatusCode).ToString(CultureInfo.InvariantCulture) + ".");
                         var mime = res.Content.Headers.ContentType;
                         if (mime == null || !String.Equals(mime.MediaType, "application/json", StringComparison.OrdinalIgnoreCase))
-                            throw new InvalidDataException("Expected a JSON snapshot from the service.");
-                        if (res.Content.Headers.ContentLength.GetValueOrDefault() > MaxBytes)
-                            throw new InvalidDataException("The service snapshot exceeded its size limit.");
+                            throw new InvalidDataException("Expected a JSON response from the service.");
+                        if (res.Content.Headers.ContentLength.GetValueOrDefault() > maxBytes)
+                            throw new InvalidDataException("The service response exceeded its size limit.");
                         using (var data = await res.Content.ReadAsStreamAsync().ConfigureAwait(false))
                         using (var output = new MemoryStream())
                         {
@@ -137,11 +140,11 @@ namespace RedDeerResearch
                             int n;
                             while ((n = await data.ReadAsync(buffer, 0, buffer.Length, time.Token).ConfigureAwait(false)) > 0)
                             {
-                                if (output.Length + n > MaxBytes)
-                                    throw new InvalidDataException("The service snapshot exceeded its size limit.");
+                                if (output.Length + n > maxBytes)
+                                    throw new InvalidDataException("The service response exceeded its size limit.");
                                 output.Write(buffer, 0, n);
                             }
-                            return Parse(new UTF8Encoding(false, true).GetString(output.ToArray()));
+                            return new UTF8Encoding(false, true).GetString(output.ToArray());
                         }
                     }
                 }
@@ -149,6 +152,22 @@ namespace RedDeerResearch
             catch (OperationCanceledException) { throw new InvalidDataException("The service request timed out."); }
             catch (HttpRequestException) { throw new InvalidDataException("Could not reach the service. Check its URL, connection, or TLS certificate."); }
             catch (DecoderFallbackException) { throw new InvalidDataException("The service sent invalid UTF-8."); }
+        }
+
+        public static async Task<Snapshot> Fetch(string url, string token)
+        {
+            string raw = await FetchJson(new Uri(Url(url) + "/api/v1/snapshot"), token, MaxBytes).ConfigureAwait(false);
+            return Parse(raw);
+        }
+
+        public static async Task<object> FetchHistory48h(string url, string token)
+        {
+            try
+            {
+                string raw = await FetchJson(new Uri(Url(url) + "/api/v1/history48h"), token, MaxHistoryBytes).ConfigureAwait(false);
+                return new JavaScriptSerializer { MaxJsonLength = MaxHistoryBytes, RecursionLimit = 24 }.DeserializeObject(raw);
+            }
+            catch { return null; }
         }
 
         private static Dictionary<string, object> Dict(object obj) { return obj as Dictionary<string, object>; }
@@ -189,7 +208,8 @@ namespace RedDeerResearch
             if (depth && (Text(Get(row, "kind")) != (id == "P06" ? "terminal_stage_proxy" : "latent") ||
                 (id == "P06" && Text(Get(row, "station_id")) != "05CC002"))) { val = null; at = null; }
             if (!at.HasValue || (depth ? state != "experimental" : state != "ok" && state != "stale")) val = null;
-            return new Reading {
+            return new Reading
+            {
                 Id = id, Title = name, Value = val, Clock = at,
                 Status = val.HasValue ? (depth ? "Experimental" : state == "stale" ? "Stale" : "Available") : (depth ? "Unavailable" : "Missing"),
                 Period = Text(Get(row, "period"), 70), Source = Text(Get(row, "source"), 90),
@@ -241,8 +261,11 @@ namespace RedDeerResearch
                 if (Reasons.TryGetValue(detail, out reason)) note = reason;
                 else if (note.Length == 0) note = "No qualifying upstream observations or estimate were supplied for this target.";
             }
-            return new Group { Hours = h, Depths = outputs, State = any ? "Experimental" : "Unavailable",
-                Target = target, Generated = Time(Get(info, "generated_at")), Note = note };
+            return new Group
+            {
+                Hours = h, Depths = outputs, State = any ? "Experimental" : "Unavailable",
+                Target = target, Generated = Time(Get(info, "generated_at")), Note = note
+            };
         }
 
         public static Snapshot Parse(string json)
@@ -281,7 +304,8 @@ namespace RedDeerResearch
                 DateTimeOffset? fallback = current.Target.HasValue ? current.Target.Value.AddHours(h) : (DateTimeOffset?)null;
                 return ReadGroup(row, h, fallback);
             })).ToArray();
-            return new Snapshot {
+            return new Snapshot
+            {
                 Mode = mode, State = status == "ok" ? "Available" : status == "partial" ? "Partial" : "Unavailable",
                 Generated = created.Value, Warning = Text(Get(body, "warning")),
                 BackendError = Text(Get(Dict(Get(body, "collection")), "internal_error")),
@@ -296,199 +320,257 @@ namespace RedDeerResearch
             return time.HasValue ? time.Value.ToString("yyyy-MM-dd HH:mm:ss 'UTC'", CultureInfo.InvariantCulture) : "—";
         }
 
-        public static string Value(double? value, int decimals)
+        public static bool SmokeValidate(Snapshot snap, string expected)
         {
-            if (!value.HasValue) return "—";
-            var n = value.Value;
-            var rendered = n.ToString("F" + decimals, CultureInfo.InvariantCulture);
-            if (n != 0 && (Math.Abs(n) >= 1e7 || Double.Parse(rendered, CultureInfo.InvariantCulture) == 0))
-                return n.ToString("G4", CultureInfo.InvariantCulture);
-            return rendered;
+            if (snap == null || snap.Mode != "demo") return false;
+            if (snap.Flows.Count(q => q.Value.HasValue) != 4 || !snap.Rain.Value.HasValue ||
+                String.IsNullOrEmpty(snap.Rain.Period) || String.IsNullOrEmpty(snap.Rain.Source)) return false;
+            if (snap.Groups.Length != 3) return false;
+            if (snap.Groups[1].Target - snap.Groups[0].Target != TimeSpan.FromHours(3) ||
+                snap.Groups[2].Target - snap.Groups[0].Target != TimeSpan.FromHours(9)) return false;
+            var hits = snap.Groups.Select(g => g.Depths.Count(p => p.Value.HasValue)).ToArray();
+            if (hits[0] != 6 || hits[1] != 6) return false;
+            if (expected == "complete")
+                return hits[2] == 6 && snap.Groups[2].State == "Experimental" && snap.Groups[2].Depths[5].Value.HasValue;
+            return expected == "partial" && hits[2] == 0 && snap.Groups[2].State == "Unavailable" &&
+                (snap.Groups[2].Note ?? "").Contains("Little Red Deer River") && !snap.Groups[2].Depths[5].Value.HasValue;
         }
     }
 
-    internal sealed class Viewer : Form
+    internal static class EmbeddedAssets
     {
-        private static readonly Color Ink = Color.FromArgb(21, 40, 61);
-        private static readonly Color Muted = Color.FromArgb(60, 78, 95);
-        private static readonly Color WarningColor = Color.FromArgb(133, 45, 37);
-        private static readonly Color Canvas = Color.FromArgb(246, 248, 251);
-        private readonly TextBox address = new TextBox();
-        private readonly Label status = LabelOf("", 10, true, Ink);
-        private readonly Label clocks = LabelOf("", 9, false, Muted);
-        private readonly Label notice = LabelOf("", 9, true, WarningColor);
-        private readonly Label rainDetail = LabelOf("", 9, false, Muted);
-        private readonly DataGridView flowGrid = Grid("Station / WSC ID", "Observation time");
-        private readonly DataGridView rainGrid = Grid("Climate station", "Observation time");
-        private readonly Dictionary<int, DataGridView> depthGrid = new Dictionary<int, DataGridView>();
-        private readonly Dictionary<int, Label> depthDetail = new Dictionary<int, Label>();
-        private readonly TabControl targets = new TabControl();
-        private readonly System.Windows.Forms.Timer schedule = new System.Windows.Forms.Timer();
+        public static byte[] ReadRawBytes(string resourceName)
+        {
+            var asm = Assembly.GetExecutingAssembly();
+            using (var stream = asm.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null) throw new InvalidOperationException("Missing embedded resource: " + resourceName);
+                using (var ms = new MemoryStream()) { stream.CopyTo(ms); return ms.ToArray(); }
+            }
+        }
+
+        public static byte[] ReadGzipBytes(string resourceName)
+        {
+            var asm = Assembly.GetExecutingAssembly();
+            using (var stream = asm.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null) throw new InvalidOperationException("Missing embedded resource: " + resourceName);
+                using (var gz = new GZipStream(stream, CompressionMode.Decompress))
+                using (var ms = new MemoryStream())
+                {
+                    gz.CopyTo(ms);
+                    return ms.ToArray();
+                }
+            }
+        }
+    }
+
+    internal static class WebViewBootstrap
+    {
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr LoadLibrary(string lpFileName);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetProcessDPIAware();
+
+        private static string _libDir;
+        private static string _assetsDir;
+        private static bool _initialized;
+
+        public static string AssetsDir { get { return _assetsDir; } }
+
+        public static string UserDataDir
+        {
+            get
+            {
+                string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RedDeerRiver", "WebView2Data");
+                Directory.CreateDirectory(dir);
+                return dir;
+            }
+        }
+
+        public static void Init()
+        {
+            if (_initialized) return;
+            try { SetProcessDPIAware(); } catch { }
+            string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RedDeerRiver");
+            _libDir = Path.Combine(root, "wv2-1.0.2903.40");
+            _assetsDir = Path.Combine(root, "ui-assets-2.3");
+            Directory.CreateDirectory(_libDir);
+            Directory.CreateDirectory(_assetsDir);
+
+            ExtractGzip("wv2_loader.dll.gz", Path.Combine(_libDir, "WebView2Loader.dll"));
+            ExtractGzip("wv2_core.dll.gz", Path.Combine(_libDir, "Microsoft.Web.WebView2.Core.dll"));
+            ExtractGzip("wv2_winforms.dll.gz", Path.Combine(_libDir, "Microsoft.Web.WebView2.WinForms.dll"));
+
+            // Unpack UI + GIS + Replay + OGL-Canada Alberta & Reach Basemaps for clean HTTPS virtual-host serving
+            ExtractGzipAlways("ui.html.gz", Path.Combine(_assetsDir, "ui.html"));
+            ExtractGzipAlways("gis_bundle.json.gz", Path.Combine(_assetsDir, "gis_bundle.json"));
+            ExtractGzipAlways("replay_history.json.gz", Path.Combine(_assetsDir, "replay_history.json"));
+            ExtractGzipAlways("nrcan_cbmt_basemap.json.gz", Path.Combine(_assetsDir, "nrcan_cbmt_basemap.json"));
+            ExtractRaw("nrcan_cbmt_basemap.jpg", Path.Combine(_assetsDir, "nrcan_cbmt_basemap.jpg"));
+            ExtractGzipAlways("nrcan_ab_wide.json.gz", Path.Combine(_assetsDir, "nrcan_ab_wide.json"));
+            ExtractRaw("nrcan_ab_wide.jpg", Path.Combine(_assetsDir, "nrcan_ab_wide.jpg"));
+
+            LoadLibrary(Path.Combine(_libDir, "WebView2Loader.dll"));
+            AppDomain.CurrentDomain.AssemblyResolve += OnResolve;
+            _initialized = true;
+        }
+
+        private static void ExtractGzip(string resName, string destPath)
+        {
+            byte[] data = EmbeddedAssets.ReadGzipBytes(resName);
+            if (File.Exists(destPath) && new FileInfo(destPath).Length == data.Length) return;
+            try { File.WriteAllBytes(destPath, data); }
+            catch (IOException) { if (!File.Exists(destPath)) throw; }
+        }
+
+        private static void ExtractGzipAlways(string resName, string destPath)
+        {
+            byte[] data = EmbeddedAssets.ReadGzipBytes(resName);
+            try { File.WriteAllBytes(destPath, data); }
+            catch (IOException) { if (!File.Exists(destPath)) throw; }
+        }
+
+        private static void ExtractRaw(string resName, string destPath)
+        {
+            byte[] data = EmbeddedAssets.ReadRawBytes(resName);
+            if (File.Exists(destPath) && new FileInfo(destPath).Length == data.Length) return;
+            try { File.WriteAllBytes(destPath, data); }
+            catch (IOException) { if (!File.Exists(destPath)) throw; }
+        }
+
+        private static Assembly OnResolve(object sender, ResolveEventArgs args)
+        {
+            string shortName = new AssemblyName(args.Name).Name;
+            if (shortName == "Microsoft.Web.WebView2.Core" || shortName == "Microsoft.Web.WebView2.WinForms")
+            {
+                string path = Path.Combine(_libDir, shortName + ".dll");
+                if (File.Exists(path)) return Assembly.LoadFrom(path);
+            }
+            return null;
+        }
+    }
+
+    internal sealed class WebViewerForm : Form
+    {
+        private readonly WebView2 webView = new WebView2();
+        private readonly System.Windows.Forms.Timer ticker = new System.Windows.Forms.Timer();
+        private readonly JavaScriptSerializer json = new JavaScriptSerializer { MaxJsonLength = 8 * 1024 * 1024 };
         private readonly string sessionToken, tokenEndpoint;
         private string server, error;
-        private bool working, afterChange;
+        private bool working, afterChange, uiReady, firstLiveSwitchDone;
         private long generation;
-        private DateTimeOffset next = DateTimeOffset.MinValue;
+        private DateTimeOffset nextPoll = DateTimeOffset.MinValue;
         private DateTimeOffset? lastContact;
         private Snapshot latest;
-        internal event Action Arrived;
+        private object latestHistory48h;
 
-        public Viewer(string serverUrl, string token)
+        public WebViewerForm(string serverUrl, string token)
         {
-            server = serverUrl; sessionToken = token; tokenEndpoint = serverUrl;
-            Text = "Red Deer River | Research Receiver";
+            server = serverUrl;
+            sessionToken = token;
+            tokenEndpoint = serverUrl;
+            Text = "Red Deer River · Hydro-GIS Research Receiver";
             StartPosition = FormStartPosition.CenterScreen;
-            ClientSize = new Size(1080, 790);
-            MinimumSize = new Size(850, 705);
-            BackColor = Canvas;
-            Font = new Font("Segoe UI", 9);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(1340, 820);
+            MinimumSize = new Size(960, 640);
+            BackColor = Color.FromArgb(8, 13, 24);
+            webView.Dock = DockStyle.Fill;
+            webView.DefaultBackgroundColor = Color.FromArgb(8, 13, 24);
+            Controls.Add(webView);
 
-            var layout = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(12, 8, 12, 8),
-                ColumnCount = 1, RowCount = 9, BackColor = Canvas };
-            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            foreach (int px in new[] { 34, 38, 36, 23, 22, 37, 133, 91 })
-                layout.RowStyles.Add(new RowStyle(SizeType.Absolute, px));
-            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            Controls.Add(layout);
-            layout.Controls.Add(LabelOf("Red Deer River", 19, true, Ink), 0, 0);
-            var disclaimer = LabelOf(Contract.Disclaimer, 9, true, WarningColor);
-            disclaimer.BackColor = Color.FromArgb(252, 235, 229);
-            disclaimer.Padding = new Padding(7, 2, 7, 2);
-            layout.Controls.Add(disclaimer, 0, 1);
-
-            var control = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1 };
-            control.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 105));
-            control.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            control.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 87));
-            control.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 105));
-            control.Controls.Add(LabelOf("Server base URL", 9, true, Ink), 0, 0);
-            address.Text = server;
-            address.Dock = DockStyle.Fill;
-            address.Margin = new Padding(3, 6, 3, 2);
-            address.AccessibleName = "Server base URL";
-            address.KeyDown += delegate(object sender, KeyEventArgs evt)
-            {
-                if (evt.KeyCode == Keys.Enter) { evt.SuppressKeyPress = true; Reconnect(); }
-            };
-            control.Controls.Add(address, 1, 0);
-            var connect = new Button { Text = "Connect", Dock = DockStyle.Fill };
-            connect.Click += delegate { Reconnect(); };
-            control.Controls.Add(connect, 2, 0);
-            var refresh = new Button { Text = "Refresh now", Dock = DockStyle.Fill };
-            refresh.Click += delegate { if (!working) { next = DateTimeOffset.MinValue; Poll(); } };
-            control.Controls.Add(refresh, 3, 0);
-            layout.Controls.Add(control, 0, 2);
-            layout.Controls.Add(status, 0, 3);
-            layout.Controls.Add(clocks, 0, 4);
-            layout.Controls.Add(notice, 0, 5);
-            layout.Controls.Add(Box("Observed river discharge (m³/s)", flowGrid, null), 0, 6);
-            layout.Controls.Add(Box("Regional airport precipitation (mm), not basin rainfall", rainGrid, rainDetail), 0, 7);
-            targets.Dock = DockStyle.Fill;
-            targets.Margin = new Padding(2);
-            targets.AccessibleName = "Water-depth estimate target";
-            layout.Controls.Add(targets, 0, 8);
-            foreach (var h in new[] { 0, 3, 9 })
-            {
-                var page = new TabPage(h == 0 ? "Current time" : "+" + h + " hours");
-                page.BackColor = Canvas;
-                var content = new TableLayoutPanel { ColumnCount = 1, RowCount = 4, Dock = DockStyle.Fill, Padding = new Padding(4) };
-                content.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-                content.RowStyles.Add(new RowStyle(SizeType.Absolute, 23));
-                content.RowStyles.Add(new RowStyle(SizeType.Absolute, 53));
-                content.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-                content.RowStyles.Add(new RowStyle(SizeType.Absolute, 34));
-                var title = h == 0 ? "Estimated depth at current target time (m)" :
-                    "Experimental depth at the +" + h + "-hour target (m)";
-                content.Controls.Add(LabelOf(title, 10, true, Ink), 0, 0);
-                var detail = LabelOf("", 9, false, Muted);
-                depthDetail[h] = detail;
-                content.Controls.Add(detail, 0, 1);
-                var grid = Grid("Node / interpretation", "Model valid time");
-                depthGrid[h] = grid;
-                content.Controls.Add(grid, 0, 2);
-                content.Controls.Add(LabelOf(Contract.Limit, 9, false, Muted), 0, 3);
-                page.Controls.Add(content);
-                targets.TabPages.Add(page);
-            }
-            schedule.Interval = 800;
-            schedule.Tick += delegate { if (!working && DateTimeOffset.UtcNow >= next) Poll(); };
-            Shown += delegate { schedule.Start(); Poll(); };
-            FormClosed += delegate { schedule.Stop(); schedule.Dispose(); };
-            Render();
+            ticker.Interval = 1000;
+            ticker.Tick += OnTick;
+            Shown += OnShownAsync;
+            FormClosed += delegate { ticker.Stop(); ticker.Dispose(); };
         }
 
-        private static Label LabelOf(string text, float points, bool bold, Color color)
+        private async void OnShownAsync(object sender, EventArgs e)
         {
-            return new Label { Text = text, Dock = DockStyle.Fill, Margin = new Padding(1),
-                Font = new Font("Segoe UI", points, bold ? FontStyle.Bold : FontStyle.Regular),
-                ForeColor = color, TextAlign = ContentAlignment.MiddleLeft, UseMnemonic = false };
-        }
-
-        private static Control Box(string title, Control centre, Control extra)
-        {
-            var outer = new GroupBox { Dock = DockStyle.Fill, Text = title, ForeColor = Ink, Margin = new Padding(1, 2, 1, 3) };
-            var body = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = extra == null ? 1 : 2 };
-            body.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            body.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            body.Controls.Add(centre, 0, 0);
-            if (extra != null)
+            try
             {
-                body.RowStyles.Add(new RowStyle(SizeType.Absolute, 22));
-                body.Controls.Add(extra, 0, 1);
+                var env = await CoreWebView2Environment.CreateAsync(null, WebViewBootstrap.UserDataDir);
+                await webView.EnsureCoreWebView2Async(env);
+                webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
+                webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+                webView.CoreWebView2.SetVirtualHostNameToFolderMapping(
+                    "appassets.local", WebViewBootstrap.AssetsDir, CoreWebView2HostResourceAccessKind.Allow);
+                webView.CoreWebView2.WebMessageReceived += OnWebMessage;
+                webView.Source = new Uri("https://appassets.local/ui.html");
+                ticker.Start();
             }
-            outer.Controls.Add(body);
-            return outer;
-        }
-
-        private static DataGridView Grid(string first, string clock)
-        {
-            var grid = new DataGridView {
-                Dock = DockStyle.Fill, Margin = new Padding(0), ReadOnly = true, RowHeadersVisible = false,
-                AllowUserToAddRows = false, AllowUserToDeleteRows = false, AllowUserToOrderColumns = false,
-                AllowUserToResizeRows = false, BackgroundColor = Color.White, BorderStyle = BorderStyle.FixedSingle,
-                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal, GridColor = Color.FromArgb(222, 230, 237),
-                MultiSelect = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill, ColumnHeadersHeight = 25,
-                ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing,
-                EnableHeadersVisualStyles = false, AccessibleName = first
-            };
-            grid.RowTemplate.Height = 19;
-            grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(228, 236, 244);
-            grid.ColumnHeadersDefaultCellStyle.ForeColor = Ink;
-            grid.DefaultCellStyle.ForeColor = Ink;
-            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 248, 251);
-            string[] labels = { first, "Value", "Status", clock };
-            float[] shares = { 46, 10, 17, 27 };
-            for (int i = 0; i < labels.Length; i++)
+            catch (Exception ex)
             {
-                var col = new DataGridViewTextBoxColumn { Name = "c" + i, HeaderText = labels[i],
-                    FillWeight = shares[i], SortMode = DataGridViewColumnSortMode.NotSortable };
-                col.MinimumWidth = i == 3 ? 162 : i == 2 ? 112 : 60;
-                if (i == 1) col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                grid.Columns.Add(col);
+                MessageBox.Show(this,
+                    "Could not initialize Microsoft Edge WebView2 Runtime.\n\nDetails: " + ex.Message,
+                    "Red Deer River Hydro-GIS", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            return grid;
         }
 
-        private void Reconnect()
+        private void OnWebMessage(object sender, CoreWebView2WebMessageReceivedEventArgs e)
+        {
+            try
+            {
+                var msg = json.DeserializeObject(e.WebMessageAsJson) as Dictionary<string, object>;
+                if (msg == null || !msg.ContainsKey("action")) return;
+                string action = Convert.ToString(msg["action"], CultureInfo.InvariantCulture);
+                if (action == "ready")
+                {
+                    uiReady = true;
+                    PushState(null);
+                    Poll();
+                }
+                else if (action == "connect")
+                {
+                    string rawUrl = msg.ContainsKey("url") ? Convert.ToString(msg["url"], CultureInfo.InvariantCulture) : "";
+                    Reconnect(rawUrl);
+                }
+                else if (action == "refresh")
+                {
+                    if (!working) { nextPoll = DateTimeOffset.MinValue; Poll(); }
+                }
+            }
+            catch { }
+        }
+
+        private void OnTick(object sender, EventArgs e)
+        {
+            if (IsDisposed) return;
+            if (!working && DateTimeOffset.UtcNow >= nextPoll)
+            {
+                Poll();
+            }
+            else if (uiReady && webView.CoreWebView2 != null)
+            {
+                int rem = Math.Max(0, (int)Math.Ceiling((nextPoll - DateTimeOffset.UtcNow).TotalSeconds));
+                webView.CoreWebView2.PostWebMessageAsJson("{\"type\":\"tick\",\"seconds\":" + rem.ToString(CultureInfo.InvariantCulture) + "}");
+            }
+        }
+
+        private void Reconnect(string rawUrl)
         {
             string url;
-            try { url = Contract.Url(address.Text); }
-            catch (InvalidDataException e)
+            try { url = Contract.Url(rawUrl); }
+            catch (InvalidDataException ex)
             {
-                MessageBox.Show(this, e.Message, "Check the server URL", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                error = ex.Message;
+                PushState(null);
                 return;
             }
-            address.Text = url;
             if (url != server)
             {
                 server = url; generation++;
-                latest = null; lastContact = null; error = null;
+                latest = null; latestHistory48h = null; lastContact = null; error = null;
+                firstLiveSwitchDone = false;
                 afterChange = working;
             }
-            next = DateTimeOffset.MinValue;
-            Render();
+            else
+            {
+                error = null;
+            }
+            nextPoll = DateTimeOffset.MinValue;
+            PushState(null);
             if (!working) Poll();
         }
 
@@ -496,27 +578,39 @@ namespace RedDeerResearch
         {
             if (working || IsDisposed) return;
             working = true;
-            long forGeneration = generation;
-            var url = server;
-            next = DateTimeOffset.UtcNow.AddSeconds(60);
-            Render();
+            long forGen = generation;
+            string url = server;
+            string tok = url == tokenEndpoint ? sessionToken : null;
+            nextPoll = DateTimeOffset.UtcNow.AddSeconds(60);
+            PushState(null);
             Snapshot candidate = null;
+            object hist48 = null;
             string failure = null;
             try
             {
-                candidate = await Contract.Fetch(url, url == tokenEndpoint ? sessionToken : null);
+                candidate = await Contract.Fetch(url, tok);
+                hist48 = await Contract.FetchHistory48h(url, tok);
             }
-            catch (InvalidDataException e) { failure = e.Message; }
+            catch (InvalidDataException ex) { failure = ex.Message; }
             catch (Exception) { failure = "The service connection failed. Check the server and try again."; }
             if (IsDisposed) return;
             working = false;
-            if (forGeneration == generation)
+            if (forGen == generation)
             {
                 error = failure;
-                if (candidate != null) { latest = candidate; lastContact = DateTimeOffset.UtcNow; }
-                Render();
-                var listener = Arrived;
-                if (candidate != null && listener != null) listener();
+                string autoMode = null;
+                if (candidate != null)
+                {
+                    latest = candidate;
+                    if (hist48 != null) latestHistory48h = hist48;
+                    lastContact = DateTimeOffset.UtcNow;
+                    if (!firstLiveSwitchDone)
+                    {
+                        firstLiveSwitchDone = true;
+                        autoMode = candidate.Mode;
+                    }
+                }
+                PushState(autoMode);
             }
             if (afterChange && !IsDisposed)
             {
@@ -525,150 +619,136 @@ namespace RedDeerResearch
             }
         }
 
-        private static void Fill(DataGridView grid, IEnumerable<Reading> rows, int precision, bool cached)
+        private void PushState(string autoSwitchMode)
         {
-            grid.Rows.Clear();
-            foreach (var r in rows)
-            {
-                var state = cached && r.Value.HasValue ? "Cached / " + r.Status : r.Status;
-                int index = grid.Rows.Add(r.Id + "   " + r.Title, Contract.Value(r.Value, precision), state, Contract.Clock(r.Clock));
-                if (state.StartsWith("Cached", StringComparison.Ordinal) || r.Status == "Stale")
-                    grid.Rows[index].Cells[2].Style.ForeColor = WarningColor;
-            }
-            grid.ClearSelection();
-        }
-
-        private void Render()
-        {
+            if (!uiReady || IsDisposed || webView.CoreWebView2 == null) return;
             var snap = latest;
             bool old = snap != null && (DateTimeOffset.UtcNow - snap.Generated > TimeSpan.FromMinutes(125) || snap.BackendError == "cached_snapshot_stale");
             bool cached = snap != null && (old || error != null || snap.BackendError == "database_unavailable");
-            string mode = snap == null ? "Unknown mode" : snap.Mode == "demo" ? "DEMO: synthetic inputs" : "LIVE: provider observations";
-            string network = error != null ? "Connection failed" : old ? "Old server snapshot" :
-                cached ? "Server cache" : working ? "Refreshing" : lastContact.HasValue ? "Connected" : "Waiting";
-            status.Text = mode + "   |   Service: " + (snap == null ? "No snapshot" : snap.State) + "   |   " + network + "   |   Poll: 60 s";
-            clocks.Text = "Newest observation: " + Contract.Clock(snap == null ? null : snap.Newest) +
-                "  |  Snapshot: " + Contract.Clock(snap == null ? null : (DateTimeOffset?)snap.Generated) +
-                "  |  Last contact: " + Contract.Clock(lastContact);
-            notice.Text = error != null ? error + (cached ? " Showing cached values, not current data." : " No values available.") :
-                old ? "Showing cached values, not current data. The server snapshot is not recent." :
-                cached ? "Showing cached values, not current data. The server data store is unavailable." : snap == null ? "" : snap.Warning;
 
-            var shown = snap ?? EmptySnapshot.Value;
-            Fill(flowGrid, shown.Flows, 2, cached);
-            Fill(rainGrid, new[] { shown.Rain }, 2, cached);
-            var rain = shown.Rain;
-            rainDetail.Text = "Source: " + (String.IsNullOrEmpty(rain.Source) ? "Not reported" : rain.Source) +
-                "  |  Period: " + (String.IsNullOrEmpty(rain.Period) ? "Not reported" : rain.Period) +
-                "  |  Period end: " + Contract.Clock(rain.WindowEnd) + "  |  Retrieved: " + Contract.Clock(rain.Retrieved);
-            foreach (var g in shown.Groups)
+            object snapObj = null;
+            if (snap != null)
             {
-                Fill(depthGrid[g.Hours], g.Depths, 3, cached);
-                depthDetail[g.Hours].Text = "Inference: " + (cached && g.State == "Experimental" ? "Cached / " : "") + g.State +
-                    "  |  Target time: " + Contract.Clock(g.Target) +
-                    "  |  Generated: " + Contract.Clock(g.Generated) +
-                    Environment.NewLine + (String.IsNullOrEmpty(g.Note) ? "Estimates are not gauge measurements." : g.Note);
+                snapObj = new
+                {
+                    mode = snap.Mode,
+                    state = snap.State,
+                    cached = cached,
+                    warning = snap.Warning,
+                    newest = Contract.Clock(snap.Newest),
+                    generated = Contract.Clock(snap.Generated),
+                    flows = snap.Flows.Select(r => new
+                    {
+                        id = r.Id, title = r.Title, value = r.Value, status = r.Status, clock = Contract.Clock(r.Clock)
+                    }).ToArray(),
+                    rain = new
+                    {
+                        id = snap.Rain.Id, title = snap.Rain.Title, value = snap.Rain.Value,
+                        status = snap.Rain.Status, period = snap.Rain.Period, source = snap.Rain.Source,
+                        clock = Contract.Clock(snap.Rain.Clock)
+                    },
+                    groups = snap.Groups.Select(g => new
+                    {
+                        hours = g.Hours, state = g.State, note = g.Note,
+                        target = Contract.Clock(g.Target), generated = Contract.Clock(g.Generated),
+                        depths = g.Depths.Select(d => new
+                        {
+                            id = d.Id, title = d.Title, value = d.Value, status = d.Status, clock = Contract.Clock(d.Clock)
+                        }).ToArray()
+                    }).ToArray()
+                };
             }
-        }
 
-        private static readonly Lazy<Snapshot> EmptySnapshot = new Lazy<Snapshot>(delegate
-        {
-            return Contract.Parse("{\"schema_version\":1,\"mode\":\"demo\",\"status\":\"unavailable\",\"generated_at\":\"2000-01-01T00:00:00Z\",\"flows\":[],\"depths\":[],\"horizons\":[]}");
-        });
-
-        internal bool SmokeReconnect(string nextUrl)
-        {
-            address.Text = nextUrl;
-            Reconnect();
-            return latest == null && working &&
-                Convert.ToString(flowGrid.Rows[0].Cells[1].Value) == "—";
-        }
-
-        internal bool SmokeCheck(string expected)
-        {
-            if (latest == null || latest.Mode != "demo" || !status.Text.StartsWith("DEMO:", StringComparison.Ordinal)) return false;
-            if (!targets.TabPages.Cast<TabPage>().Select(p => p.Text).SequenceEqual(new[] { "Current time", "+3 hours", "+9 hours" }))
-                return false;
-            if (latest.Flows.Count(q => q.Value.HasValue) != 4 || !latest.Rain.Value.HasValue ||
-                String.IsNullOrEmpty(latest.Rain.Period) || String.IsNullOrEmpty(latest.Rain.Source)) return false;
-            if (flowGrid.Rows.Count != 4 || rainGrid.Rows.Count != 1) return false;
-            if (latest.Groups[1].Target - latest.Groups[0].Target != TimeSpan.FromHours(3) ||
-                latest.Groups[2].Target - latest.Groups[0].Target != TimeSpan.FromHours(9)) return false;
-            var hits = latest.Groups.Select(g => g.Depths.Count(p => p.Value.HasValue)).ToArray();
-            if (hits[0] != 6 || hits[1] != 6) return false;
-            if (expected == "complete")
-                return hits[2] == 6 && depthDetail[9].Text.Contains("Experimental") &&
-                    Convert.ToString(depthGrid[9].Rows[5].Cells[1].Value) != "—";
-            return expected == "partial" && hits[2] == 0 && depthDetail[9].Text.Contains("Unavailable") &&
-                depthDetail[9].Text.Contains("Little Red Deer River") &&
-                Convert.ToString(depthGrid[9].Rows[5].Cells[1].Value) == "—";
+            var payload = new
+            {
+                type = "state",
+                serverUrl = server,
+                working = working,
+                error = error,
+                lastContact = Contract.Clock(lastContact),
+                autoSwitchMode = autoSwitchMode,
+                snapshot = snapObj,
+                history48h = latestHistory48h
+            };
+            webView.CoreWebView2.PostWebMessageAsJson(json.Serialize(payload));
         }
     }
 
     internal static class Program
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static int RunGui(string url, string token)
+        {
+            using (var viewer = new WebViewerForm(url, token))
+            {
+                Application.Run(viewer);
+                return 0;
+            }
+        }
+
+        private static int RunSmoke(string[] args, bool switching)
+        {
+            try
+            {
+                if (Contract.Url("https://host.example:8443") != "https://host.example:8443" ||
+                    Contract.Url("https://host.example") != "https://host.example" ||
+                    Contract.Url("http://127.0.0.1:8765/") != Contract.DefaultUrl) return 7;
+                try { Contract.Url("http://host.example:8443"); return 7; }
+                catch (InvalidDataException) { }
+
+                // Verify all embedded assets unpack cleanly
+                string html = Encoding.UTF8.GetString(EmbeddedAssets.ReadGzipBytes("ui.html.gz"));
+                string gis = Encoding.UTF8.GetString(EmbeddedAssets.ReadGzipBytes("gis_bundle.json.gz"));
+                string rep = Encoding.UTF8.GetString(EmbeddedAssets.ReadGzipBytes("replay_history.json.gz"));
+                byte[] bm = EmbeddedAssets.ReadRawBytes("nrcan_cbmt_basemap.jpg");
+                byte[] ab = EmbeddedAssets.ReadRawBytes("nrcan_ab_wide.jpg");
+                if (!html.Contains("replaySlider") || !gis.Contains("05CC002") || !rep.Contains("span_start") || bm.Length < 100000 || ab.Length < 50000) return 4;
+                if (EmbeddedAssets.ReadGzipBytes("wv2_loader.dll.gz").Length < 50000) return 4;
+                if (EmbeddedAssets.ReadGzipBytes("wv2_core.dll.gz").Length < 100000) return 4;
+                if (EmbeddedAssets.ReadGzipBytes("wv2_winforms.dll.gz").Length < 10000) return 4;
+
+                string u1 = Contract.Url(args[1]);
+                Snapshot s1 = Contract.Fetch(u1, null).GetAwaiter().GetResult();
+                object h1 = Contract.FetchHistory48h(u1, null).GetAwaiter().GetResult();
+                if (h1 == null) return 3;
+                if (switching)
+                {
+                    if (!Contract.SmokeValidate(s1, "complete")) return 6;
+                    string u2 = Contract.Url(args[2]);
+                    Snapshot s2 = Contract.Fetch(u2, null).GetAwaiter().GetResult();
+                    return Contract.SmokeValidate(s2, "partial") ? 0 : 9;
+                }
+                return Contract.SmokeValidate(s1, args[2]) ? 0 : 9;
+            }
+            catch (Exception)
+            {
+                return 5;
+            }
+        }
+
         [STAThread]
         private static int Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
+
             bool switching = args.Length == 3 && args[0] == "--smoke-switch";
             bool smoke = switching || (args.Length == 3 && args[0] == "--smoke-test");
-            if (smoke)
-            {
-                try
-                {
-                    if (Contract.Url("https://host.example:8443") != "https://host.example:8443" ||
-                        Contract.Url("https://host.example") != "https://host.example" ||
-                        Contract.Url("http://127.0.0.1:8765/") != Contract.DefaultUrl) return 7;
-                    try { Contract.Url("http://host.example:8443"); return 7; }
-                    catch (InvalidDataException) { }
-                }
-                catch (InvalidDataException) { return 7; }
-            }
-            string supplied = smoke ? args[1] : args.Length == 2 && args[0] == "--server" ? args[1] :
+            if (smoke) return RunSmoke(args, switching);
+
+            string supplied = args.Length == 2 && args[0] == "--server" ? args[1] :
                 Environment.GetEnvironmentVariable("RDR_SERVER_URL");
             string url;
             try { url = Contract.Url(String.IsNullOrWhiteSpace(supplied) ? Contract.DefaultUrl : supplied); }
             catch (InvalidDataException e)
             {
-                if (!smoke) MessageBox.Show(e.Message, "Check the default server URL", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(e.Message, "Check the default server URL", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return 1;
             }
-            string token = smoke ? null : Environment.GetEnvironmentVariable("RDR_API_TOKEN");
-            using (var viewer = new Viewer(url, token))
-            {
-                if (!smoke) { Application.Run(viewer); return 0; }
-                viewer.ShowInTaskbar = false;
-                viewer.Opacity = 0;
-                using (var deadline = new System.Windows.Forms.Timer { Interval = 13000 })
-                {
-                    int result = 5;
-                    deadline.Tick += delegate { deadline.Stop(); viewer.Close(); };
-                    viewer.Shown += delegate { deadline.Start(); };
-                    bool second = false;
-                    viewer.Arrived += delegate
-                    {
-                        if (switching && !second)
-                        {
-                            if (!viewer.SmokeCheck("complete")) { result = 6; viewer.Close(); return; }
-                            second = true;
-                            try
-                            {
-                                if (viewer.SmokeReconnect(Contract.Url(args[2]))) return;
-                            }
-                            catch (InvalidDataException) { }
-                            result = 8; viewer.Close(); return;
-                        }
-                        result = viewer.SmokeCheck(switching ? "partial" : args[2]) ? 0 : 9;
-                        viewer.Close();
-                    };
-                    Application.Run(viewer);
-                    return result;
-                }
-            }
+            string token = Environment.GetEnvironmentVariable("RDR_API_TOKEN");
+            WebViewBootstrap.Init();
+            return RunGui(url, token);
         }
     }
 }
-

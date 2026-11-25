@@ -1,5 +1,25 @@
 # AIDA 2156 Final Professional Project — EDA Decision Study
 
+## Quick-Start Offline Reproduction (Reviewer & Self-Check Guide)
+
+> **Everything needed to reproduce the formal EDA is already tracked in this repository** inside [`D2L_SUBMISSION_READY/AIDA2156_EDA_D2L_ready_20261123.zip`](../../D2L_SUBMISSION_READY/AIDA2156_EDA_D2L_ready_20261123.zip) (~3.72 MB; bundles the frozen 5-station 18-month CSV inputs, pure Python 3.13 standard-library scripts, 7 tables, and 4 SVGs). **Zero third-party packages (`pip install`), database, or network access are required.**
+
+```powershell
+# 1. From the repository root, extract the tracked standalone EDA package
+Expand-Archive -Path D2L_SUBMISSION_READY\AIDA2156_EDA_D2L_ready_20261123.zip -DestinationPath eda_replay_unpack -Force
+cd eda_replay_unpack
+
+# 2. Run pure Python 3.13 standard-library EDA, assertions, and SVG figure redraw (~25 s total)
+python -B -E -S analysis\analysis.py
+python -B -E -S analysis\tests_or_assertions.py
+python -B -E -S analysis\make_eda_figures.py
+```
+
+- **Expected verified result:** All three `-B -E -S` stdlib-only commands exit `0`, reproducing all 7 tables under `output/final_eda/` and all 4 colourblind-safe SVGs byte-for-byte (`0` mismatches; `P-S1` strict Final `95,053 -> 0`, `P-S2` lake exclusion `-48,571` winter rows and `+0.123 m³/s` shift).
+- **Key files to inspect:** [Formal EDA Report](app-or-report/final-eda-report.md) · [Sensitivity Results](output/sensitivity-results.csv) · [Claim-to-Evidence Index](claim-evidence-index.csv) · [Governance & Release](governance-and-release.md).
+
+---
+
 ## Formal 2156 EDA decision study
 
 **Standalone course report (Word):** [English](docs/eda-project-report.docx) · [中文版](docs/eda-project-reportCN.docx)
@@ -73,7 +93,7 @@ Use the shared formative checkpoints; they do not change the project weight. Bri
 
 Demonstrate the working EDA: station, parameter and UTC time unit; the denominator; one traceable claim; a sensitivity or limitation; and the recommended next step. The Word report shows the evidence sequence. The synthetic V4 viewer is optional context.
 
-The `AIDA 2156 Final Project: Presentation, Peer Review, and Submission` D2L activity requires an uploadable, reproducible clean project package and the private repository link in the submission information or manifest. The supplied page does not specify an extension; verify the actual files from a clean location before submitting and use any official validation checks made available. A Git link does not replace upload. **No EDA submission package was made or uploaded for this check.**
+The `AIDA 2156 Final Project: Presentation, Peer Review, and Submission` D2L activity requires an uploadable, reproducible clean project package and the private repository link in the submission information or manifest. The supplied page does not specify an extension; verify the actual files from a clean location before submitting and use any official validation checks made available. A Git link does not replace upload. **The clean EDA submission archive (`AIDA2156_EDA_D2L_ready_20261123.zip`, 41 files, 3.72 MB) passed clean-extraction replay with 0 mismatches (`output/zip-extraction-validation.json`); final D2L upload remains pending after Dec 1–11 peer review.**
 
 ---
 

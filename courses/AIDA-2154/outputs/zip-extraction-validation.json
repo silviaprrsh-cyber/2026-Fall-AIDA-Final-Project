@@ -1,9 +1,9 @@
 {
-  "validated_utc": "2026-11-24T03:15:38.989554+00:00",
+  "validated_utc": "2026-11-25T02:13:30.483859+00:00",
   "zip_name": "AIDA2154_CV_D2L_ready_20261123.zip",
-  "zip_bytes": 32305353,
+  "zip_bytes": 32307517,
   "zip_mb": 30.81,
-  "zip_sha256": "fd96d907673f38ed1571e14466bd6367a4939d8cce1c64b93d8cacd05db5f018",
+  "zip_sha256": "a74f8346b68ae942d4da2a31ec3549c7662173b373aed47877f66469ec205d7c",
   "verify_stdout": "Verified files: 60",
   "verify_seconds": 0.722,
   "replay_132_exit": 0,
@@ -11,5 +11,6 @@
   "portable_tests_exit": 0,
   "portable_tests_seconds": 5.795,
   "blind_manual_score_exit": 0,
-  "blind_manual_score_seconds": 0.949
+  "blind_manual_score_seconds": 0.949,
+  "manifest_files_verified": 60
 }

@@ -33,7 +33,15 @@ def main():
     assert layout is not None
     for item in layout.items():
         if isinstance(item, QgsLayoutItemLabel):
-            item.setText(item.text().replace('Map date: 2026-11-04', 'Map date: 2026-11-08'))
+            updated_text = item.text().replace('Map date: 2026-11-04', 'Map date: 2026-11-08')
+            updated_text = updated_text.replace(
+                'Data sources: ECCC, NRCan, Government of Alberta',
+                'Data sources: ECCC, NRCan, Alberta EPA',
+            ).replace(
+                'Data sources: ECCC, NRCan, Alberta Environment and Protected Areas (EPA)',
+                'Data sources: ECCC, NRCan, Alberta EPA',
+            )
+            item.setText(updated_text)
         elif isinstance(item, QgsLayoutItemScaleBar):
             page_width = layout.pageCollection().page(0).sizeWithUnits().width()
             item.attemptMove(QgsLayoutPoint(page_width - item.rect().width() - 18, item.pos().y()))

@@ -1,0 +1,19 @@
+{
+  "source": "Natural Resources Canada (NRCan) \u2014 Canada Base Map - Transportation (CBMT)",
+  "licence": "Open Government Licence - Canada (https://open.canada.ca/en/open-government-licence-canada)",
+  "srs": "EPSG:3857",
+  "bbox_lonlat": [
+    -114.52,
+    51.94,
+    -113.66,
+    52.42
+  ],
+  "bbox_3857": [
+    -12748308.08387111,
+    6789283.946046945,
+    -12652573.321802221,
+    6876426.031039179
+  ],
+  "width": 2048,
+  "height": 1864
+}

@@ -133,6 +133,79 @@ class Collector:
         self.need_backfill = True
         self.failures = self.source_failures = 0
 
+    def history48h(self):
+        t = aware(self.clock())
+        since = t - timedelta(hours=48)
+        try:
+            rows = self.store.read(since, t)
+        except Exception:
+            rows = []
+        flows = {sid: [] for sid in FLOWS}
+        rain = []
+        for r in rows:
+            ts_str = iso(r.observed_at)
+            if r.kind == "flow" and r.station_id in flows:
+                flows[r.station_id].append([ts_str, round(float(r.value), 3)])
+            elif r.kind == "rain" and r.station_id == RAIN_ID:
+                rain.append([ts_str, round(float(r.value), 3)])
+        # Thin 5-min flow series to ~30-min cadence for compact 48h sparklines (<=96 pts)
+        for sid in list(flows.keys()):
+            pts = flows[sid]
+            if len(pts) > 96:
+                stride = max(1, len(pts) // 96)
+                thinned = pts[::stride]
+                if thinned[-1] != pts[-1]:
+                    thinned.append(pts[-1])
+                flows[sid] = thinned
+        levels = {}
+        if self.mode == "live":
+            try:
+                from .provider import get_recent_levels
+                levels = get_recent_levels(t, hours=48)
+                for sid in list(levels.keys()):
+                    pts = levels[sid]
+                    if len(pts) > 96:
+                        stride = max(1, len(pts) // 96)
+                        thinned = pts[::stride]
+                        if thinned[-1] != pts[-1]:
+                            thinned.append(pts[-1])
+                        levels[sid] = thinned
+            except Exception:
+                levels = {}
+        else:
+            # Deterministic synthetic stage curve aligned with demo flows
+            base_lvl = {"05CB007": 1.35, "05CB001": 0.88, "05CC007": 0.72, "05CC002": 2.45}
+            for sid, pts in flows.items():
+                b = base_lvl.get(sid, 1.2)
+                levels[sid] = [[ts, round(b + 0.008 * val, 3)] for ts, val in pts]
+        # Compute past 48h hourly V4 depth estimates (up to 49 points)
+        depths = {f"P{i+1:02d}": [] for i in range(6)}
+        if rows:
+            end_h = t.replace(minute=0, second=0, microsecond=0)
+            for h_back in range(48, -1, -2):
+                at = end_h - timedelta(hours=h_back)
+                if at > t:
+                    continue
+                try:
+                    vals, _ = features(rows, at, 0)
+                    out = self.estimate(vals) if vals is not None else None
+                except Exception:
+                    out = None
+                if out is not None:
+                    ts_str = iso(at)
+                    for i in range(6):
+                        depths[f"P{i+1:02d}"].append([ts_str, round(float(out[i]), 3)])
+        return {
+            "schema_version": 1,
+            "mode": self.mode,
+            "as_of": iso(t),
+            "levels": levels,
+            "flows": flows,
+            "rain": rain,
+            "depths": depths,
+            "level_datum_note": "ECCC assumed gauge datum (stage, m); not geodetic water depth.",
+        }
+
     def restore(self):
         t = self.clock()
         try:
@@ -247,12 +320,15 @@ def transport(collector, token):
             if path=="/healthz":
                 self.reply(*collector.health())
                 return
-            if path!="/api/v1/snapshot":
+            if path not in ("/api/v1/snapshot", "/api/v1/history48h"):
                 self.reply(404, {"error":"not_found"})
                 return
             info=self.headers.get("Authorization","")
             if token and not hmac.compare_digest(info.encode("utf-8"), ("Bearer "+token).encode("utf-8")):
                 self.reply(401,{"error":"authorization_required"}, challenge=True)
+                return
+            if path=="/api/v1/history48h":
+                self.reply(200,collector.history48h())
                 return
             self.reply(200,collector.current())
 
@@ -276,19 +352,65 @@ def transport(collector, token):
 
     return Handler
 
-def tls_connection_string():
+def _read_local_dotenv():
+    from pathlib import Path
+    out={}
+    candidates=[Path.cwd()/".env"]
+    try:
+        candidates.append(Path(__file__).resolve().parents[4]/".env")
+    except IndexError:
+        pass
+    for p in candidates:
+        if not p.is_file():
+            continue
+        for raw in p.read_text(encoding="utf-8",errors="ignore").splitlines():
+            line=raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k,v=line.split("=",1)
+            k=k.strip()
+            v=v.strip().strip('"').strip("'")
+            if k and k not in out:
+                out[k]=v
+        break
+    return out
+
+def tls_connection_string(allow_local_pg=False):
     import psycopg.conninfo as pg
     secret=os.environ.get("RDR_DEPLOYMENT_DSN")
+    if not secret and allow_local_pg:
+        dot=_read_local_dotenv()
+        secret=dot.get("RDR_DEPLOYMENT_DSN")
+        if not secret:
+            host=(os.environ.get("PGHOST") or dot.get("PGHOST") or "").strip()
+            dbname=(os.environ.get("PGDATABASE") or dot.get("PGDATABASE") or "").strip()
+            user=(os.environ.get("PGUSER") or dot.get("PGUSER") or "").strip()
+            port=(os.environ.get("PGPORT") or dot.get("PGPORT") or "5432").strip()
+            pwd=os.environ.get("PGPASSWORD") if "PGPASSWORD" in os.environ else dot.get("PGPASSWORD","")
+            if host.lower() in ("127.0.0.1","localhost","::1") and dbname and user:
+                kw={"host":host,"port":port,"dbname":dbname,"user":user,"sslmode":"prefer",
+                    "connect_timeout":"5","application_name":"rdr_research_snapshot"}
+                if pwd:
+                    kw["password"]=pwd
+                return pg.make_conninfo(**kw)
     if not secret:
         raise ValueError("Define the deployment database secret")
     try:
         data=pg.conninfo_to_dict(secret)
-        if not data.get("host") or not data.get("dbname") or not data.get("user") or data.get("sslmode")!="verify-full":
+        host=str(data.get("host") or "").strip().lower()
+        is_loopback=host in ("127.0.0.1","localhost","::1")
+        if not host or not data.get("dbname") or not data.get("user"):
             raise ValueError
-        ca=data.get("sslrootcert") or os.environ.get("RDR_DB_SSLROOTCERT")
-        if not ca or not (ca=="system" or os.path.isfile(ca)):
-            raise ValueError
-        data.update(sslrootcert=ca,connect_timeout=data.get("connect_timeout","5"),
+        if allow_local_pg and is_loopback:
+            data.setdefault("sslmode","prefer")
+        else:
+            if data.get("sslmode")!="verify-full":
+                raise ValueError
+            ca=data.get("sslrootcert") or os.environ.get("RDR_DB_SSLROOTCERT")
+            if not ca or not (ca=="system" or os.path.isfile(ca)):
+                raise ValueError
+            data.update(sslrootcert=ca)
+        data.update(connect_timeout=data.get("connect_timeout","5"),
                     application_name="rdr_research_snapshot")
         return pg.make_conninfo(**data)
     except Exception:
@@ -301,6 +423,8 @@ def main(argv=None):
     a.add_argument("--port",type=int,default=os.environ.get("RDR_PORT","8765"))
     a.add_argument("--interval",type=int,default=os.environ.get("RDR_POLL_SECONDS","600"))
     a.add_argument("--timeout",type=float,default=os.environ.get("RDR_SOURCE_TIMEOUT","10"))
+    a.add_argument("--local-pg",action="store_true",default=os.environ.get("RDR_ALLOW_LOCAL_PG")=="1",
+                   help="Allow loopback-only local PostgreSQL connection without remote TLS CA verification")
     a.add_argument("--init-db",action="store_true",help="Versioned schema migration only; exits without serving")
     a.add_argument("--once",action="store_true",help="Run one cycle, emit one JSON snapshot and exit")
     z=a.parse_args(argv)
@@ -313,7 +437,7 @@ def main(argv=None):
         if z.init_db and z.mode!="live":
             a.error("--init-db may be used only with live mode and the dedicated deployment DB")
         if z.mode=="live":
-            store=PgStore(tls_connection_string())
+            store=PgStore(tls_connection_string(allow_local_pg=z.local_pg))
             if z.init_db:
                 store.initialize()
                 LOG.info("Dedicated versioned deployment schema initialized.")

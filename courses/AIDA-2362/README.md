@@ -4,6 +4,30 @@
 
 **Individual assessment · 25% of the AIDA 2362 course grade**
 
+## Quick-Start Offline Reproduction (Reviewer & Self-Check Guide)
+
+> **Everything needed to open and verify the portable QGIS project is already tracked in this repository** inside [`D2L_SUBMISSION_READY/AIDA2362_FinalProject_Miles_Zhang.zip`](../../D2L_SUBMISSION_READY/AIDA2362_FinalProject_Miles_Zhang.zip) (~9.1 MB; bundles the relative-path QGIS project `project/dickson_to_joffre.qgz`, all 8 local GeoJSON layers / 246 valid features, all 3 scope comparison PDFs, and validation scripts). **No raw government geodatabases, online basemap, or PostgreSQL are required.**
+
+```powershell
+# 1. From the repository root, extract the tracked standalone GIS package
+Expand-Archive -Path D2L_SUBMISSION_READY\AIDA2362_FinalProject_Miles_Zhang.zip -DestinationPath gis_replay_unpack -Force
+```
+
+2. **Open offline in QGIS 3.44.14 LTR**: double-click `gis_replay_unpack\project\dickson_to_joffre.qgz` (active ~56.0 km Dickson Dam to `05CC002` reach; 8 local relative vector layers, 2 print layouts).
+3. **Reproduce the `25 m` vs. `50 m` sensitivity live in QGIS**: select layer `prediction_points` → **Select by Expression**:
+   - Baseline (`<= 25 m`, selects 3 targets `P01–P03`): `abs("nearest_section_along_river_offset_m") <= 25`
+   - Sensitivity (`<= 50 m`, selects 5 targets `P01–P05`, adding surveyed `P04`/`P05`): `abs("nearest_section_along_river_offset_m") <= 50`
+4. **Optional headless QGIS package check** (from `gis_replay_unpack` with QGIS 3.44.14 installed):
+   ```powershell
+   "C:\Program Files\QGIS 3.44.14\bin\python-qgis-ltr.bat" src\gis_tools\validate_course_package.py --check-only
+   ```
+
+- **Expected verified result:** 8/8 local vector layers load with 0 broken links, 246 features pass GEOS validity (`0` invalid geometries), and `<= 25 m` (`3/5`) vs. `<= 50 m` (`5/5`) highlights `P04`/`P05` as the sole surveyed targets.
+- **Optional companion Hydro-GIS viewer (Check #25):** QGIS 3.44.14 remains the required primary tool for AIDA 2362. As an optional read-only visualization companion, the Windows Hydro-GIS receiver ([`courses/AIDA-2156/deployment/dist/RedDeerRiver.exe`](../AIDA-2156/deployment/dist/RedDeerRiver.exe); guide in [`client/README.md`](../AIDA-2156/deployment/client/README.md)) embeds all 8 active AIDA 2362 GeoJSON layers (246 features) alongside the `<= 25 m` vs. `<= 50 m` sensitivity toggle and NRCan OGL-Canada offline basemap without replacing the QGIS evidence chain.
+- **Key files to inspect:** [Decision Brief](decision-brief.md) · [25 m vs. 50 m Sensitivity](outputs/section-proximity-sensitivity.md) · [Active 56 km Map PDF](outputs/Overhead%20view.pdf) · [Layer Inventory](data/layer-inventory.csv).
+
+---
+
 ## Purpose and tool boundary
 
 Build one fictional facilities-maintenance spatial decision package around a bounded question. Name the decision-maker, action, unit, geographic extent, time period, map scale, and consequences of error. QGIS is the core tool. Python may extend the work, but it cannot replace the QGIS evidence chain. Do not use real sensitive locations or claim operational readiness. Paid services, specialized hardware, mandatory Docker, or deployment are not required.

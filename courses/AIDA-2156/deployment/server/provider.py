@@ -4,6 +4,7 @@ import math
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from threading import Lock
 from urllib.parse import urlencode
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
@@ -41,6 +42,22 @@ ROOT = "https://api.weather.gc.ca/collections/"
 HYDRO = "hydrometric-realtime"
 RAIN = "climate-hourly"
 MAX_BYTES = 8 * 1024 * 1024
+_LEVEL_LOCK = Lock()
+_RECENT_LEVELS: dict[str, dict[datetime, float]] = {}
+
+
+def get_recent_levels(as_of: datetime, hours: int = 48) -> dict[str, list[list]]:
+    """Return cached ECCC real-time water level (m, assumed datum) series for the last `hours`."""
+    end = as_of.astimezone(UTC)
+    begin = end - timedelta(hours=hours)
+    out: dict[str, list[list]] = {}
+    with _LEVEL_LOCK:
+        for sid, series in _RECENT_LEVELS.items():
+            pts = [[at.strftime("%Y-%m-%dT%H:%M:%SZ"), round(val, 3)]
+                   for at, val in sorted(series.items()) if begin <= at <= end]
+            if pts:
+                out[sid] = pts
+    return out
 
 
 def _time(value, *, explicit_utc=True):
@@ -98,6 +115,16 @@ def parse_page(obj, collection, station, start, end, received):
         at = _time(p[tf], explicit_utc=not rain)
         if not start <= at <= end:
             continue
+        if not rain:
+            lv = p.get("LEVEL")
+            if not isinstance(lv, bool) and isinstance(lv, (int, float)) and math.isfinite(lv):
+                with _LEVEL_LOCK:
+                    bucket = _RECENT_LEVELS.setdefault(station, {})
+                    bucket[at] = float(lv)
+                    if len(bucket) > 1200:
+                        cutoff = sorted(bucket.keys())[-1000]
+                        for old_k in [k for k in bucket if k < cutoff]:
+                            del bucket[old_k]
         if rain and (at.minute or at.second or at.microsecond):
             raise ValueError("rain has non-hourly clock")
         v = p.get(vf)

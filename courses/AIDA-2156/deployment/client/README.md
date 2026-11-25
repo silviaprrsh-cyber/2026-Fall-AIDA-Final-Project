@@ -4,7 +4,21 @@
 
 ## Start the receiver
 
-1. Double-click the standalone **RedDeerRiver.exe**; nothing needs to be extracted. The optional **RedDeerRiver-Client-Windows.zip** contains the same EXE and this English guide. Do not use the private server ZIP as a client; it is only for deployment operators. The program was tested on Windows 11 with the built-in .NET Framework 4.8/4.8.1. There is no Python, installer, or additional app dependency. The executable is unsigned; on a managed computer, follow your administrator’s software approval rules.
+### Quick-start launch commands (from repository root)
+- **Standalone offline client (Replay + built-in Frozen Demo, no server needed):** double-click `courses\AIDA-2156\deployment\dist\RedDeerRiver.exe`.
+- **With local synthetic Demo server:**
+  ```powershell
+  $env:PYTHONPATH = "$PWD\courses\AIDA-2156\deployment"
+  .\.venv\Scripts\python.exe -B -m server.service --mode demo --port 8765
+  ```
+- **With local PostgreSQL + live ECCC API (auto-reads loopback `PG*` from local `.env`):**
+  ```powershell
+  $env:PYTHONPATH = "$PWD\courses\AIDA-2156\deployment"
+  .\.venv\Scripts\python.exe -B -m server.service --mode live --local-pg --init-db   # first time only
+  .\.venv\Scripts\python.exe -B -m server.service --mode live --local-pg --port 8765
+  ```
+
+1. Double-click the standalone **RedDeerRiver.exe**; nothing needs to be extracted. The optional **RedDeerRiver-Client-Windows.zip** contains the same EXE and this English guide. Do not use the private server ZIP as a client; it is only for deployment operators. The v2.0 Hydro-GIS receiver was tested on Windows 11 with the built-in .NET Framework 4.8/4.8.1 and Microsoft Edge WebView2 Runtime (preinstalled on Windows 10/11). There is no Python, installer, or external data dependency — all 8 active 56.0 km GIS layers (246 features) and WebView2 libraries are embedded inside the single executable. The executable is unsigned; on a managed computer, follow your administrator’s software approval rules.
 2. If the service is on the same computer on its default port, leave the address at `http://127.0.0.1:8765`. If it is in the cloud or on another computer, enter the service address in **Server base URL** and select **Connect**. The same EXE works for both.
 3. The client refreshes automatically every 60 seconds. Use **Refresh now** for an immediate check. No client rebuild is needed when the host or port changes. The backend has its own provider collection schedule.
 
@@ -23,6 +37,9 @@ For an operator-managed default, set the client-process environment variable `RD
 
 ## What the receiver shows
 
+- **Three explicit top-bar data modes:** **Live** (reads real ECCC observations stored in PostgreSQL `rdr_live_v1` via `/api/v1/snapshot` + `/api/v1/history48h`), **Replay** (smooth interactive timeline scrubber across all **11,626** matched 18-month historical hourly ECCC + pinned V4 frames from `2025-05` to `2026-11`, with drag-to-start, Play/Pause, step, season quick-jumps, and `1×–10×` playback speeds), and **Demo** (synthetic frozen snapshot for offline or winter-gap demonstration).
+- **Interactive Hydro-GIS map (left panel — Global Auto + Full-Alberta OGL-Canada Offline):** defaults to **`Auto (Global + AB Offline)`**, rendering the embedded official **Natural Resources Canada (NRCan) CBMT** maps (full Alberta province + high-resolution 56 km Red Deer reach, **Open Government Licence — Canada**) immediately offline while seamlessly streaming global **Esri World Dark/Light Gray Canvas** (`Powered by Esri`) tiles whenever online (z=3–15). Also supports global **Esri World Topo** and **Esri World Imagery** satellite layers, strictly offline **NRCan (AB + Reach)**, and **Vector Grid Only**, plus `FIT` (56 km reach) and `AB` (full Alberta) quick-zoom buttons and the **`<= 25 m` vs. `<= 50 m`** sensitivity filter highlighting EPA-surveyed `P04`/`P05`.
+- **Clickable map points with Past 48h charts (all three modes):** clicking any of the 12 map markers or their floating numeric badges opens the auto-updating bottom-left detail card with a **Past 48h chart** tailored to the point type — observed water level (`m`, ECCC assumed datum) for river/lake gauges, V4 predicted water depth (`m`) for `P01–P06`, and hourly precipitation (`mm`) bar chart for airport weather station `3025484`.
 - **Observed river discharge (m³/s):** the latest available reading and its UTC observation timestamp for Dickson Dam Tunnel Outlet (05CB007), Little Red Deer River near the Mouth (05CB001), Medicine River near Eckville (05CC007), and Red Deer River at Red Deer (05CC002). These latest observations are shown separately from the older records used by the model.
 - **Regional airport precipitation (mm):** Red Deer Regional A (3025484), a single station, not full-basin rainfall. The provider, accumulation period and observation, period-end and retrieval times are shown when available.
 - **Current time:** estimated depth at the current target time from routed, lagged records, not measured depth.
@@ -33,4 +50,18 @@ For an operator-managed default, set the client-process environment variable `RD
 
 ## If the receiver cannot connect
 
-Check the address and the service port. For local use, start the companion server if it is not running. For remote use, check the private endpoint, its TLS certificate and any required authorization with the server operator. If a connection succeeds but some estimates are unavailable, inspect the status and the reason in the relevant tab; do not replace missing measurements with zero.
+Check the address and the service port. For local use, start the companion server if it is not running. For remote use, check the private endpoint, its TLS certificate and any required authorization with the server operator. If a connection succeeds but some estimates are unavailable, inspect the status and the reason in the relevant tab; do not replace missing measurements with zero. Even without a running server, **Replay 历史回放** (11,626 embedded historical frames) and **Demo 冻结演示** remain immediately inspectable offline.
+
+## Rebuild workflow (Windows x64, .NET Framework 4.8 + WebView2)
+
+From the repository root:
+
+```powershell
+# 1. Regenerate the 18-month matched historical ECCC + V4 replay bundle (assets/replay_history.json.gz)
+.\.venv\Scripts\python.exe -B courses\AIDA-2156\deployment\client\build_replay_dataset.py
+
+# 2. Compile single-file dist/RedDeerRiver.exe and dist/RedDeerRiver-Client-Windows.zip
+.\.venv\Scripts\python.exe -B courses\AIDA-2156\deployment\client\build_client.py --wv2-dir <path-to-Microsoft.Web.WebView2-net462-and-win-x64-dlls>
+```
+
+The build embeds `ui.html`, all 8 active AIDA 2362 GeoJSON layers (`gis_bundle.json.gz`), the official NRCan CBMT offline basemap (`assets/nrcan_cbmt_basemap.jpg`, Open Government Licence — Canada), `assets/replay_history.json.gz`, and the three WebView2 runtime bridge DLLs directly into `dist/RedDeerRiver.exe`. On launch, assets are unpacked to `%LOCALAPPDATA%\RedDeerRiver\` and served locally over WebView2 virtual host `https://appassets.local/`.

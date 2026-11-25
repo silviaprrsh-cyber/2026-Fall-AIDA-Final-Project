@@ -2,6 +2,29 @@
 
 **Individual assessment · 25% of the AIDA 2154 course grade**
 
+## Quick-Start Offline Reproduction (Reviewer & Self-Check Guide)
+
+> **Everything needed to reproduce the CV results is already tracked in this repository** inside [`D2L_SUBMISSION_READY/AIDA2154_CV_D2L_ready_20261123.zip`](../../D2L_SUBMISSION_READY/AIDA2154_CV_D2L_ready_20261123.zip) (~30.8 MB; bundles all 1,009 frozen Sentinel-2 RGB/NIR arrays `dataset.npz`, frozen CNN weights `best_model.pt`, `transects.json`, the 9-site blind manual audit JSON, and all replay/test scripts). **No raw 20 GB GeoTIFFs, network, PostgreSQL, or QGIS are required.**
+
+```powershell
+# 1. From the repository root, extract the tracked standalone CV package
+Expand-Archive -Path D2L_SUBMISSION_READY\AIDA2154_CV_D2L_ready_20261123.zip -DestinationPath cv_replay_unpack -Force
+cd cv_replay_unpack
+
+# 2. Install Python 3.13 CPU dependencies (skip if already installed)
+pip install -r courses\AIDA-2154\requirements-cv.lock.txt
+
+# 3. Run full 132-image CPU inference replay, 14 portable tests, and 9-site blind manual audit (~10-15 s)
+python -B run.py -m cv_tools.replay_frozen_cnn --output cv_replay_NEW
+python -B run.py -m cv_tools.test_release_replay
+python -B run.py -m cv_tools.independent_manual_eval --score courses\AIDA-2154\outputs\independent_manual_eval_20261123\manual_blind_annotations_9sites.json
+```
+
+- **Expected verified result:** `0.0` valid-pixel probability difference across all 132 held-out images (`85.21%` CNN vs. `84.41%` static baseline), 14/14 portable tests pass, and the 9-site blind manual check reproduces `79.26%` CNN vs. `79.80%` static baseline (`44.83%–83.31%` uncertainty bounds), supporting **WITHHOLD**. Optional 40-epoch CPU training replay (~2 min): `python -B run.py -m cv_tools.replay_frozen_training --output cv_training_NEW`.
+- **Key files to inspect:** [Failure Report](docs/cv-width-failure-report.md) · [9-Site Blind Manual Check](docs/independent-manual-check.md) · [Model/Data Card](data-model-card.md) · [Peer Review Record](docs/peer-review-status.md).
+
+---
+
 ## Purpose and boundary
 
 Develop a bounded, reproducible computer-vision inspection prototype for a facilities-maintenance question. Use only supplied or explicitly approved data and keep the implementation CPU-bounded. This is a teaching prototype, not a deployed product. A personal recording is never required. Do not connect to a live employer system or claim operational readiness.
@@ -95,16 +118,35 @@ No winter test scenes or independent physical widths exist. P01-P05 lack corresp
 #### Supplementary independent blind manual check (2026-11-23, reported separately)
 Following Formative Feedback 1, a strictly separate blind manual check was completed on nine predeclared chronological-median held-out crops (one per site, June–July 2026, disjoint from `test_examples.png`, annotated with zero model or mask visibility across `clear land`, `clear water`, and `uncertain/mixed`). On clear pixels (`30,342` px), the frozen CNN scored **79.26% IoU** — slightly **below** the static training-mask baseline (**79.80%**) and automatic weak mask (**82.18%**) — with **`3,147` uncertain pixels** (`45.24%` of the combined water+uncertain channel zone) producing a **44.83%–83.31%** IoU uncertainty band (`05CC007` CNN IoU `23.53%`; `P03` side-channel omission `41.25%`; `P04` off-channel FP drop `87.09%` vs. `98.71%` baseline). This supplementary audit does not alter the original 132-image evaluation and further reinforces the **WITHHOLD** disposition. See [independent-manual-check.md](docs/independent-manual-check.md) and [`outputs/independent_manual_eval_20261123/`](outputs/independent_manual_eval_20261123/).
 
-### Safe offline replay
-From the repository or extracted candidate root, using Python 3.13 and [CV dependency versions](requirements-cv.lock.txt):
-```powershell
-python -B run.py -m cv_tools.replay_frozen_cnn --output cv_replay_NEW
-python -B run.py -m cv_tools.test_release_replay
-```
-Use a new output directory. Optional unchanged training replay: `python -B run.py -m cv_tools.replay_frozen_training --output cv_training_NEW`. This never replaces the retained original model. No network, PostgreSQL or QGIS service is needed for frozen replay. Original archive-to-mask regeneration requires the retained source archives/GIS files and is not part of the minimal handoff.
-Original results remain in data/processed/point_cnn_20261113, masks in point_water_masks_20261113, width evidence in point_width_validation_20261113. Release checks and local ZIP are under the Git-ignored data/processed/cv_release_20261113. See the package guide for replay boundaries and pending D2L/peer/presentation actions.
+### Safe offline replay (reviewer / classmate quick-start — no raw GeoTIFFs needed)
+Although the original 20 GB Sentinel-2 GeoTIFF archive and local `courses/AIDA-2154/data/` folder are Git-ignored, the **complete frozen offline replay package is tracked directly in this repository** at [`D2L_SUBMISSION_READY/AIDA2154_CV_D2L_ready_20261123.zip`](../../D2L_SUBMISSION_READY/AIDA2154_CV_D2L_ready_20261123.zip) (~30.8 MB). It bundles all 1,009 frozen Sentinel-2 RGB/NIR crops and weak labels (`dataset.npz`, 708/169/132 split), the frozen CNN checkpoint (`best_model.pt`), transect width tables/geometry (`transects.json`, `test_width_hydrometry.csv`), the 9-site blind manual audit JSON, and all replay/test scripts.
 
-Portable tests run five morphology, four CNN, four geometry/statistics and one frozen-site identity check. The original GIS-file scope test remains a full-workspace test and requires the excluded GIS project; it is not represented as a package test.
+To independently reproduce the full held-out evaluation on CPU directly from a GitHub clone (no network, PostgreSQL, QGIS, or raw GeoTIFFs required):
+
+1. **Extract the standalone replay ZIP** from the repository root and enter the unpacked folder:
+   ```powershell
+   Expand-Archive -Path D2L_SUBMISSION_READY\AIDA2154_CV_D2L_ready_20261123.zip -DestinationPath cv_replay_unpack -Force
+   cd cv_replay_unpack
+   ```
+2. **Install Python 3.13 CPU dependencies** (skip if already installed in your environment):
+   ```powershell
+   pip install -r courses\AIDA-2154\requirements-cv.lock.txt
+   ```
+3. **Run the frozen 132-image CPU inference replay, 14 portable unit/identity tests, and 9-site blind manual audit scorer** (~10–15 s total on CPU; the `--output` folder must be new):
+   ```powershell
+   python -B run.py -m cv_tools.replay_frozen_cnn --output cv_replay_NEW
+   python -B run.py -m cv_tools.test_release_replay
+   python -B run.py -m cv_tools.independent_manual_eval --score courses\AIDA-2154\outputs\independent_manual_eval_20261123\manual_blind_annotations_9sites.json
+   ```
+   - `replay_frozen_cnn` reloads `best_model.pt` and `dataset.npz`, recomputes predictions for all 132 held-out images plus the static baseline, verifies `0.0` valid-pixel probability difference, and writes `cv_replay_NEW/evaluation.json` and `point_metrics.csv`.
+   - `test_release_replay` runs 14 portable checks (5 morphology, 4 CNN, 4 geometry/width statistics, and 1 frozen-site identity check).
+   - `independent_manual_eval --score` reproduces the separate 9-site blind manual IoU comparison (`79.26%` CNN vs. `79.80%` static baseline; `44.83%–83.31%` uncertainty bounds) and refreshes `courses/AIDA-2154/outputs/independent_manual_eval_20261123/`.
+4. **Optional unchanged 40-epoch CPU training replay** (~2 min on CPU; never overwrites the original saved model):
+   ```powershell
+   python -B run.py -m cv_tools.replay_frozen_training --output cv_training_NEW
+   ```
+
+Original local workspace artifacts remain under the Git-ignored `data/processed/point_cnn_20261113`, `point_water_masks_20261113`, `point_width_validation_20261113`, and `cv_release_20261113`. Only upstream raw-GeoTIFF-to-crop regeneration and full-workspace GIS scope tests require the excluded local source archives. See the [package guide](docs/package-guide.md) and [D2L readiness notes](docs/d2l-readiness.md) for replay boundaries and verification hashes.
 
 
 ## Database and container workflow extension (2026-11-13)
